@@ -14,6 +14,5 @@
   <name>CRM Maven Webapp</name>
 
   <dependencies>
-    <!-- Put here PostgreSQL connector dependency-->
   </dependencies>
 </project>
