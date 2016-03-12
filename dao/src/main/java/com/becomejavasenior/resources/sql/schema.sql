@@ -1,4 +1,4 @@
-﻿
+
 -- -----------------------------------------------------
 -- Schema crm_helios
 -- -----------------------------------------------------
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS crm_helios.role (
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS crm_helios.stage (
-  id SERIAL NOT NULL,
+  id INT NOT NULL,
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (id));
 
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS crm_helios.tag_contact_company (
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS crm_helios.file (
-  id INT NOT NULL,
+  id SERIAL NOT NULL,
   path TEXT NULL,
   blob_data bytea NULL,
   contact_id INT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS crm_helios.file (
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS crm_helios.user (
-  id INT NOT NULL,
+  id SERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   photo_file_id INT NULL,
@@ -211,7 +211,7 @@ CREATE TABLE IF NOT EXISTS crm_helios.user (
 CREATE TABLE IF NOT EXISTS crm_helios.deal (
   id SERIAL NOT NULL,
   name VARCHAR(255) NOT NULL,
-  budget REAL NULL,
+  budget DECIMAL(20,2) NULL,
   responsible_id INT NOT NULL,
   stage_id INT NOT NULL,
   company_id INT NOT NULL,
