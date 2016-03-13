@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public abstract class AbstractDao {
     private DataSource dataSource;
 
-    private Connection getConnection(){
+    protected Connection getConnection(){
         try {
             return dataSource.getConnection();
         } catch (SQLException e) {

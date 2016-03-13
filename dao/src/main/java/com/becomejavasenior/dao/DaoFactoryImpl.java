@@ -3,22 +3,24 @@ package com.becomejavasenior.dao;
 import org.apache.commons.dbcp2.*;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-
 import javax.sql.DataSource;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class DaoFactoryImpl implements DaoFactory {
-    private static String URL = "localhost";
-    private static String PORT = "8082";
-    private static String DB_NAME = "crm_helios";
-    private static String USER_NAME = "postgres";
-    private static String PASSWORD = "root";
-    private static String POOL_NAME = "pool";
+    private static String URL;
+    private static String PORT;
+    private static String DB_NAME;
+    private static String USER_NAME;
+    private static String PASSWORD;
     private static DataSource dataSource = null;
 
     private DataSource initDataSource(){
-        /*http://svn.apache.org/viewvc/commons/proper/dbcp/trunk/doc/PoolingDataSourceExample.java?revision=1659726&view=markup*/
         String connectURI= "jdbc:postgresql://" + URL + ":" + PORT + "/" + DB_NAME;
-        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(connectURI,DB_NAME, PASSWORD);
+        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(connectURI,USER_NAME, PASSWORD);
         PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
         ObjectPool<PoolableConnection> connectionPool =  new GenericObjectPool<PoolableConnection>(poolableConnectionFactory);
         poolableConnectionFactory.setPool(connectionPool);
@@ -26,26 +28,24 @@ public class DaoFactoryImpl implements DaoFactory {
         return dataSource;
     }
 
-    /*public void initConnectionPool() {
-        String connectURI= "jdbc:postgresql://" + URL +":" + PORT + "/" + DB_NAME ;
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI,USER_NAME, PASSWORD);
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-        ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<PoolableConnection>(poolableConnectionFactory);
-        poolableConnectionFactory.setPool(connectionPool);
-
+    private void loadProperties(){
+        Properties prop = new Properties();
+        InputStream input = null;
         try {
-            Class.forName("org.apache.commons.dbcp2.PoolingDriver");
-        } catch (ClassNotFoundException e) {
+            input = new FileInputStream("db_config.properties");
+            prop.load(input);
+            URL = prop.getProperty("url");
+            PORT = prop.getProperty("port");
+            DB_NAME = prop.getProperty("db_name");
+            USER_NAME = prop.getProperty("user_name");
+            PASSWORD = prop.getProperty("password");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("can't find propereties file");
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        PoolingDriver driver = null;
-        try {
-            driver = (PoolingDriver) DriverManager.getDriver("jdbc:apache:commons:dbcp:");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        driver.registerPool(POOL_NAME,connectionPool);
-    }*/
+    }
 
     public CompanyDao getCompanyDao() {
         return new CompanyDaoImpl(getDataSource());
@@ -92,6 +92,7 @@ public class DaoFactoryImpl implements DaoFactory {
 
     private DataSource getDataSource(){
         if(dataSource == null){
+            loadProperties();
             dataSource = initDataSource();
             return dataSource ;
         }
