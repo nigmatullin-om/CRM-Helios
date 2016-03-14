@@ -304,6 +304,7 @@ CREATE TABLE IF NOT EXISTS crm_helios.task (
   company_id INT NULL,
   created_by INT NOT NULL,
   date_create TIMESTAMP NOT NULL,
+  done BOOLEAN,
   PRIMARY KEY (id),
   CONSTRAINT fk_tasks_users1
     FOREIGN KEY (responsible_id)
