@@ -1,4 +1,9 @@
-package com.becomejavasenior;
+package com.becomejavasenior.model;
+
+import com.becomejavasenior.model.File;
+import com.becomejavasenior.model.Language;
+import com.becomejavasenior.model.Note;
+import com.becomejavasenior.model.Role;
 
 import java.io.Serializable;
 import java.util.Date;

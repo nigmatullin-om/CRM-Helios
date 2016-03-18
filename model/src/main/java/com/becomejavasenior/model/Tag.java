@@ -1,7 +1,6 @@
-package com.becomejavasenior;
+package com.becomejavasenior.model;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Date;
 
 public class Tag implements Serializable {

@@ -1,4 +1,4 @@
-package com.becomejavasenior;
+package com.becomejavasenior.model;
 
 import java.io.Serializable;
 
