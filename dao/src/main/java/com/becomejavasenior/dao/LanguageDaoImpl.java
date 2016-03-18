@@ -5,7 +5,7 @@ import com.becomejavasenior.Language;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class LanguageDaoImpl extends AbstractDao implements LanguageDao {
+public class LanguageDaoImpl extends CommonDao implements LanguageDao {
     public int create(Language language) {
         return 0;
     }

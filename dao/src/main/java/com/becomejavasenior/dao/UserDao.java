@@ -5,9 +5,9 @@ import com.becomejavasenior.User;
 import java.util.List;
 
 public interface UserDao {
-    public int create(User user) throws DaoException;
-    public User read(int id) throws DaoException;
-    public boolean update(User user) throws DaoException;
-    public boolean delete(User user) throws DaoException;
-    public List<User> findAll() throws DaoException;
+    public int create(User user) throws DatabaseException;
+    public User read(int id) throws DatabaseException;
+    public boolean update(User user) throws DatabaseException;
+    public boolean delete(User user) throws DatabaseException;
+    public List<User> findAll() throws DatabaseException;
 }

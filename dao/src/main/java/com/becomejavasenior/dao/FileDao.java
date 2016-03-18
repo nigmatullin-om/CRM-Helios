@@ -6,9 +6,9 @@ import com.becomejavasenior.File;
 import java.util.List;
 
 public interface FileDao {
-    public int create(File file);
-    public File read(int id);
-    public boolean update(File file);
-    public boolean delete(File file);
-    public List<File> findAll();
+    public int create(File file) throws DatabaseException;
+    public File read(int id) throws DatabaseException;
+    public boolean update(File file) throws DatabaseException;
+    public boolean delete(File file)throws DatabaseException;
+    public List<File> findAll()throws DatabaseException;
 }

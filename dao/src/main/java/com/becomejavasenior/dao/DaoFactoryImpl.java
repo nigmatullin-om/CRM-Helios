@@ -3,6 +3,7 @@ package com.becomejavasenior.dao;
 import org.apache.commons.dbcp2.*;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+
 import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,6 +20,7 @@ public class DaoFactoryImpl implements DaoFactory {
     private static DataSource dataSource = null;
 
     private DataSource initDataSource(){
+        loadProperties();
         String connectURI= "jdbc:postgresql://" + URL + ":" + PORT + "/" + DB_NAME;
         ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(connectURI,USER_NAME, PASSWORD);
         PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
@@ -92,12 +94,8 @@ public class DaoFactoryImpl implements DaoFactory {
 
     private DataSource getDataSource(){
         if(dataSource == null){
-            loadProperties();
             dataSource = initDataSource();
-            return dataSource ;
         }
-        else {
-            return dataSource;
-        }
+        return dataSource;
     }
 }

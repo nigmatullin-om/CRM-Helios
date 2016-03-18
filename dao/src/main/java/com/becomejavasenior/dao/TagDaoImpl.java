@@ -5,7 +5,7 @@ import com.becomejavasenior.Tag;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class TagDaoImpl extends AbstractDao implements TagDao {
+public class TagDaoImpl extends CommonDao implements TagDao {
     public int create(Tag tag) {
         return 0;
     }
