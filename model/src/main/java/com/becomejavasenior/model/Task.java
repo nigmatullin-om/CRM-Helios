@@ -1,4 +1,4 @@
-package com.becomejavasenior;
+package com.becomejavasenior.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +18,7 @@ public class Task implements Serializable {
     private Company company;
     private User createdByUser;
     private Date creationDate;
+    private Boolean deleted;
 
     public int getId() {
         return id;
@@ -105,6 +106,14 @@ public class Task implements Serializable {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

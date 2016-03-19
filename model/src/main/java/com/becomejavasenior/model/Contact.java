@@ -1,7 +1,8 @@
-package com.becomejavasenior;
+package com.becomejavasenior.model;
 
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class Contact implements Serializable{
@@ -17,6 +18,8 @@ public class Contact implements Serializable{
     private User responsibleUser;
     private PhoneType phoneType;
     private Company company;
+    private Date creationDate;
+    private Boolean deleted;
 
     private List<Note> notes;
     private List<File> files;
@@ -125,6 +128,22 @@ public class Contact implements Serializable{
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override
