@@ -17,6 +17,7 @@ public class Deal implements Serializable {
     private Company company;
     private User createdByUser;
     private Date creationDate;
+    private Boolean deleted;
 
     private List<Note> notes;
     private List<File> files;
@@ -117,6 +118,14 @@ public class Deal implements Serializable {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

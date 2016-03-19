@@ -23,6 +23,7 @@ public class User implements Serializable {
     private Note note;
     private Date creationDate;
     private String password;
+    private Boolean deleted;
 
     public String getPassword() {
         return password;
@@ -110,6 +111,14 @@ public class User implements Serializable {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

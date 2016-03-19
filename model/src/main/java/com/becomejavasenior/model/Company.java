@@ -18,6 +18,7 @@ public class Company implements Serializable {
     private PhoneType phoneType;
     private User createdByUser;
     private Date creationDate;
+    private Boolean deleted;
 
     private List<Note> notes;
     private List<File> files;
@@ -143,6 +144,14 @@ public class Company implements Serializable {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override
