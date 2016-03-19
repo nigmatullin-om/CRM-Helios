@@ -2,7 +2,7 @@ package com.becomejavasenior.model;
 
 import java.io.Serializable;
 
-enum PhoneType implements Serializable {
+public enum PhoneType implements Serializable {
     WORK_PHONE,
     DIRECT_WORK_PHONE,
     MOBILE,

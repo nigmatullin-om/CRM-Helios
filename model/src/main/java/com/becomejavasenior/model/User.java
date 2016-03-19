@@ -20,7 +20,7 @@ public class User implements Serializable {
     private String workPhone;
     private Language language;
     private Role role;
-    private Note note;
+    private String note;
     private Date creationDate;
     private String password;
     private Boolean deleted;
@@ -97,11 +97,11 @@ public class User implements Serializable {
         this.role = role;
     }
 
-    public Note getNote() {
+    public String getNote() {
         return note;
     }
 
-    public void setNote(Note note) {
+    public void setNote(String note) {
         this.note = note;
     }
 
