@@ -1,6 +1,8 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.impl;
 
-import com.becomejavasenior.Language;
+import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.LanguageDao;
+import com.becomejavasenior.model.Language;
 
 import javax.sql.DataSource;
 import java.util.List;

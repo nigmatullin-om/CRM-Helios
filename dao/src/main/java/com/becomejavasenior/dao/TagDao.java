@@ -1,6 +1,7 @@
 package com.becomejavasenior.dao;
 
-import com.becomejavasenior.Tag;
+
+import com.becomejavasenior.model.Tag;
 
 import java.util.List;
 

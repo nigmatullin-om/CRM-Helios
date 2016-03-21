@@ -1,6 +1,9 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.impl;
 
-import com.becomejavasenior.Tag;
+
+import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.TagDao;
+import com.becomejavasenior.model.Tag;
 
 import javax.sql.DataSource;
 import java.util.List;

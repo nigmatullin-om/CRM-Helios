@@ -1,6 +1,8 @@
 package com.becomejavasenior.dao;
 
-import com.becomejavasenior.Note;
+
+import com.becomejavasenior.dao.impl.DatabaseException;
+import com.becomejavasenior.model.Note;
 
 import java.util.List;
 

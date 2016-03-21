@@ -1,5 +1,7 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.impl;
 
+import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.model.User;
 
 import javax.sql.DataSource;
@@ -9,15 +11,15 @@ import java.util.List;
 
 public class UserDaoImpl extends CommonDao implements UserDao {
     private final String CREATE_USER = "INSERT INTO user (name, password, photo_file_id, email, phone_mobile," +
-                        "phone_work, lang_id, role_id, note, date_create) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "phone_work, lang_id, role_id, note, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String READ_USER = "SELECT * FROM user WHERE id = ?";
     private final String UPDATE_USER = "UPDATE user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
-            "phone_work=?, lang_id=?, role_id=?, note=?, date_create=? WHERE id=?";
+            "phone_work=?, lang_id=?, role_id=?, note=?, date_create=?, deleted=? WHERE id=?";
     private final String DELETE_USER = "DELETE FROM user WHERE id=?";
     private final String FIND_ALL_USERS = "SELECT * FROM user";
 
 
-    public int create(User user) throws DatabaseException{
+    public int create(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
             preparedStatement.setString(1, user.getName());
@@ -30,6 +32,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
             preparedStatement.setInt(8, user.getRole().getId());
             preparedStatement.setString(9, user.getNote());
             preparedStatement.setTimestamp(10, new Timestamp(user.getCreationDate().getTime()));
+            preparedStatement.setBoolean(11, user.getDeleted());
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
@@ -52,9 +55,10 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                         user.setWorkPhone(resultSet.getString(7));
                         user.setNote(resultSet.getString(10));
                         user.setCreationDate(resultSet.getDate(11));
+                        user.setDeleted(resultSet.getBoolean(12));
                         connection.close();
                     }
-            }
+                }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
@@ -74,7 +78,8 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                 preparedStatement.setInt(8, user.getRole().getId());
                 preparedStatement.setString(9, user.getNote());
                 preparedStatement.setDate(10, new java.sql.Date(user.getCreationDate().getTime()));
-                preparedStatement.setInt(11, user.getId());
+            preparedStatement.setBoolean(11, user.getDeleted());
+                preparedStatement.setInt(12, user.getId());
                 preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
@@ -108,6 +113,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                     user.setWorkPhone(resultSet.getString(7));
                     user.setNote(resultSet.getString(10));
                     user.setCreationDate(resultSet.getDate(11));
+                    user.setDeleted(resultSet.getBoolean(12));
                     users.add(user);
                 }
         } catch (SQLException e) {

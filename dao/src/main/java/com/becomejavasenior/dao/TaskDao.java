@@ -1,6 +1,7 @@
 package com.becomejavasenior.dao;
 
-import com.becomejavasenior.Task;
+import com.becomejavasenior.dao.impl.DatabaseException;
+import com.becomejavasenior.model.Task;
 
 import java.util.List;
 

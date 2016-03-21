@@ -1,6 +1,8 @@
 package com.becomejavasenior.dao;
 
-import com.becomejavasenior.Deal;
+
+import com.becomejavasenior.dao.impl.DatabaseException;
+import com.becomejavasenior.model.Deal;
 
 import java.util.List;
 

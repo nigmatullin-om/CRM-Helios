@@ -1,6 +1,8 @@
 package com.becomejavasenior.dao;
 
-import com.becomejavasenior.Contact;
+
+import com.becomejavasenior.dao.impl.DatabaseException;
+import com.becomejavasenior.model.Contact;
 
 import java.util.List;
 

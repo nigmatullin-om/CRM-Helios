@@ -1,6 +1,7 @@
 package com.becomejavasenior.dao;
 
-import com.becomejavasenior.Language;
+
+import com.becomejavasenior.model.Language;
 
 import java.util.List;
 
