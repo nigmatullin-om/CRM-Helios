@@ -4,6 +4,8 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.PhoneType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
@@ -26,6 +28,8 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     private final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
     private final String FIND_ALL_COMPANIES = "SELECT * FROM company";
 
+    static final Logger log = LogManager.getLogger(CompanyDaoImpl.class);
+
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
@@ -44,6 +48,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());
         } catch (SQLException e) {
+            log.error("Couldn't create the company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return 1;
@@ -69,6 +74,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                 }
             }
         } catch (SQLException e) {
+            log.error("Couldn't read from company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return company;
@@ -90,6 +96,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(11, company.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return true;
@@ -101,6 +108,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(1, company.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return true;
@@ -125,6 +133,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                 companies.add(company);
             }
         } catch (SQLException e) {
+            log.error("Couldn't find from company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return companies;

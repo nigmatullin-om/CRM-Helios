@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ContactDaoImpl extends CommonDao implements ContactDao {
     private final String READ_CONTACT= "SELECT * FROM contact WHERE id=?";
 
@@ -26,6 +29,8 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     private final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
     private final String FIND_ALL_CONTACTS = "SELECT * FROM contact";
+
+    static final Logger log = LogManager.getLogger(ContactDaoImpl.class);
 
     public int create(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
@@ -43,6 +48,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setBoolean(11, contact.getDeleted());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't create the contact entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return 1;
@@ -68,6 +74,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
                 }
             }
         } catch (SQLException e){
+            log.error("Couldn't read from contact entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return contact;
@@ -90,6 +97,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(12, contact.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the contact entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return true;
@@ -101,6 +109,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(1, contact.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the contact entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return true;
@@ -125,6 +134,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
                 contacts.add(contact);
             }
         } catch (SQLException e) {
+            log.error("Couldn't find from contact entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return contacts;

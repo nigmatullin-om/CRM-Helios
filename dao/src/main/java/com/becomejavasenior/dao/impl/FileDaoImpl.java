@@ -4,6 +4,8 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.FileDao;
 import com.becomejavasenior.model.File;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -20,6 +22,8 @@ public class FileDaoImpl extends CommonDao implements FileDao {
     private final String DELETE_FILE = "DELETE FROM file WHERE id=?";
     private final String FIND_ALL_FILES = "SELECT * FROM file";
 
+    static final Logger log = LogManager.getLogger(FileDaoImpl.class);
+
     public int create(File file) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FILE)) {
@@ -29,6 +33,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
             preparedStatement.setInt(4, file.getCreatedByUser().getId());
             preparedStatement.setDate(5, new java.sql.Date(file.getCreationDate().getTime()));
         } catch (SQLException e) {
+            log.error("Couldn't create the file entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return 1;
@@ -49,6 +54,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
                 }
             }
         } catch (SQLException e) {
+            log.error("Couldn't read from file entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return file;
@@ -65,6 +71,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
             preparedStatement.setInt(6, file.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the file entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return true;
@@ -76,6 +83,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
             preparedStatement.setInt(1, file.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the file entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return true;
@@ -95,6 +103,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
                 files.add(file);
             }
         } catch (SQLException e) {
+            log.error("Couldn't find from file entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return files;
