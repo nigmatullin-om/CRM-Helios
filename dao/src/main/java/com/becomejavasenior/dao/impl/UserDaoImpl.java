@@ -12,14 +12,15 @@ import java.util.List;
 public class UserDaoImpl extends CommonDao implements UserDao {
     private final String CREATE_USER = "INSERT INTO user (name, password, photo_file_id, email, phone_mobile," +
                         "phone_work, lang_id, role_id, note, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String READ_USER = "SELECT * FROM user WHERE id = ?";
+    private final String READ_USER = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
+                        "FROM user WHERE id = ?";
     private final String UPDATE_USER = "UPDATE user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
             "phone_work=?, lang_id=?, role_id=?, note=?, date_create=?, deleted=? WHERE id=?";
     private final String DELETE_USER = "DELETE FROM user WHERE id=?";
-    private final String FIND_ALL_USERS = "SELECT * FROM user";
+    private final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
+                            "FROM user";
 
-
-    public int create(User user) throws DatabaseException {
+    public void create(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
             preparedStatement.setString(1, user.getName());
@@ -37,7 +38,6 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public User read(int id) throws DatabaseException {
@@ -47,25 +47,28 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                 preparedStatement.setInt(1, id);
                 try(ResultSet resultSet = preparedStatement.executeQuery();) {
                     if (resultSet.next()){
-                        user.setId(resultSet.getInt(1));
-                        user.setName(resultSet.getString(2));
-                        user.setPassword(resultSet.getString(3));
-                        user.setEmail(resultSet.getString(5));
-                        user.setMobilePhone(resultSet.getString(6));
-                        user.setWorkPhone(resultSet.getString(7));
-                        user.setNote(resultSet.getString(10));
-                        user.setCreationDate(resultSet.getDate(11));
-                        user.setDeleted(resultSet.getBoolean(12));
-                        connection.close();
+                        user = new User();
+                        user.setId(resultSet.getInt("id"));
+                        user.setName(resultSet.getString("name"));
+                        user.setPassword(resultSet.getString("password"));
+                        user.setEmail(resultSet.getString("email"));
+                        user.setMobilePhone(resultSet.getString("phone_mobile"));
+                        user.setWorkPhone(resultSet.getString("phone_work"));
+                        user.setNote(resultSet.getString("note"));
+                        user.setCreationDate(resultSet.getDate("date_create"));
+                        user.setDeleted(resultSet.getBoolean("deleted"));
                     }
                 }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
+        if (user == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return user;
     }
 
-    public boolean update(User user) throws DatabaseException {
+    public void update(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER);) {
                 preparedStatement.setString(1, user.getName());
@@ -84,10 +87,9 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(User user) throws DatabaseException {
+    public void delete(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER);) {
                 preparedStatement.setInt(1, user.getId());
@@ -95,7 +97,6 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<User> findAll() throws DatabaseException {
@@ -105,15 +106,15 @@ public class UserDaoImpl extends CommonDao implements UserDao {
             ResultSet resultSet = preparedStatement.executeQuery();) {
                 while (resultSet.next()) {
                     User user = new User();
-                    user.setId(resultSet.getInt(1));
-                    user.setName(resultSet.getString(2));
-                    user.setPassword(resultSet.getString(3));
-                    user.setEmail(resultSet.getString(5));
-                    user.setMobilePhone(resultSet.getString(6));
-                    user.setWorkPhone(resultSet.getString(7));
-                    user.setNote(resultSet.getString(10));
-                    user.setCreationDate(resultSet.getDate(11));
-                    user.setDeleted(resultSet.getBoolean(12));
+                    user.setId(resultSet.getInt("id"));
+                    user.setName(resultSet.getString("name"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setMobilePhone(resultSet.getString("phone_mobile"));
+                    user.setWorkPhone(resultSet.getString("phone_work"));
+                    user.setNote(resultSet.getString("note"));
+                    user.setCreationDate(resultSet.getDate("date_create"));
+                    user.setDeleted(resultSet.getBoolean("deleted"));
                     users.add(user);
                 }
         } catch (SQLException e) {
