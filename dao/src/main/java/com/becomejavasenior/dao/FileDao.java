@@ -13,4 +13,5 @@ public interface FileDao {
     public boolean update(File file) throws DatabaseException;
     public boolean delete(File file)throws DatabaseException;
     public List<File> findAll()throws DatabaseException;
+    public List<File> findAllByDealId(int id) throws DatabaseException;
 }

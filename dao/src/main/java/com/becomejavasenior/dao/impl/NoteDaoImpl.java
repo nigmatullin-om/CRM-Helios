@@ -20,6 +20,8 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     private final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
     private final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
     private final String FIND_ALL_NOTES = "SELECT * FROM note";
+    private final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM crm_helios.note WHERE deal_id = ?";
+
 
     public int create(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
@@ -88,6 +90,32 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
                 note.setText(resultSet.getString(2));
                 note.setCreationDate(resultSet.getDate(7));
                 notes.add(note);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+        return  notes;
+    }
+
+    @Override
+    public List<Note> findAllByDealId(int id) throws DatabaseException {
+        List<Note> notes = new ArrayList<Note>();
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_NOTES_BY_DEAL_ID)) {
+            preparedStatement.setInt(1, id);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()) {
+                    Note note = new Note();
+                    note.setId(resultSet.getInt("id"));
+                    note.setText(resultSet.getString("text"));
+                    note.setCreationDate(resultSet.getDate(7));
+                    note.setCreatedByUser(daoFactory.getUserDao().read(resultSet.getInt("crated_by")));
+                    notes.add(note);
+                }
+            }
+            catch (SQLException e) {
+                throw new DatabaseException(e.getMessage());
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());

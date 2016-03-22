@@ -3,6 +3,7 @@ package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.ContactDao;
+import com.becomejavasenior.dao.DaoFactory;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.PhoneType;
 
@@ -26,6 +27,8 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     private final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
     private final String FIND_ALL_CONTACTS = "SELECT * FROM contact";
+    private final String FIND_ALL_CONTACTS_BY_DEAL_ID = "SELECT * FROM crm_helios.contact JOIN crm_helios.deal_contact " +
+            "ON contact.id = deal_contact.contact_id AND deal_id = 1";
 
     public int create(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
@@ -125,6 +128,37 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
                 contacts.add(contact);
             }
         } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+        return contacts;
+    }
+
+    @Override
+    public List<Contact> findAllByDealId(int id) throws DatabaseException {
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        List<Contact> contacts = new ArrayList<Contact>();
+        try(Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_CONTACTS_BY_DEAL_ID)){
+            int i = 1;
+            preparedStatement.setInt(i, id);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()){
+                    Contact  contact =  new Contact();
+                    contact.setId(resultSet.getInt(1));
+                    contact.setName(resultSet.getString(2));
+                    contact.setPhone(resultSet.getString(3));
+                    contact.setEmail(resultSet.getString(4));
+                    contact.setSkype(resultSet.getString(5));
+                    contact.setPosition(resultSet.getString(6));
+                    contact.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
+                    contact.setCreationDate(resultSet.getDate(11));
+                    contact.setDeleted(resultSet.getBoolean(12));
+                    contacts.add(contact);
+                }
+            }catch (SQLException e) {
+                throw new DatabaseException(e.getMessage());
+            }
+        }catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
         return contacts;

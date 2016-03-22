@@ -12,4 +12,5 @@ public interface ContactDao {
     public boolean update(Contact contact) throws DatabaseException;
     public boolean delete(Contact contact) throws DatabaseException;
     public List<Contact> findAll() throws DatabaseException;
+    public List<Contact> findAllByDealId (int id) throws DatabaseException;
 }

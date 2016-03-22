@@ -12,4 +12,5 @@ public interface NoteDao {
     public boolean update(Note note) throws DatabaseException;
     public boolean delete(Note note) throws DatabaseException;
     public List<Note> findAll() throws DatabaseException;
+    public List<Note> findAllByDealId(int id) throws DatabaseException;
 }
