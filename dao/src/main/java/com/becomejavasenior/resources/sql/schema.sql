@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS crm_helios.user (
   lang_id INT NOT NULL,
   role_id INT NOT NULL,
   note TEXT NULL,
-  date_create TIMESTAMP NOT NULL, 
+  date_create TIMESTAMP NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_users_role1
     FOREIGN KEY (role_id)

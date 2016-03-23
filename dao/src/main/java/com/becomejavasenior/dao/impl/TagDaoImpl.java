@@ -38,7 +38,6 @@ public class TagDaoImpl extends CommonDao implements TagDao {
     }
 
     @Override
-
     public List<Tag> findAllByDealId(int id) throws DatabaseException {
         try (Connection connection =  getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_DEAL_ID)){
@@ -60,7 +59,7 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         return null;
     }
 
-    public TagDaoImpl(DataSource dataSource)throws DatabaseException {
+    public TagDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
 }

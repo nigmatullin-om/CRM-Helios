@@ -14,7 +14,7 @@ public interface DealDao {
     public boolean update(Deal deal) throws DatabaseException;
     public boolean delete(Deal deal) throws DatabaseException;
     public List<Deal> findAll() throws DatabaseException;
-    public List<Deal> getAllDealForContactById(Contact contact) throws DatabaseException;
-    public List<Deal> getDealForCompanyById(Company company) throws DatabaseException;
+    public List<Deal> getDealsForContactById(Contact contact) throws DatabaseException;
+    public List<Deal> getDealsForCompanyById(Company company) throws DatabaseException;
 
 }

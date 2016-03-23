@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDaoImpl extends CommonDao implements FileDao {
-    private final String READ_FILE= "SELECT * FROM file WHERE id=?";
-    private final String CREATE_FILE = "INSERT INTO file (path, blob_data, contact_id, created_by, date_create) VALUES (?, ?, ?, ?, ?)";
-    private final String UPDATE_FILE = "UPDATE file SET path=?, blob_data=?, contact_id=?, created_by=?, date_create=? WHERE id=?";
-    private final String DELETE_FILE = "DELETE FROM file WHERE id=?";
-    private final String FIND_ALL_FILES = "SELECT * FROM file";
-    private final String FIND_ALL_FILES_BY_DEAL_ID = "SELECT * FROM file WHERE deal_id = ?";
+    private final String READ_FILE= "SELECT * FROM crm_helios.file WHERE id=?";
+    private final String CREATE_FILE = "INSERT INTO crm_helios.file (path, blob_data, contact_id, created_by, date_create)" +
+            " VALUES (?, ?, ?, ?, ?)";
+    private final String UPDATE_FILE = "UPDATE crm_helios.file SET path=?, blob_data=?, contact_id=?, created_by=?, date_create=? " +
+            "WHERE id=?";
+    private final String DELETE_FILE = "DELETE FROM crm_helios.file WHERE id=?";
+    private final String FIND_ALL_FILES = "SELECT * FROM crm_helios.file";
+    private final String FIND_ALL_FILES_BY_DEAL_ID = "SELECT * FROM crm_helios.file WHERE deal_id = ?";
 
     public FileDaoImpl(DataSource dataSource) {
         super(dataSource);

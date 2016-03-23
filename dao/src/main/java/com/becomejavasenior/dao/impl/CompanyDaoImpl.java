@@ -15,16 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
-    private final String READ_COMPANY= "SELECT * FROM company WHERE id=?";
+    private final String READ_COMPANY= "SELECT * FROM crm_helios.company WHERE id=?";
 
-    private final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
-                                            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String CREATE_COMPANY = "INSERT INTO crm_helios.company " +
+            "(name,  responsible_id, web, email, adress, phone, phone_type_id" +
+            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
-                                            "created_by=?, date_create=?, deleted=? WHERE id=?";
+    private final String UPDATE_COMPANY = "UPDATE crm_helios.company SET name=?, resposible_id=?, web=?, email=?, " +
+            "adress=?, phone=?, phone_type_id=?,created_by=?, date_create=?, deleted=? WHERE id=?";
 
-    private final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
-    private final String FIND_ALL_COMPANIES = "SELECT * FROM company";
+    private final String DELETE_COMPANY = "DELETE FROM crm_helios.company WHERE id=?";
+    private final String FIND_ALL_COMPANIES = "SELECT * FROM crm_helios.company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -52,9 +53,9 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     public Company read(int id) throws DatabaseException {
         Company company = null;
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY)) {
             preparedStatement.setInt(1, id);
-            try(ResultSet resultSet = preparedStatement.executeQuery();) {
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     company = new Company();
                     company.setId(resultSet.getInt(1));
@@ -65,7 +66,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                     company.setPhone(resultSet.getString(7));
                     company.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
                     company.setCreationDate(resultSet.getDate(10));
-                    company.setDeleted(resultSet.getBoolean(11));
+                    //company.setDeleted(resultSet.getBoolean(11));
                 }
             }
         } catch (SQLException e) {

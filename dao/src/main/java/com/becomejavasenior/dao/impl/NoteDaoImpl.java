@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteDaoImpl extends CommonDao implements NoteDao {
-    private final String READ_NOTE= "SELECT * FROM note WHERE id=?";
-    private final String CREATE_NOTE = "INSERT INTO note (text, created_by, date_create) " +
+    private final String READ_NOTE= "SELECT * FROM crm_helios.note WHERE id=?";
+    private final String CREATE_NOTE = "INSERT INTO crm_helios.note (text, created_by, date_create) " +
                                         "VALUES (?, ?, ?)";
-    private final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
-    private final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
-    private final String FIND_ALL_NOTES = "SELECT * FROM note";
+    private final String UPDATE_NOTE = "UPDATE crm_helios.note SET text=?, created_by=?, date_create=? WHERE id=?";
+    private final String DELETE_NOTE = "DELETE FROM crm_helios.note WHERE id=?";
+    private final String FIND_ALL_NOTES = "SELECT * FROM crm_helios.note";
     private final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM crm_helios.note WHERE deal_id = ?";
 
 
@@ -110,7 +110,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
                     note.setId(resultSet.getInt("id"));
                     note.setText(resultSet.getString("text"));
                     note.setCreationDate(resultSet.getDate(7));
-                    note.setCreatedByUser(daoFactory.getUserDao().read(resultSet.getInt("crated_by")));
+                    note.setCreatedByUser(daoFactory.getUserDao().read(resultSet.getInt("created_by")));
                     notes.add(note);
                 }
             }

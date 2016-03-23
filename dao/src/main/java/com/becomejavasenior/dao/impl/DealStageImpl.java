@@ -14,6 +14,8 @@ public  class DealStageImpl {
           case 4:
               return DealStage.AGREEMENT;
           case 5:
+              return DealStage.SUCCESS;
+          case 6:
               return DealStage.FAILED_AND_CLOSED;
           default:
               return null;

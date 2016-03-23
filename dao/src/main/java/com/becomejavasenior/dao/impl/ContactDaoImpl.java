@@ -16,19 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactDaoImpl extends CommonDao implements ContactDao {
-    private final String READ_CONTACT= "SELECT * FROM contact WHERE id=?";
+    private final String READ_CONTACT= "SELECT * FROM crm_helios.contact WHERE id=?";
 
-    private final String CREATE_CONTACT = "INSERT INTO contact (name, phone, email, skype, position, responsible_id," +
+    private final String CREATE_CONTACT = "INSERT INTO crm_helios.contact (name, phone, email, skype, position, responsible_id," +
             " phone_type_id, company_id, created_by, date_create, deleted) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE_CONTACT = "UPDATE contact SET name=?, phone=?, email=?, skype=?, position=?, responsible_id=?," +
-                                    " phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
+    private final String UPDATE_CONTACT = "UPDATE crm_helios.contact SET name=?, phone=?, email=?, skype=?, position=?, " +
+            "responsible_id=?, phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
-    private final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
-    private final String FIND_ALL_CONTACTS = "SELECT * FROM contact";
+    private final String DELETE_CONTACT = "DELETE FROM crm_helios.contact WHERE id=?";
+    private final String FIND_ALL_CONTACTS = "SELECT * FROM crm_helios.contact";
     private final String FIND_ALL_CONTACTS_BY_DEAL_ID = "SELECT * FROM crm_helios.contact JOIN crm_helios.deal_contact " +
-            "ON contact.id = deal_contact.contact_id AND deal_id = 1";
+            "ON contact.id = deal_contact.contact_id AND deal_id = ?";
 
     public int create(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
@@ -135,7 +135,6 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     @Override
     public List<Contact> findAllByDealId(int id) throws DatabaseException {
-        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
         List<Contact> contacts = new ArrayList<Contact>();
         try(Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_CONTACTS_BY_DEAL_ID)){
@@ -152,7 +151,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
                     contact.setPosition(resultSet.getString(6));
                     contact.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
                     contact.setCreationDate(resultSet.getDate(11));
-                    contact.setDeleted(resultSet.getBoolean(12));
+                   //contact.setDeleted(resultSet.getBoolean(12));
                     contacts.add(contact);
                 }
             }catch (SQLException e) {

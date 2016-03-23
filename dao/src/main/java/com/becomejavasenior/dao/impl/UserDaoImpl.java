@@ -12,11 +12,11 @@ import java.util.List;
 public class UserDaoImpl extends CommonDao implements UserDao {
     private final String CREATE_USER = "INSERT INTO user (name, password, photo_file_id, email, phone_mobile," +
                         "phone_work, lang_id, role_id, note, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String READ_USER = "SELECT * FROM user WHERE id = ?";
+    private final String READ_USER = "SELECT * FROM crm_helios.user WHERE id = ?";
     private final String UPDATE_USER = "UPDATE user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
             "phone_work=?, lang_id=?, role_id=?, note=?, date_create=?, deleted=? WHERE id=?";
     private final String DELETE_USER = "DELETE FROM user WHERE id=?";
-    private final String FIND_ALL_USERS = "SELECT * FROM user";
+    private final String FIND_ALL_USERS = "SELECT * FROM crm_helios.user";
 
 
     public int create(User user) throws DatabaseException {
@@ -41,7 +41,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
     }
 
     public User read(int id) throws DatabaseException {
-        User user = null;
+        User user = new User();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_USER);) {
                 preparedStatement.setInt(1, id);
@@ -55,7 +55,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                         user.setWorkPhone(resultSet.getString(7));
                         user.setNote(resultSet.getString(10));
                         user.setCreationDate(resultSet.getDate(11));
-                        user.setDeleted(resultSet.getBoolean(12));
+                        //user.setDeleted(resultSet.getBoolean(12));
                         connection.close();
                     }
                 }
