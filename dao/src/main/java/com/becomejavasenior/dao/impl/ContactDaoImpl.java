@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactDaoImpl extends CommonDao implements ContactDao {
-    private final String READ_CONTACT= "SELECT * FROM contact WHERE id=?";
+    private final String READ_CONTACT= "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact WHERE id=?";
 
     private final String CREATE_CONTACT = "INSERT INTO contact (name, phone, email, skype, position, responsible_id," +
             " phone_type_id, company_id, created_by, date_create, deleted) " +
@@ -25,9 +25,9 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
                                     " phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
     private final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
-    private final String FIND_ALL_CONTACTS = "SELECT * FROM contact";
+    private final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact";
 
-    public int create(Contact contact) throws DatabaseException {
+    public void create(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT)) {
             preparedStatement.setString(1, contact.getName());
@@ -45,7 +45,6 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public Contact read(int id) throws DatabaseException {
@@ -56,24 +55,27 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             try(ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
                     contact = new Contact();
-                    contact.setId(resultSet.getInt(1));
-                    contact.setName(resultSet.getString(2));
-                    contact.setPhone(resultSet.getString(3));
-                    contact.setEmail(resultSet.getString(4));
-                    contact.setSkype(resultSet.getString(5));
-                    contact.setPosition(resultSet.getString(6));
-                    contact.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
-                    contact.setCreationDate(resultSet.getDate(11));
-                    contact.setDeleted(resultSet.getBoolean(12));
+                    contact.setId(resultSet.getInt("id"));
+                    contact.setName(resultSet.getString("name"));
+                    contact.setPhone(resultSet.getString("phone"));
+                    contact.setEmail(resultSet.getString("email"));
+                    contact.setSkype(resultSet.getString("skype"));
+                    contact.setPosition(resultSet.getString("position"));
+                    contact.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+                    contact.setCreationDate(resultSet.getDate("date_create"));
+                    contact.setDeleted(resultSet.getBoolean("deleted"));
                 }
             }
         } catch (SQLException e){
             throw new DatabaseException(e.getMessage());
         }
+        if (contact == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return contact;
     }
 
-    public boolean update(Contact contact) throws DatabaseException {
+    public void update(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CONTACT);) {
             preparedStatement.setString(1, contact.getName());
@@ -92,10 +94,9 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(Contact contact) throws DatabaseException {
+    public void delete(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CONTACT);) {
             preparedStatement.setInt(1, contact.getId());
@@ -103,7 +104,6 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<Contact> findAll() throws DatabaseException {
@@ -113,15 +113,15 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 Contact contact = new Contact();
-                contact.setId(resultSet.getInt(1));
-                contact.setName(resultSet.getString(2));
-                contact.setPhone(resultSet.getString(3));
-                contact.setEmail(resultSet.getString(4));
-                contact.setSkype(resultSet.getString(5));
-                contact.setPosition(resultSet.getString(6));
-                contact.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
-                contact.setCreationDate(resultSet.getDate(11));
-                contact.setDeleted(resultSet.getBoolean(12));
+                contact.setId(resultSet.getInt("id"));
+                contact.setName(resultSet.getString("name"));
+                contact.setPhone(resultSet.getString("phone"));
+                contact.setEmail(resultSet.getString("email"));
+                contact.setSkype(resultSet.getString("skype"));
+                contact.setPosition(resultSet.getString("position"));
+                contact.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+                contact.setCreationDate(resultSet.getDate("date_create"));
+                contact.setDeleted(resultSet.getBoolean("deleted"));
                 contacts.add(contact);
             }
         } catch (SQLException e) {
