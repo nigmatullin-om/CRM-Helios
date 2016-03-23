@@ -2,11 +2,11 @@ package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.CompanyDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.PhoneType;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,22 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
-    private final String READ_COMPANY= "SELECT * FROM company WHERE id=?";
+    private static final String READ_COMPANY= "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
 
-    private final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
-                                            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
+            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
-                                            "created_by=?, date_create=?, deleted=? WHERE id=?";
+    private static final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
+            "created_by=?, date_create=?, deleted=? WHERE id=?";
 
-    private final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
-    private final String FIND_ALL_COMPANIES = "SELECT * FROM company";
+    private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
+    private static final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
+    private static final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
 
-    public int create(Company company) throws DatabaseException {
+    @Override
+    public void create(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
             preparedStatement.setString(1, company.getName());
@@ -43,13 +45,14 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(8, company.getCreatedByUser().getId());
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());
+            preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
-    public Company read(int id) throws DatabaseException {
+    @Override
+    public Company getCompanyById(int id) throws DatabaseException {
         Company company = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY);) {
@@ -57,24 +60,28 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             try(ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
                     company = new Company();
-                    company.setId(resultSet.getInt(1));
-                    company.setName(resultSet.getString(2));
-                    company.setWeb(resultSet.getString(4));
-                    company.setEmail(resultSet.getString(5));
-                    company.setAddress(resultSet.getString(6));
-                    company.setPhone(resultSet.getString(7));
-                    company.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
-                    company.setCreationDate(resultSet.getDate(10));
-                    company.setDeleted(resultSet.getBoolean(11));
+                    company.setId(resultSet.getInt("id"));
+                    company.setName(resultSet.getString("name"));
+                    company.setWeb(resultSet.getString("web"));
+                    company.setEmail(resultSet.getString("email"));
+                    company.setAddress(resultSet.getString("adress"));
+                    company.setPhone(resultSet.getString("phone"));
+                    company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+                    company.setCreationDate(resultSet.getDate("date_create"));
+                    company.setDeleted(resultSet.getBoolean("deleted"));
                 }
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
+        if (company == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return company;
     }
 
-    public boolean update(Company company) throws DatabaseException {
+    @Override
+    public void update(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY);) {
             preparedStatement.setString(1, company.getName());
@@ -92,10 +99,10 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(Company company) throws DatabaseException {
+    @Override
+    public void delete(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY);) {
             preparedStatement.setInt(1, company.getId());
@@ -103,9 +110,9 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
+    @Override
     public List<Company> findAll() throws DatabaseException {
         List<Company> companies = new ArrayList<Company>();
         try (Connection connection = getConnection();
@@ -113,21 +120,36 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 Company company = new Company();
-                company.setId(resultSet.getInt(1));
-                company.setName(resultSet.getString(2));
-                company.setWeb(resultSet.getString(4));
-                company.setEmail(resultSet.getString(5));
-                company.setAddress(resultSet.getString(6));
-                company.setPhone(resultSet.getString(7));
-                company.setPhoneType(PhoneType.values()[resultSet.getInt(8)] );
-                company.setCreationDate(resultSet.getDate(10));
-                company.setDeleted(resultSet.getBoolean(11));
+                company.setId(resultSet.getInt("id"));
+                company.setName(resultSet.getString("name"));
+                company.setWeb(resultSet.getString("web"));
+                company.setEmail(resultSet.getString("email"));
+                company.setAddress(resultSet.getString("adress"));
+                company.setPhone(resultSet.getString("phone"));
+                company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+                company.setCreationDate(resultSet.getDate("date_create"));
+                company.setDeleted(resultSet.getBoolean("deleted"));
                 companies.add(company);
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
         return companies;
+    }
+
+    @Override
+    public int getCount() throws DatabaseException{
+        int count = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_COMPANIES_COUNT);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+        return count;
     }
 }
 

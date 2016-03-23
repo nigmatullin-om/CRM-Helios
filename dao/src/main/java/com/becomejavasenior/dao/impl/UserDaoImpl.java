@@ -1,6 +1,7 @@
 package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.model.User;
 
@@ -10,16 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoImpl extends CommonDao implements UserDao {
-    private final String CREATE_USER = "INSERT INTO user (name, password, photo_file_id, email, phone_mobile," +
+    private static final String CREATE_USER = "INSERT INTO user (name, password, photo_file_id, email, phone_mobile," +
                         "phone_work, lang_id, role_id, note, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String READ_USER = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
+    private static final String READ_USER = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
                         "FROM user WHERE id = ?";
-    private final String UPDATE_USER = "UPDATE user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
+    private static final String UPDATE_USER = "UPDATE user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
             "phone_work=?, lang_id=?, role_id=?, note=?, date_create=?, deleted=? WHERE id=?";
-    private final String DELETE_USER = "DELETE FROM user WHERE id=?";
-    private final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
+    private static final String DELETE_USER = "DELETE FROM user WHERE id=?";
+    private static final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
                             "FROM user";
 
+    @Override
     public void create(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
@@ -40,7 +42,8 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         }
     }
 
-    public User read(int id) throws DatabaseException {
+    @Override
+    public User getUserById(int id) throws DatabaseException {
         User user = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_USER);) {
@@ -68,6 +71,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         return user;
     }
 
+    @Override
     public void update(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER);) {
@@ -89,6 +93,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         }
     }
 
+    @Override
     public void delete(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER);) {
@@ -99,6 +104,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         }
     }
 
+    @Override
     public List<User> findAll() throws DatabaseException {
         List<User> users = new ArrayList<User>();
         try (Connection connection = getConnection();

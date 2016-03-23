@@ -6,9 +6,9 @@ import com.becomejavasenior.model.Tag;
 import java.util.List;
 
 public interface TagDao {
-    public int create(Tag tag);
-    public Tag read(int id);
-    public boolean update(Tag tag);
-    public boolean delete(Tag tag);
-    public List<Tag> findAll();
+    void create(Tag tag);
+    Tag getTagById(int id);
+    void update(Tag tag);
+    void delete(Tag tag);
+    List<Tag> findAll();
 }
