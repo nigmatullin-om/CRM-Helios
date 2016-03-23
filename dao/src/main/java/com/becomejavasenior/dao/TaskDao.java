@@ -6,9 +6,9 @@ import com.becomejavasenior.model.Task;
 import java.util.List;
 
 public interface TaskDao {
-    public int create(Task task) throws DatabaseException;
-    public Task read(int id) throws DatabaseException;
-    public boolean update(Task task) throws DatabaseException;
-    public boolean delete(Task task) throws DatabaseException;
-    public List<Task> findAll() throws DatabaseException;
+    void create(Task task) throws DatabaseException;
+    Task read(int id) throws DatabaseException;
+    void update(Task task) throws DatabaseException;
+    void delete(Task task) throws DatabaseException;
+    List<Task> findAll() throws DatabaseException;
 }

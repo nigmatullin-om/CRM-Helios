@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteDaoImpl extends CommonDao implements NoteDao {
-    private final String READ_NOTE= "SELECT * FROM crm_helios.note WHERE id=?";
+
+    private final String READ_NOTE= "SELECT id, text, date_create FROM crm_helios.note WHERE id=?";
     private final String CREATE_NOTE = "INSERT INTO crm_helios.note (text, created_by, date_create) " +
                                         "VALUES (?, ?, ?)";
     private final String UPDATE_NOTE = "UPDATE crm_helios.note SET text=?, created_by=?, date_create=? WHERE id=?";
@@ -22,8 +23,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     private final String FIND_ALL_NOTES = "SELECT * FROM crm_helios.note";
     private final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM crm_helios.note WHERE deal_id = ?";
 
-
-    public int create(Note note) throws DatabaseException {
+    public void create(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NOTE)) {
             preparedStatement.setString(1, note.getText());
@@ -33,7 +33,6 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public Note read(int id) throws DatabaseException {
@@ -43,9 +42,10 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
             preparedStatement.setInt(1, id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()){
-                    note.setId(resultSet.getInt(1));
-                    note.setText(resultSet.getString(2));
-                    note.setCreationDate(resultSet.getDate(7));
+                    note = new Note();
+                    note.setId(resultSet.getInt("id"));
+                    note.setText(resultSet.getString("text"));
+                    note.setCreationDate(resultSet.getDate("date_create"));
                 }
             }
         } catch (SQLException e) {
@@ -54,7 +54,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         return note;
     }
 
-    public boolean update(Note note) throws DatabaseException {
+    public void update(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_NOTE);) {
             preparedStatement.setString(1, note.getText());
@@ -65,10 +65,9 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(Note note) throws DatabaseException {
+    public void delete(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_NOTE);) {
             preparedStatement.setInt(1, note.getId());
@@ -76,7 +75,6 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<Note> findAll() throws DatabaseException {
@@ -86,9 +84,9 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 Note note = new Note();
-                note.setId(resultSet.getInt(1));
-                note.setText(resultSet.getString(2));
-                note.setCreationDate(resultSet.getDate(7));
+                note.setId(resultSet.getInt("id"));
+                note.setText(resultSet.getString("text"));
+                note.setCreationDate(resultSet.getDate("date_create"));
                 notes.add(note);
             }
         } catch (SQLException e) {

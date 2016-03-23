@@ -7,10 +7,12 @@ import com.becomejavasenior.model.Contact;
 import java.util.List;
 
 public interface ContactDao {
-    public int create(Contact contact) throws DatabaseException;
-    public Contact read(int id) throws DatabaseException;
-    public boolean update(Contact contact) throws DatabaseException;
-    public boolean delete(Contact contact) throws DatabaseException;
-    public List<Contact> findAll() throws DatabaseException;
-    public List<Contact> findAllByDealId (int id) throws DatabaseException;
+
+    void create(Contact contact) throws DatabaseException;
+    Contact read(int id) throws DatabaseException;
+    void update(Contact contact) throws DatabaseException;
+    void delete(Contact contact) throws DatabaseException;
+    List<Contact> findAll() throws DatabaseException;
+    List<Contact> findAllByDealId (int id) throws DatabaseException;
+
 }

@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDaoImpl extends CommonDao implements FileDao {
-    private final String READ_FILE= "SELECT * FROM crm_helios.file WHERE id=?";
+
+    private final String READ_FILE= "SELECT id, path, blob_data, date_create FROM crm_helios.file WHERE id=?";
     private final String CREATE_FILE = "INSERT INTO crm_helios.file (path, blob_data, contact_id, created_by, date_create)" +
             " VALUES (?, ?, ?, ?, ?)";
     private final String UPDATE_FILE = "UPDATE crm_helios.file SET path=?, blob_data=?, contact_id=?, created_by=?, date_create=? " +
@@ -28,7 +29,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         super(dataSource);
     }
 
-    public int create(File file) throws DatabaseException {
+    public void create(File file) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FILE)) {
             preparedStatement.setString(1, file.getPath());
@@ -36,10 +37,10 @@ public class FileDaoImpl extends CommonDao implements FileDao {
             preparedStatement.setInt(3, file.getContact().getId());
             preparedStatement.setInt(4, file.getCreatedByUser().getId());
             preparedStatement.setDate(5, new java.sql.Date(file.getCreationDate().getTime()));
+            preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public File read(int id) throws DatabaseException {
@@ -50,19 +51,22 @@ public class FileDaoImpl extends CommonDao implements FileDao {
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()){
                     file = new File();
-                    file.setId(resultSet.getInt(1));
-                    file.setPath(resultSet.getString(2));
-                    file.setData(resultSet.getBytes(3));
-                    file.setCreationDate(resultSet.getDate(9));
+                    file.setId(resultSet.getInt("id"));
+                    file.setPath(resultSet.getString("path"));
+                    file.setData(resultSet.getBytes("blob_data"));
+                    file.setCreationDate(resultSet.getDate("date_create"));
                 }
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
+        if (file == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return file;
     }
 
-    public boolean update(File file) throws DatabaseException {
+    public void update(File file) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_FILE);) {
             preparedStatement.setString(1, file.getPath());
@@ -75,10 +79,9 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(File file) throws DatabaseException {
+    public void delete(File file) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FILE);) {
             preparedStatement.setInt(1, file.getId());
@@ -86,7 +89,6 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<File> findAll() throws DatabaseException {
@@ -96,10 +98,9 @@ public class FileDaoImpl extends CommonDao implements FileDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 File file = new File();
-                file.setId(resultSet.getInt(1));
-                file.setPath(resultSet.getString(2));
-                 file.setData(resultSet.getBytes(3));
-                file.setCreationDate(resultSet.getDate(9));
+                file.setId(resultSet.getInt("id"));
+                file.setPath(resultSet.getString("path"));
+                file.setData(resultSet.getBytes("blob_data"));
                 files.add(file);
             }
         } catch (SQLException e) {

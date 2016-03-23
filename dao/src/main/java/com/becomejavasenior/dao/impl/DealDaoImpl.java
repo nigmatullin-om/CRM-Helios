@@ -15,11 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DealDaoImpl extends CommonDao implements DealDao {
-    private final String READ_DEAL= "SELECT * FROM crm_helios.deal WHERE id=?";
-    private final String CREATE_DEAL = "INSERT INTO crm_helios.deal (id,name, budget, responsible_id, stage_id, company_id," +
-            " created_by, date_create,deleted) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private final String READ_DEAL= "SELECT id, name, budget,responsible_id, stage_id, company_id, date_create, created_by, deleted " +
+            "FROM crm_helios.deal  WHERE id=?";
+
+    private final String CREATE_DEAL = "INSERT INTO crm_helios.deal (id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
+                                        "VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
+
     private final String UPDATE_DEAL = "UPDATE crm_helios.deal SET name=?, budget=?, responsible_id=?, stage_id=?," +
                                        "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
+
     private final String DELETE_DEAL = "DELETE FROM crm_helios.deal WHERE id=?";
     private final String FIND_ALL_DEALS = "SELECT * FROM crm_helios.deal";
     private final String FIND_ALL_DEAL_FOR_CONTACT = "SELECT * FROM crm_helios.deal JOIN crm_helios.deal_contact " +
@@ -28,12 +33,15 @@ public class DealDaoImpl extends CommonDao implements DealDao {
 
     DaoFactoryImpl  daoFactory;
 
+
+
     public DealDaoImpl(DataSource dataSource) {
         super(dataSource);
         daoFactory = new DaoFactoryImpl();
     }
 
-    public int create(Deal deal) throws DatabaseException {
+
+    public void create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL)) {
             preparedStatement.setInt(1,deal.getId());
@@ -49,7 +57,6 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         } catch (SQLException e) {
             throw new  DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public Deal read(int id) throws DatabaseException {
@@ -64,10 +71,13 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
+        if (deal == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return deal;
     }
 
-    public boolean update(Deal deal) throws DatabaseException {
+    public void update(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_DEAL);) {
             preparedStatement.setString(1, deal.getName());
@@ -83,10 +93,9 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(Deal deal) throws DatabaseException {
+    public void delete(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_DEAL);) {
             preparedStatement.setInt(1, deal.getId());
@@ -94,7 +103,6 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<Deal> findAll() throws DatabaseException {

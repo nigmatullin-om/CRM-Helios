@@ -2,7 +2,6 @@ package com.becomejavasenior.dao.impl;
 
 
 import com.becomejavasenior.dao.CommonDao;
-import com.becomejavasenior.dao.DaoFactory;
 import com.becomejavasenior.dao.TagDao;
 import com.becomejavasenior.model.Tag;
 
@@ -14,23 +13,21 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class TagDaoImpl extends CommonDao implements TagDao {
+
     private String FIND_ALL_BY_DEAL_ID ="SELECT * FROM crm_helios.tag JOIN crm_helios.tag_deal ON" +
             " tag.id = tag_deal.tag_id AND deal_id = ?";
 
-    public int create(Tag tag)throws DatabaseException {
-        return 0;
+    public void create(Tag tag) {
     }
 
     public Tag read(int id)throws DatabaseException {
         return null;
     }
 
-    public boolean update(Tag tag)throws DatabaseException {
-        return false;
+    public void update(Tag tag) {
     }
 
-    public boolean delete(Tag tag)throws DatabaseException {
-        return false;
+    public void delete(Tag tag) {
     }
 
     public List<Tag> findAll()throws DatabaseException {

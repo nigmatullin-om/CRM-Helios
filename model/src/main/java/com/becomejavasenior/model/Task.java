@@ -19,6 +19,7 @@ public class Task implements Serializable {
     private User createdByUser;
     private Date creationDate;
     private Boolean deleted;
+    private boolean done;
 
     public int getId() {
         return id;
@@ -114,6 +115,14 @@ public class Task implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     @Override
