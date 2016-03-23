@@ -7,11 +7,10 @@ import com.becomejavasenior.model.Company;
 import java.util.List;
 
 public interface CompanyDao {
-    public int create(Company company) throws DatabaseException;
-    public Company read(int id) throws DatabaseException;
-    public boolean update(Company company) throws DatabaseException;
-    public boolean delete(Company company) throws DatabaseException;
-    public List<Company> findAll() throws DatabaseException;
-
+    void create(Company company) throws DatabaseException;
+    Company read(int id) throws DatabaseException;
+    void update(Company company) throws DatabaseException;
+    void delete(Company company) throws DatabaseException;
+    List<Company> findAll() throws DatabaseException;
     int getCount() throws DatabaseException;
 }

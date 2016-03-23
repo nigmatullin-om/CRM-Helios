@@ -15,25 +15,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
-    private final String READ_COMPANY= "SELECT * FROM company WHERE id=?";
+    private final String READ_COMPANY= "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
 
     private final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
-                                            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
-                                            "created_by=?, date_create=?, deleted=? WHERE id=?";
+            "created_by=?, date_create=?, deleted=? WHERE id=?";
 
     private final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
-    private final String FIND_ALL_COMPANIES = "SELECT * FROM company";
+    private final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
     private final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM crm_helios.company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
 
-    public int create(Company company) throws DatabaseException {
+    public void create(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
             preparedStatement.setString(1, company.getName());
             preparedStatement.setInt(2, company.getResponsibleUser().getId());
             preparedStatement.setString(3, company.getWeb());
@@ -44,10 +44,10 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(8, company.getCreatedByUser().getId());
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());
+            preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public Company read(int id) throws DatabaseException {
@@ -58,26 +58,29 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             try(ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
                     company = new Company();
-                    company.setId(resultSet.getInt(1));
-                    company.setName(resultSet.getString(2));
-                    company.setWeb(resultSet.getString(4));
-                    company.setEmail(resultSet.getString(5));
-                    company.setAddress(resultSet.getString(6));
-                    company.setPhone(resultSet.getString(7));
-                    company.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
-                    company.setCreationDate(resultSet.getDate(10));
-                    company.setDeleted(resultSet.getBoolean(11));
+                    company.setId(resultSet.getInt("id"));
+                    company.setName(resultSet.getString("name"));
+                    company.setWeb(resultSet.getString("web"));
+                    company.setEmail(resultSet.getString("email"));
+                    company.setAddress(resultSet.getString("adress"));
+                    company.setPhone(resultSet.getString("phone"));
+                    company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+                    company.setCreationDate(resultSet.getDate("date_create"));
+                    company.setDeleted(resultSet.getBoolean("deleted"));
                 }
             }
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
+        if (company == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return company;
     }
 
-    public boolean update(Company company) throws DatabaseException {
+    public void update(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY);) {
             preparedStatement.setString(1, company.getName());
             preparedStatement.setInt(2, company.getResponsibleUser().getId());
             preparedStatement.setString(3, company.getWeb());
@@ -93,18 +96,16 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(Company company) throws DatabaseException {
+    public void delete(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY);) {
             preparedStatement.setInt(1, company.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<Company> findAll() throws DatabaseException {
@@ -114,15 +115,15 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 Company company = new Company();
-                company.setId(resultSet.getInt(1));
-                company.setName(resultSet.getString(2));
-                company.setWeb(resultSet.getString(4));
-                company.setEmail(resultSet.getString(5));
-                company.setAddress(resultSet.getString(6));
-                company.setPhone(resultSet.getString(7));
-                company.setPhoneType(PhoneType.values()[resultSet.getInt(8)] );
-                company.setCreationDate(resultSet.getDate(10));
-                company.setDeleted(resultSet.getBoolean(11));
+                company.setId(resultSet.getInt("id"));
+                company.setName(resultSet.getString("name"));
+                company.setWeb(resultSet.getString("web"));
+                company.setEmail(resultSet.getString("email"));
+                company.setAddress(resultSet.getString("adress"));
+                company.setPhone(resultSet.getString("phone"));
+                company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+                company.setCreationDate(resultSet.getDate("date_create"));
+                company.setDeleted(resultSet.getBoolean("deleted"));
                 companies.add(company);
             }
         } catch (SQLException e) {

@@ -9,20 +9,20 @@ import javax.sql.DataSource;
 import java.util.List;
 
 public class TagDaoImpl extends CommonDao implements TagDao {
-    public int create(Tag tag) {
-        return 0;
+    public void create(Tag tag) {
+
     }
 
     public Tag read(int id) {
         return null;
     }
 
-    public boolean update(Tag tag) {
-        return false;
+    public void update(Tag tag) {
+
     }
 
-    public boolean delete(Tag tag) {
-        return false;
+    public void delete(Tag tag) {
+
     }
 
     public List<Tag> findAll() {
