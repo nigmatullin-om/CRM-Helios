@@ -2,6 +2,7 @@ package com.becomejavasenior.dao.impl;
 
 
 import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.TaskDao;
 import com.becomejavasenior.model.Task;
 
@@ -14,15 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDaoImpl extends CommonDao implements TaskDao {
-    private final String READ_TASK = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task WHERE id=?";
-    private final String CREATE_TASK = "INSERT INTO task (name, finish_date, responsible_id, description, " +
+    private static final String READ_TASK = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task WHERE id=?";
+    private static final String CREATE_TASK = "INSERT INTO task (name, finish_date, responsible_id, description, " +
                                     "contact_id, deal_id, company_id, created_by, date_create, deleted) " +
                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_TASK = "UPDATE task SET name=?, finish_date=?, responsible_id=?, description=?, " +
+    private static final String UPDATE_TASK = "UPDATE task SET name=?, finish_date=?, responsible_id=?, description=?, " +
                                     "contact_id=?, deal_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
-    private final String DELETE_TASK = "DELETE FROM task WHERE id=?";
-    private final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task";
+    private static final String DELETE_TASK = "DELETE FROM task WHERE id=?";
+    private static final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task";
 
+    @Override
     public void create(Task task) throws DatabaseException {
         try (Connection connection = getConnection();
                    PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TASK)){
@@ -42,7 +44,8 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         }
     }
 
-    public Task read(int id) throws DatabaseException {
+    @Override
+    public Task getTaskById(int id) throws DatabaseException {
         Task task = null;
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(READ_TASK);) {
@@ -68,6 +71,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         return task;
     }
 
+    @Override
     public void update(Task task) throws DatabaseException {
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TASK);) {
@@ -88,6 +92,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             }
     }
 
+    @Override
     public void delete(Task task) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TASK);) {
@@ -98,6 +103,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         }
     }
 
+    @Override
     public List<Task> findAll() throws DatabaseException {
         List<Task> tasks = new ArrayList<>();
         try (Connection connection = getConnection();

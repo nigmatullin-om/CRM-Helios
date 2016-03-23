@@ -8,22 +8,26 @@ import javax.sql.DataSource;
 import java.util.List;
 
 public class LanguageDaoImpl extends CommonDao implements LanguageDao {
-    public int create(Language language) {
-        return 0;
+
+    @Override
+    public void create(Language language) {
     }
 
-    public Language read(int id) {
+    @Override
+    public Language getLanguageById(int id) {
         return null;
     }
 
-    public boolean update(Language language) {
-        return false;
+    @Override
+    public void update(Language language) {
     }
 
-    public boolean delete(Language language) {
-        return false;
+    @Override
+    public void delete(Language language) {
+
     }
 
+    @Override
     public List<Language> findAll() {
         return null;
     }

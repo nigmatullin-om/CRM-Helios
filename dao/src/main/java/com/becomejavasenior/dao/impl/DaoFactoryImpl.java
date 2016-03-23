@@ -6,42 +6,51 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import javax.sql.DataSource;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class DaoFactoryImpl implements DaoFactory {
-    private static String URL;
-    private static String PORT;
-    private static String DB_NAME;
-    private static String USER_NAME;
-    private static String PASSWORD;
-    private static DataSource dataSource = null;
+
+    private static final String URL = "url";
+    private static final String PORT = "port";
+    private static final String DB_NAME = "db_name";
+    private static final String USER_NAME = "user_name";
+    private static final String PASSWORD = "password";
+    private static final String DRIVER_CLASS_NAME = "driverClassName";
+    private static String URL_VALUE;
+    private static String PORT_VALUE;
+    private static String DB_NAME_VALUE;
+    private static String USER_NAME_VALUE;
+    private static String PASSWORD_VALUE;
+    private static DataSource dataSource;
 
     private DataSource initDataSource(){
         loadProperties();
-        String connectURI= "jdbc:postgresql://" + URL + ":" + PORT + "/" + DB_NAME;
-        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(connectURI,USER_NAME, PASSWORD);
+        String connectURI= "jdbc:postgresql://" + URL_VALUE + ":" + PORT_VALUE + "/" + DB_NAME_VALUE;
+        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(connectURI, USER_NAME_VALUE, PASSWORD_VALUE);
         PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-        ObjectPool<PoolableConnection> connectionPool =  new GenericObjectPool<PoolableConnection>(poolableConnectionFactory);
+        ObjectPool<PoolableConnection> connectionPool =  new GenericObjectPool<>(poolableConnectionFactory);
         poolableConnectionFactory.setPool(connectionPool);
-        PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<PoolableConnection>(connectionPool);
+        PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(connectionPool);
         return dataSource;
     }
 
     private void loadProperties(){
         Properties prop = new Properties();
-        InputStream input = null;
+        InputStream input;
         try {
-            input = new FileInputStream("db_config.properties");
+            input = Thread.currentThread().getContextClassLoader().getResourceAsStream("db_config.properties");
             prop.load(input);
-            URL = prop.getProperty("url");
-            PORT = prop.getProperty("port");
-            DB_NAME = prop.getProperty("db_name");
-            USER_NAME = prop.getProperty("user_name");
-            PASSWORD = prop.getProperty("password");
+            URL_VALUE = prop.getProperty(URL);
+            PORT_VALUE = prop.getProperty(PORT);
+            DB_NAME_VALUE = prop.getProperty(DB_NAME);
+            USER_NAME_VALUE = prop.getProperty(USER_NAME);
+            PASSWORD_VALUE = prop.getProperty(PASSWORD);
+            Class.forName(prop.getProperty(DRIVER_CLASS_NAME));
+        } catch (ClassNotFoundException e) {
+                e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.out.println("can't find propereties file");
