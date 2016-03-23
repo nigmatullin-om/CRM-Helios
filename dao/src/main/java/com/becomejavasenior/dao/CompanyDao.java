@@ -12,4 +12,6 @@ public interface CompanyDao {
     public boolean update(Company company) throws DatabaseException;
     public boolean delete(Company company) throws DatabaseException;
     public List<Company> findAll() throws DatabaseException;
+
+    int getCount() throws DatabaseException;
 }

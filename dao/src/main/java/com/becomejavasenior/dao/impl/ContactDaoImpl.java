@@ -26,6 +26,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     private final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
     private final String FIND_ALL_CONTACTS = "SELECT * FROM contact";
+    private final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM crm_helios.contact";
 
     public int create(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
@@ -128,6 +129,21 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             throw new DatabaseException(e.getMessage());
         }
         return contacts;
+    }
+
+    @Override
+    public int getCount() throws DatabaseException{
+        int count = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_CONTACTS_COUNT);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+        return count;
     }
 
     public ContactDaoImpl(DataSource dataSource) {

@@ -25,6 +25,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     private final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
     private final String FIND_ALL_COMPANIES = "SELECT * FROM company";
+    private final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM crm_helios.company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -128,6 +129,21 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             throw new DatabaseException(e.getMessage());
         }
         return companies;
+    }
+
+    @Override
+    public int getCount() throws DatabaseException{
+        int count = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_COMPANIES_COUNT);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+        return count;
     }
 }
 

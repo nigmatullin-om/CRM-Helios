@@ -24,7 +24,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
                                        "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
     private final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
-    private final String FIND_ALL_DEALS = "SELECT * FROM deal";
+    private final String FIND_ALL_DEALS = "SELECT * FROM crm_helios.deal";
 
     public int create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
@@ -104,7 +104,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
                 deal.setId(resultSet.getInt(1));
                 deal.setName(resultSet.getString(2));
                 deal.setBudget(resultSet.getBigDecimal(3));
-                deal.setDealStage(DealStage.values()[resultSet.getInt(4)]);
+                deal.setDealStage(DealStage.values()[resultSet.getInt(5)]);
                 deal.setCreationDate(resultSet.getDate(8));
                 deal.setDeleted(resultSet.getBoolean(9));
                 deals.add(deal);

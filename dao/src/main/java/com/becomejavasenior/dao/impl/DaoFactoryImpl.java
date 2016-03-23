@@ -6,7 +6,6 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import javax.sql.DataSource;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,15 +32,18 @@ public class DaoFactoryImpl implements DaoFactory {
 
     private void loadProperties(){
         Properties prop = new Properties();
-        InputStream input = null;
+        InputStream input;
         try {
-            input = new FileInputStream("db_config.properties");
+            Class.forName("org.postgresql.Driver");
+            input = Thread.currentThread().getContextClassLoader().getResourceAsStream("db_config.properties");
             prop.load(input);
             URL = prop.getProperty("url");
             PORT = prop.getProperty("port");
             DB_NAME = prop.getProperty("db_name");
             USER_NAME = prop.getProperty("user_name");
             PASSWORD = prop.getProperty("password");
+        } catch (ClassNotFoundException e) {
+                e.printStackTrace();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.out.println("can't find propereties file");
