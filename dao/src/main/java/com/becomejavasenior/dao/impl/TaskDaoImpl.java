@@ -16,18 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDaoImpl extends CommonDao implements TaskDao {
-    private final String READ_TASK = "SELECT * FROM task WHERE id=?";
+    private final String READ_TASK = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task WHERE id=?";
     private final String CREATE_TASK = "INSERT INTO task (name, finish_date, responsible_id, description, " +
                                     "contact_id, deal_id, company_id, created_by, date_create, deleted) " +
                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String UPDATE_TASK = "UPDATE task SET name=?, finish_date=?, responsible_id=?, description=?, " +
                                     "contact_id=?, deal_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
     private final String DELETE_TASK = "DELETE FROM task WHERE id=?";
-    private final String FIND_ALL_TASKS = "SELECT * FROM task";
+    private final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task";
 
     static final Logger log = LogManager.getLogger(TaskDaoImpl.class);
 
-    public int create(Task task) throws DatabaseException {
+    public void create(Task task) throws DatabaseException {
         try (Connection connection = getConnection();
                    PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TASK)){
             preparedStatement.setString(1, task.getName());
@@ -45,7 +45,6 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             log.error("Couldn't create the task entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public Task read(int id) throws DatabaseException {
@@ -55,22 +54,27 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
-                    task.setId(resultSet.getInt(1));
-                    task.setName(resultSet.getString(2));
-                    task.setFinishDate(resultSet.getDate(3));
-                    task.setDescription(resultSet.getString(5));
-                    task.setCreationDate(resultSet.getDate(11));
-                    task.setDeleted(resultSet.getBoolean(13));
+                    task = new Task();
+                    task.setId(resultSet.getInt("id"));
+                    task.setName(resultSet.getString("name"));
+                    task.setFinishDate(resultSet.getDate("finish_date"));
+                    task.setDescription(resultSet.getString("description"));
+                    task.setCreationDate(resultSet.getDate("date_create"));
+                    task.setDeleted(resultSet.getBoolean("deleted"));
+                    task.setDone(resultSet.getBoolean("done"));
                 }
             }
         } catch (SQLException e) {
             log.error("Couldn't read from task entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
+        if (task == null) {
+            throw new DatabaseException("no results for id=" + id);
+        }
         return task;
     }
 
-    public boolean update(Task task) throws DatabaseException {
+    public void update(Task task) throws DatabaseException {
         try(Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TASK);) {
             preparedStatement.setString(1, task.getName());
@@ -89,10 +93,9 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             log.error("Couldn't update the task entity because of some SQL exception!");
                 throw new DatabaseException(e.getMessage());
             }
-        return true;
     }
 
-    public boolean delete(Task task) throws DatabaseException {
+    public void delete(Task task) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TASK);) {
             preparedStatement.setInt(1, task.getId());
@@ -101,7 +104,6 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             log.error("Couldn't delete the task entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<Task> findAll() throws DatabaseException {
@@ -111,12 +113,13 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 Task task = new Task();
-                task.setId(resultSet.getInt(1));
-                task.setName(resultSet.getString(2));
-                task.setFinishDate(resultSet.getDate(3));
-                task.setDescription(resultSet.getString(5));
-                task.setCreationDate(resultSet.getDate(11));
-                task.setDeleted(resultSet.getBoolean(13));
+                task.setId(resultSet.getInt("id"));
+                task.setName(resultSet.getString("name"));
+                task.setFinishDate(resultSet.getDate("finish_date"));
+                task.setDescription(resultSet.getString("description"));
+                task.setCreationDate(resultSet.getDate("date_create"));
+                task.setDeleted(resultSet.getBoolean("deleted"));
+                task.setDone(resultSet.getBoolean("done"));
                 tasks.add(task);
             }
         } catch (SQLException e) {
