@@ -1,15 +1,12 @@
 package com.becomejavasenior.service.impl;
 
-import com.becomejavasenior.dao.DaoFactory;
 import com.becomejavasenior.dao.DealDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.dao.impl.DatabaseException;
-import com.becomejavasenior.dao.impl.DealDaoImpl;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.DealStage;
 import com.becomejavasenior.service.DealService;
 
-import javax.sql.DataSource;
 import java.util.*;
 
 /**

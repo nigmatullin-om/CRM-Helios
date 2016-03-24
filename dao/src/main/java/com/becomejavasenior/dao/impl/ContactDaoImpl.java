@@ -3,6 +3,7 @@ package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.ContactDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.PhoneType;
 
@@ -15,19 +16,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactDaoImpl extends CommonDao implements ContactDao {
-    private final String READ_CONTACT= "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact WHERE id=?";
+    private static final String READ_CONTACT= "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact WHERE id=?";
 
-    private final String CREATE_CONTACT = "INSERT INTO contact (name, phone, email, skype, position, responsible_id," +
+    private static final String CREATE_CONTACT = "INSERT INTO contact (name, phone, email, skype, position, responsible_id," +
             " phone_type_id, company_id, created_by, date_create, deleted) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE_CONTACT = "UPDATE contact SET name=?, phone=?, email=?, skype=?, position=?, responsible_id=?," +
+    private static final String UPDATE_CONTACT = "UPDATE contact SET name=?, phone=?, email=?, skype=?, position=?, responsible_id=?," +
             " phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
-    private final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
-    private final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact";
-    private final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM crm_helios.contact";
+    private static final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
+    private static final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact";
+    private static final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM crm_helios.contact";
 
+    @Override
     public void create(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT)) {
@@ -48,7 +50,8 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         }
     }
 
-    public Contact read(int id) throws DatabaseException {
+    @Override
+    public Contact getContactById(int id) throws DatabaseException {
         Contact contact = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_CONTACT);) {
@@ -76,6 +79,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         return contact;
     }
 
+    @Override
     public void update(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CONTACT);) {
@@ -97,6 +101,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         }
     }
 
+    @Override
     public void delete(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CONTACT);) {
@@ -107,6 +112,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         }
     }
 
+    @Override
     public List<Contact> findAll() throws DatabaseException {
         List<Contact> contacts = new ArrayList<Contact>();
         try (Connection connection = getConnection();

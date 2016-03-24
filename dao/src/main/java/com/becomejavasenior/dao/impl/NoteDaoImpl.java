@@ -2,6 +2,7 @@ package com.becomejavasenior.dao.impl;
 
 
 import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.NoteDao;
 import com.becomejavasenior.model.Note;
 
@@ -14,13 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteDaoImpl extends CommonDao implements NoteDao {
-    private final String READ_NOTE= "SELECT id, text, date_create FROM note WHERE id=?";
-    private final String CREATE_NOTE = "INSERT INTO note (text, created_by, date_create) " +
+    private static final String READ_NOTE= "SELECT id, text, date_create FROM note WHERE id=?";
+    private static final String CREATE_NOTE = "INSERT INTO note (text, created_by, date_create) " +
                                         "VALUES (?, ?, ?)";
-    private final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
-    private final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
-    private final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
+    private static final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
+    private static final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
+    private static final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
 
+    @Override
     public void create(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NOTE)) {
@@ -33,7 +35,8 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         }
     }
 
-    public Note read(int id) throws DatabaseException {
+    @Override
+    public Note getNoteById(int id) throws DatabaseException {
         Note note = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_NOTE);) {
@@ -52,6 +55,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         return note;
     }
 
+    @Override
     public void update(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_NOTE);) {
@@ -65,6 +69,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         }
     }
 
+    @Override
     public void delete(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_NOTE);) {
@@ -75,6 +80,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         }
     }
 
+    @Override
     public List<Note> findAll() throws DatabaseException {
         List<Note> notes = new ArrayList<Note>();
         try (Connection connection = getConnection();

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LanguageDao {
     void create(Language language);
-    Language read(int id);
+    Language getLanguageById(int id);
     void update(Language language);
     void delete(Language language);
     List<Language> findAll();

@@ -2,6 +2,7 @@ package com.becomejavasenior.dao.impl;
 
 
 import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.FileDao;
 import com.becomejavasenior.model.File;
 
@@ -14,12 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileDaoImpl extends CommonDao implements FileDao {
-    private final String READ_FILE= "SELECT id, path, blob_data, date_create FROM file WHERE id=?";
-    private final String CREATE_FILE = "INSERT INTO file (path, blob_data, contact_id, created_by, date_create) VALUES (?, ?, ?, ?, ?)";
-    private final String UPDATE_FILE = "UPDATE file SET path=?, blob_data=?, contact_id=?, created_by=?, date_create=? WHERE id=?";
-    private final String DELETE_FILE = "DELETE FROM file WHERE id=?";
-    private final String FIND_ALL_FILES = "SELECT id, path, blob_data, date_create FROM file";
+    private static final String READ_FILE= "SELECT id, path, blob_data, date_create FROM file WHERE id=?";
+    private static final String CREATE_FILE = "INSERT INTO file (path, blob_data, contact_id, created_by, date_create) VALUES (?, ?, ?, ?, ?)";
+    private static final String UPDATE_FILE = "UPDATE file SET path=?, blob_data=?, contact_id=?, created_by=?, date_create=? WHERE id=?";
+    private static final String DELETE_FILE = "DELETE FROM file WHERE id=?";
+    private static final String FIND_ALL_FILES = "SELECT id, path, blob_data, date_create FROM file";
 
+    @Override
     public void create(File file) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FILE)) {
@@ -34,7 +36,8 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         }
     }
 
-    public File read(int id) throws DatabaseException {
+    @Override
+    public File getFileById(int id) throws DatabaseException {
         File file = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_FILE);) {
@@ -57,6 +60,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         return file;
     }
 
+    @Override
     public void update(File file) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_FILE);) {
@@ -72,6 +76,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         }
     }
 
+    @Override
     public void delete(File file) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FILE);) {
@@ -82,6 +87,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         }
     }
 
+    @Override
     public List<File> findAll() throws DatabaseException {
         List<File> files = new ArrayList<File>();
         try (Connection connection = getConnection();

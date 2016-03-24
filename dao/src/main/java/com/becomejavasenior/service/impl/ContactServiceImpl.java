@@ -2,7 +2,7 @@ package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.ContactDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.dao.impl.DatabaseException;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.service.ContactService;
 
 /**

@@ -14,12 +14,12 @@
                         <h3 class="panel-title">Сделки</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Всего сделок: ${fn:length(deals)}</p>
+                        <p>Всего сделок: <a href="#" onclick="testAlert(); return false">${fn:length(deals)}</a></p>
                         <c:set var="sum" value="${0}"/>
                         <c:forEach items="${deals}" var="deal">
                             <c:set var="sum" value="${sum + deal.budget}"/>
                         </c:forEach>
-                        <p>Бюджет: $${sum}</p>
+                        <p>Бюджет: <a href="#" onclick="testAlert(); return false">${sum}</a></p>
                     </div>
                 </div>
 
@@ -28,8 +28,8 @@
                         <h3 class="panel-title">Успешные сделки</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Успешных сделок: ${successDealsCount}</p>
-                        <p>Нереализовано: ${failedDealsCount}</p>
+                        <p>Успешных сделок: <a href="#" onclick="testAlert(); return false">${successDealsCount}</a></p>
+                        <p>Нереализовано: <a href="#" onclick="testAlert(); return false">${failedDealsCount}</a></p>
                     </div>
                 </div>
 
@@ -38,8 +38,8 @@
                         <h3 class="panel-title">Сделки без задач</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Сделок без задач: 0</p>
-                        <p>Сделок с задачами: 0</p>
+                        <p>Сделок без задач: <a href="#" onclick="testAlert(); return false">-1</a></p>
+                        <p>Сделок с задачами: <a href="#" onclick="testAlert(); return false">-1</a></p>
                     </div>
                 </div>
 
@@ -50,9 +50,9 @@
                         <h3 class="panel-title">Задачи в работе и Выполненные</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Задачи в работе: 0</p>
-                        <p>Выполненные: 0</p>
-                        <p>Просроченные: 0</p>
+                        <p>Задачи в работе: <a href="#" onclick="testAlert(); return false">-1</a></p>
+                        <p>Выполненные: <a href="#" onclick="testAlert(); return false">-1</a></p>
+                        <p>Просроченные: <a href="#" onclick="testAlert(); return false">-1</a></p>
                     </div>
                 </div>
                 <div class="panel panel-primary">
@@ -60,8 +60,8 @@
                         <h3 class="panel-title">Всего контактов и Всего компаний</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Контактов: ${contactCount}</p>
-                        <p>Компаний: ${companyCount}</p>
+                        <p>Контактов: <a href="#" onclick="testAlert(); return false">${contactCount}</a></p>
+                        <p>Компаний: <a href="#" onclick="testAlert(); return false">${companyCount}</a></p>
                     </div>
                 </div>
             </div>

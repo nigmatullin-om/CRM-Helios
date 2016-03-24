@@ -2,6 +2,7 @@ package com.becomejavasenior.dao.impl;
 
 
 import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.DealDao;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.DealStage;
@@ -15,17 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DealDaoImpl extends CommonDao implements DealDao {
-    private final String READ_DEAL= "SELECT id, name, budget, stage_id, date_create, deleted FROM deal WHERE id=?";
+    private static final String READ_DEAL= "SELECT id, name, budget, stage_id, date_create, deleted FROM deal WHERE id=?";
 
-    private final String CREATE_DEAL = "INSERT INTO deal (name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
+    private static final String CREATE_DEAL = "INSERT INTO deal (name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE_DEAL = "UPDATE deal SET name=?, budget=?, responsible_id=?, stage_id=?," +
+    private static final String UPDATE_DEAL = "UPDATE deal SET name=?, budget=?, responsible_id=?, stage_id=?," +
             "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
-    private final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
-    private final String FIND_ALL_DEALS = "SELECT id, name, budget, stage_id, date_create, deleted FROM deal";
+    private static final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
+    private static final String FIND_ALL_DEALS = "SELECT id, name, budget, stage_id, date_create, deleted FROM crm_helios.deal";
 
+    @Override
     public void create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL)) {
@@ -43,7 +45,8 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         }
     }
 
-    public Deal read(int id) throws DatabaseException {
+    @Override
+    public Deal getDealById(int id) throws DatabaseException {
         Deal deal = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_DEAL)) {
@@ -68,6 +71,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         return deal;
     }
 
+    @Override
     public void update(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_DEAL);) {
@@ -86,6 +90,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         }
     }
 
+    @Override
     public void delete(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_DEAL);) {
@@ -96,6 +101,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         }
     }
 
+    @Override
     public List<Deal> findAll() throws DatabaseException {
         List<Deal> deals = new ArrayList<Deal>();
         try (Connection connection = getConnection();

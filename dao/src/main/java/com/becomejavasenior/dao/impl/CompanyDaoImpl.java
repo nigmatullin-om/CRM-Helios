@@ -2,11 +2,11 @@ package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.CompanyDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.PhoneType;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,22 +15,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
-    private final String READ_COMPANY= "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
+    private static final String READ_COMPANY= "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
 
-    private final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
+    private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
             "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
+    private static final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
             "created_by=?, date_create=?, deleted=? WHERE id=?";
 
-    private final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
-    private final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
-    private final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM crm_helios.company";
+    private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
+    private static final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
+    private static final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM crm_helios.company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
 
+    @Override
     public void create(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
@@ -50,7 +51,8 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         }
     }
 
-    public Company read(int id) throws DatabaseException {
+    @Override
+    public Company getCompanyById(int id) throws DatabaseException {
         Company company = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY);) {
@@ -78,6 +80,8 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         return company;
     }
 
+
+    @Override
     public void update(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY);) {
@@ -98,6 +102,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         }
     }
 
+    @Override
     public void delete(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY);) {
@@ -108,6 +113,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         }
     }
 
+    @Override
     public List<Company> findAll() throws DatabaseException {
         List<Company> companies = new ArrayList<Company>();
         try (Connection connection = getConnection();

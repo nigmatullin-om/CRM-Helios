@@ -1,6 +1,6 @@
 package com.becomejavasenior.service;
 
-import com.becomejavasenior.dao.impl.DatabaseException;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Deal;
 
 import java.util.List;

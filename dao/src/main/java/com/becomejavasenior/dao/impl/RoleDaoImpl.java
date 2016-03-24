@@ -2,6 +2,7 @@ package com.becomejavasenior.dao.impl;
 
 
 import com.becomejavasenior.dao.CommonDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.RoleDao;
 import com.becomejavasenior.model.Role;
 
@@ -14,12 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleDaoImpl extends CommonDao implements RoleDao {
-    private final String CREATE_ROLE = "INSERT INTO role (role_name) VALUES (?)";
-    private final String READ_ROLE = "SELECT id, role_name FROM role WHERE id=?";
-    private final String UPDATE_ROLE = "UPDATE role SET role_name=? WHERE id=?";
-    private final String DELETE_ROLE = "DELETE FROM role WHERE id=?";
-    private final String FIND_ALL_ROLES = "SELECT id, role_name FROM role";
+    private static final String CREATE_ROLE = "INSERT INTO role (role_name) VALUES (?)";
+    private static final String READ_ROLE = "SELECT id, role_name FROM role WHERE id=?";
+    private static final String UPDATE_ROLE = "UPDATE role SET role_name=? WHERE id=?";
+    private static final String DELETE_ROLE = "DELETE FROM role WHERE id=?";
+    private static final String FIND_ALL_ROLES = "SELECT id, role_name FROM role";
 
+    @Override
     public void create(Role role) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ROLE)) {
@@ -30,7 +32,8 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
         }
     }
 
-    public Role read(int id) throws DatabaseException {
+    @Override
+    public Role getRoleById(int id) throws DatabaseException {
         Role role = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_ROLE);) {
@@ -51,6 +54,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
         return role;
     }
 
+    @Override
     public void update(Role role) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ROLE);) {
@@ -62,6 +66,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
         }
     }
 
+    @Override
     public void delete(Role role) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ROLE);) {
@@ -72,6 +77,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
         }
     }
 
+    @Override
     public List<Role> findAll() throws DatabaseException {
         List<Role> roles = new ArrayList<Role>();
         try (Connection connection = getConnection();
