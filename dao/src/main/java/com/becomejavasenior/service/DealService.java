@@ -15,4 +15,8 @@ public interface DealService {
 
     Map<String, List<Deal>> filterSuccessAndFailedDeals(List<Deal> deals);
 
+    int countDealsWithTasks() throws DatabaseException;
+
+    int countDealsWithoutTasks() throws DatabaseException;
+
 }

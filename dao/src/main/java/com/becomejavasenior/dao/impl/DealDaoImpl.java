@@ -26,6 +26,8 @@ public class DealDaoImpl extends CommonDao implements DealDao {
 
     private static final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
     private static final String FIND_ALL_DEALS = "SELECT id, name, budget, stage_id, date_create, deleted FROM crm_helios.deal";
+    private static final String COUNT_DEALS_WITH_TASKS = "Select count(*) from crm_helios.deal d WHERE d.id IN (Select t.id from crm_helios.task t)";
+    private static final String COUNT_DEALS_WITHOUT_TASKS = "Select count(*) from crm_helios.deal d WHERE d.id NOT IN (Select t.id from crm_helios.task t)";
 
     @Override
     public void create(Deal deal) throws DatabaseException {
@@ -121,6 +123,36 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             throw new DatabaseException(e.getMessage());
         }
         return deals;
+    }
+
+    @Override
+    public int countDealsWithTasks() throws DatabaseException {
+        int count = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_DEALS_WITH_TASKS);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+        return count;
+    }
+
+    @Override
+    public int countDealsWithoutTasks() throws DatabaseException {
+        int count = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_DEALS_WITHOUT_TASKS);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+        return count;
     }
 
     public DealDaoImpl(DataSource dataSource) {

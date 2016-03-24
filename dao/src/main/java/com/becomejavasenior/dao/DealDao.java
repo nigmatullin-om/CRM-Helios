@@ -11,4 +11,6 @@ public interface DealDao {
     void update(Deal deal) throws DatabaseException;
     void delete(Deal deal) throws DatabaseException;
     List<Deal> findAll() throws DatabaseException;
+    int countDealsWithTasks() throws DatabaseException;
+    int countDealsWithoutTasks() throws DatabaseException;
 }

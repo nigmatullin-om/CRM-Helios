@@ -38,8 +38,8 @@
                         <h3 class="panel-title">Сделки без задач</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Сделок без задач: <a href="#" onclick="testAlert(); return false">-1</a></p>
-                        <p>Сделок с задачами: <a href="#" onclick="testAlert(); return false">-1</a></p>
+                        <p>Сделок без задач: <a href="#" onclick="testAlert(); return false">${dealsWithTasksCount}</a></p>
+                        <p>Сделок с задачами: <a href="#" onclick="testAlert(); return false">${dealsWithoutTasksCount}</a></p>
                     </div>
                 </div>
 
@@ -50,9 +50,9 @@
                         <h3 class="panel-title">Задачи в работе и Выполненные</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Задачи в работе: <a href="#" onclick="testAlert(); return false">-1</a></p>
-                        <p>Выполненные: <a href="#" onclick="testAlert(); return false">-1</a></p>
-                        <p>Просроченные: <a href="#" onclick="testAlert(); return false">-1</a></p>
+                        <p>Задачи в работе: <a href="#" onclick="testAlert(); return false">${runningTasksCount}</a></p>
+                        <p>Выполненные: <a href="#" onclick="testAlert(); return false">${doneTasksCount}</a></p>
+                        <p>Просроченные: <a href="#" onclick="testAlert(); return false">${notDoneTasksCount}</a></p>
                     </div>
                 </div>
                 <div class="panel panel-primary">
@@ -60,8 +60,8 @@
                         <h3 class="panel-title">Всего контактов и Всего компаний</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Контактов: <a href="#" onclick="testAlert(); return false">${contactCount}</a></p>
-                        <p>Компаний: <a href="#" onclick="testAlert(); return false">${companyCount}</a></p>
+                        <p>Контактов: <a href="#" onclick="testAlert(); return false">${contactsCount}</a></p>
+                        <p>Компаний: <a href="#" onclick="testAlert(); return false">${companiesCount}</a></p>
                     </div>
                 </div>
             </div>

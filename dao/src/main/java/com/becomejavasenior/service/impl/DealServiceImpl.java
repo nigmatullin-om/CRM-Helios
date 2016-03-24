@@ -14,6 +14,9 @@ import java.util.*;
  */
 public class DealServiceImpl implements DealService {
 
+    private static final String SUCCESS_DEALS = "successDeals";
+    private static final String FAILED_DEALS = "failedDeals";
+
     private DealDao dealDao;
 
     public DealServiceImpl() {
@@ -39,8 +42,18 @@ public class DealServiceImpl implements DealService {
                 failedDeals.add(tempDeal);
             }
         }
-        mapDeals.put("successDeals", successDeals);
-        mapDeals.put("failedDeals", failedDeals);
+        mapDeals.put(SUCCESS_DEALS, successDeals);
+        mapDeals.put(FAILED_DEALS, failedDeals);
         return mapDeals;
+    }
+
+    @Override
+    public int countDealsWithTasks() throws DatabaseException {
+        return dealDao.countDealsWithTasks();
+    }
+
+    @Override
+    public int countDealsWithoutTasks() throws DatabaseException {
+        return dealDao.countDealsWithoutTasks();
     }
 }

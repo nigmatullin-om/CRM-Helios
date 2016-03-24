@@ -3,7 +3,6 @@
 
 <%@attribute name="title"%>
 <%@attribute name="bodyLayout" fragment="true" %>
-<%@attribute name="menuLayout" fragment="true" %>
 
 <html>
     <title>${title}</title>
