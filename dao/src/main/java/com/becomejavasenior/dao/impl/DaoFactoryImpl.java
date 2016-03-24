@@ -20,7 +20,7 @@ public class DaoFactoryImpl implements DaoFactory {
     private static String DB_NAME;
     private static String USER_NAME;
     private static String PASSWORD;
-    private static DataSource dataSource = null;
+    private static DataSource dataSource;
 
     static final Logger log = LogManager.getLogger(CompanyDaoImpl.class);
 

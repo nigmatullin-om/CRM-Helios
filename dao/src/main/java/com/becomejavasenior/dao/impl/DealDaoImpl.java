@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DealDaoImpl extends CommonDao implements DealDao {
-    private final String READ_DEAL= "SELECT * FROM deal WHERE id=?";
+    private final String READ_DEAL= "SELECT id, name, budget, stage_id, date_create, deleted FROM deal WHERE id=?";
 
     private final String CREATE_DEAL = "INSERT INTO deal (name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
                                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -26,11 +26,11 @@ public class DealDaoImpl extends CommonDao implements DealDao {
                                        "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
     private final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
-    private final String FIND_ALL_DEALS = "SELECT * FROM deal";
+    private final String FIND_ALL_DEALS = "SELECT id, name, budget, stage_id, date_create, deleted FROM deal";
 
     static final Logger log = LogManager.getLogger(DealDaoImpl.class);
 
-    public int create(Deal deal) throws DatabaseException {
+    public void create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL)) {
             preparedStatement.setString(1, deal.getName());
@@ -41,11 +41,11 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setInt(6, deal.getCreatedByUser().getId());
             preparedStatement.setDate(7, new java.sql.Date(deal.getCreationDate().getTime()));
             preparedStatement.setBoolean(8, deal.getDeleted());
+            preparedStatement.execute();
         } catch (SQLException e) {
             log.error("Couldn't create the deal entity because of some SQL exception!");
             throw new  DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public Deal read(int id) throws DatabaseException {
@@ -55,22 +55,26 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setInt(1, id);
             try(ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()){
-                    deal.setId(resultSet.getInt(1));
-                    deal.setName(resultSet.getString(2));
-                    deal.setBudget(resultSet.getBigDecimal(3));
-                    deal.setDealStage(DealStage.values()[resultSet.getInt(4)]);
-                    deal.setCreationDate(resultSet.getDate(8));
-                    deal.setDeleted(resultSet.getBoolean(9));
+                    deal = new Deal();
+                    deal.setId(resultSet.getInt("id"));
+                    deal.setName(resultSet.getString("name"));
+                    deal.setBudget(resultSet.getBigDecimal("budget"));
+                    deal.setDealStage(DealStage.values()[resultSet.getInt("stage_id")]);
+                    deal.setCreationDate(resultSet.getDate("date_create"));
+                    deal.setDeleted(resultSet.getBoolean("deleted"));
                 }
             }
         } catch (SQLException e) {
             log.error("Couldn't read from company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
+        if (deal == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return deal;
     }
 
-    public boolean update(Deal deal) throws DatabaseException {
+    public void update(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_DEAL);) {
             preparedStatement.setString(1, deal.getName());
@@ -87,10 +91,9 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             log.error("Couldn't update the deal entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(Deal deal) throws DatabaseException {
+    public void delete(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_DEAL);) {
             preparedStatement.setInt(1, deal.getId());
@@ -99,7 +102,6 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             log.error("Couldn't delete the deal entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<Deal> findAll() throws DatabaseException {
@@ -109,12 +111,12 @@ public class DealDaoImpl extends CommonDao implements DealDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
                 Deal deal = new Deal();
-                deal.setId(resultSet.getInt(1));
-                deal.setName(resultSet.getString(2));
-                deal.setBudget(resultSet.getBigDecimal(3));
-                deal.setDealStage(DealStage.values()[resultSet.getInt(4)]);
-                deal.setCreationDate(resultSet.getDate(8));
-                deal.setDeleted(resultSet.getBoolean(9));
+                deal.setId(resultSet.getInt("id"));
+                deal.setName(resultSet.getString("name"));
+                deal.setBudget(resultSet.getBigDecimal("budget"));
+                deal.setDealStage(DealStage.values()[resultSet.getInt("stage_id")]);
+                deal.setCreationDate(resultSet.getDate("date_create"));
+                deal.setDeleted(resultSet.getBoolean("deleted"));
                 deals.add(deal);
             }
         } catch (SQLException e) {

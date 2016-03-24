@@ -17,14 +17,14 @@ import java.util.List;
 
 public class RoleDaoImpl extends CommonDao implements RoleDao {
     private final String CREATE_ROLE = "INSERT INTO role (role_name) VALUES (?)";
-    private final String READ_ROLE = "SELECT * FROM role WHERE id=?";
+    private final String READ_ROLE = "SELECT id, role_name FROM role WHERE id=?";
     private final String UPDATE_ROLE = "UPDATE role SET role_name=? WHERE id=?";
     private final String DELETE_ROLE = "DELETE FROM role WHERE id=?";
-    private final String FIND_ALL_ROLES = "SELECT * FROM role";
+    private final String FIND_ALL_ROLES = "SELECT id, role_name FROM role";
 
     static final Logger log = LogManager.getLogger(RoleDaoImpl.class);
 
-    public int create(Role role) throws DatabaseException {
+    public void create(Role role) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ROLE)) {
             preparedStatement.setString(1, role.getName());
@@ -33,7 +33,6 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             log.error("Couldn't create the role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
-        return 1;
     }
 
     public Role read(int id) throws DatabaseException {
@@ -43,18 +42,22 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             preparedStatement.setInt(1, id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if(resultSet.next()) {
-                    role.setId(resultSet.getInt(1));
-                    role.setName(resultSet.getString(2));
+                    role = new Role();
+                    role.setId(resultSet.getInt("id"));
+                    role.setName(resultSet.getString("role_name"));
                 }
             }
         } catch (SQLException e) {
             log.error("Couldn't read from role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
+        if (role == null){
+            throw new DatabaseException("no result for id=" + id);
+        }
         return role;
     }
 
-    public boolean update(Role role) throws DatabaseException {
+    public void update(Role role) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ROLE);) {
             preparedStatement.setString(1, role.getName());
@@ -64,10 +67,9 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             log.error("Couldn't update the role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
-    public boolean delete(Role role) throws DatabaseException {
+    public void delete(Role role) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ROLE);) {
             preparedStatement.setInt(1, role.getId());
@@ -76,7 +78,6 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             log.error("Couldn't delete the role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
-        return true;
     }
 
     public List<Role> findAll() throws DatabaseException {
@@ -86,8 +87,8 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while(resultSet.next()){
                 Role role = new Role();
-                role.setId(resultSet.getInt(1));
-                role.setName(resultSet.getString(2));
+                role.setId(resultSet.getInt("id"));
+                role.setName(resultSet.getString("role_name"));
                 roles.add(role);
             }
         }

@@ -7,9 +7,9 @@ import com.becomejavasenior.model.Deal;
 import java.util.List;
 
 public interface DealDao {
-    public int create(Deal deal) throws DatabaseException;
-    public Deal read(int id) throws DatabaseException;
-    public boolean update(Deal deal) throws DatabaseException;
-    public boolean delete(Deal deal) throws DatabaseException;
-    public List<Deal> findAll() throws DatabaseException;
+    void create(Deal deal) throws DatabaseException;
+    Deal read(int id) throws DatabaseException;
+    void update(Deal deal) throws DatabaseException;
+    void delete(Deal deal) throws DatabaseException;
+    List<Deal> findAll() throws DatabaseException;
 }
