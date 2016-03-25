@@ -17,7 +17,7 @@ import java.util.List;
 public class DealDaoImpl extends CommonDao implements DealDao {
 
     private final String READ_DEAL= "SELECT id, name, budget,responsible_id, stage_id, company_id, date_create, created_by, deleted " +
-            "FROM crm_helios.deal  WHERE id=?";
+            "FROM crm_helios.deal  WHERE id=? AND deleted = FALSE";
 
     private final String CREATE_DEAL = "INSERT INTO crm_helios.deal (id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
                                         "VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
@@ -26,10 +26,15 @@ public class DealDaoImpl extends CommonDao implements DealDao {
                                        "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
     private final String DELETE_DEAL = "DELETE FROM crm_helios.deal WHERE id=?";
-    private final String FIND_ALL_DEALS = "SELECT * FROM crm_helios.deal";
-    private final String FIND_ALL_DEAL_FOR_CONTACT = "SELECT * FROM crm_helios.deal JOIN crm_helios.deal_contact " +
-            "ON deal.id = deal_contact.deal_id AND contact_id = ?";
-    private final String FIND_DEAL_FOR_COMPANY = "SELECT * FROM crm_helios.deal WHERE company_id=?";
+
+    private final String FIND_ALL_DEALS = "SELECT id, name, budget,responsible_id, stage_id, company_id, date_create, created_by, deleted " +
+            " FROM crm_helios.deal WHERE deleted = FALSE ";
+
+    private final String FIND_ALL_DEAL_FOR_CONTACT = "SELECT id, name, budget,responsible_id, stage_id, company_id, date_create, created_by, deleted " +
+            "FROM crm_helios.deal JOIN crm_helios.deal_contact ON deal.id = deal_contact.deal_id AND contact_id = ? AND deleted = FALSE ";
+
+    private final String FIND_DEAL_FOR_COMPANY = "SELECT id, name, budget,responsible_id, stage_id, company_id, date_create, created_by, deleted " +
+            " FROM crm_helios.deal WHERE company_id=? AND deleted = FALSE ";
 
     DaoFactoryImpl  daoFactory;
 
