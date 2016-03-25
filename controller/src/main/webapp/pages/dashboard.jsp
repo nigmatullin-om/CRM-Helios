@@ -4,7 +4,7 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<t:pageLayout title="Dashboard">
+<t:pageLayout title="Рабочий стол">
     <jsp:attribute name="bodyLayout">
         <!-- Example row of columns -->
         <div class="row">
@@ -38,8 +38,8 @@
                         <h3 class="panel-title">Сделки без задач</h3>
                     </div>
                     <div class="panel-body">
-                        <p>Сделок без задач: <a href="#" onclick="testAlert(); return false">${dealsWithTasksCount}</a></p>
-                        <p>Сделок с задачами: <a href="#" onclick="testAlert(); return false">${dealsWithoutTasksCount}</a></p>
+                        <p>Сделок без задач: <a href="#" onclick="testAlert(); return false">${dealsWithoutTasksCount}</a></p>
+                        <p>Сделок с задачами: <a href="#" onclick="testAlert(); return false">${dealsWithTasksCount}</a></p>
                     </div>
                 </div>
 

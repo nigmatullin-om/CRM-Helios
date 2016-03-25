@@ -25,9 +25,9 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
     private static final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
-    private static final String FIND_ALL_DEALS = "SELECT id, name, budget, stage_id, date_create, deleted FROM crm_helios.deal";
-    private static final String COUNT_DEALS_WITH_TASKS = "Select count(*) from crm_helios.deal d WHERE d.id IN (Select t.id from crm_helios.task t)";
-    private static final String COUNT_DEALS_WITHOUT_TASKS = "Select count(*) from crm_helios.deal d WHERE d.id NOT IN (Select t.id from crm_helios.task t)";
+    private static final String FIND_ALL_DEALS = "SELECT id, name, budget, stage_id, date_create, deleted FROM deal";
+    private static final String COUNT_DEALS_WITH_TASKS = "Select count(*) from deal d WHERE d.id IN (Select t.id from task t)";
+    private static final String COUNT_DEALS_WITHOUT_TASKS = "Select count(*) from deal d WHERE d.id NOT IN (Select t.id from task t)";
 
     @Override
     public void create(Deal deal) throws DatabaseException {

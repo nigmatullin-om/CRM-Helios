@@ -27,7 +27,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     private static final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
     private static final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact";
-    private static final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM crm_helios.contact";
+    private static final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM contact";
 
     @Override
     public void create(Contact contact) throws DatabaseException {

@@ -24,6 +24,26 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
+    public void create(Deal deal) throws DatabaseException {
+        dealDao.create(deal);
+    }
+
+    @Override
+    public Deal getDealById(int id) throws DatabaseException {
+        return dealDao.getDealById(id);
+    }
+
+    @Override
+    public void update(Deal deal) throws DatabaseException {
+        dealDao.update(deal);
+    }
+
+    @Override
+    public void delete(Deal deal) throws DatabaseException {
+        dealDao.delete(deal);
+    }
+
+    @Override
     public List<Deal> findAll() throws DatabaseException {
         return dealDao.findAll();
     }

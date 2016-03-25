@@ -22,7 +22,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     private static final String UPDATE_TASK = "UPDATE task SET name=?, finish_date=?, responsible_id=?, description=?, " +
                                     "contact_id=?, deal_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
     private static final String DELETE_TASK = "DELETE FROM task WHERE id=?";
-    private static final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM crm_helios.task";
+    private static final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task";
 
     @Override
     public void create(Task task) throws DatabaseException {

@@ -27,6 +27,26 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
+    public void create(Task task) throws DatabaseException {
+        taskDao.create(task);
+    }
+
+    @Override
+    public Task getTaskById(int id) throws DatabaseException {
+        return taskDao.getTaskById(id);
+    }
+
+    @Override
+    public void update(Task task) throws DatabaseException {
+        taskDao.update(task);
+    }
+
+    @Override
+    public void delete(Task task) throws DatabaseException {
+        taskDao.delete(task);
+    }
+
+    @Override
     public List<Task> findAll() throws DatabaseException {
         return taskDao.findAll();
     }

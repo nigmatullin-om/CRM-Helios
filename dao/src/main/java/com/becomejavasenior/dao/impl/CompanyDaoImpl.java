@@ -25,7 +25,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
     private static final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
-    private static final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM crm_helios.company";
+    private static final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
