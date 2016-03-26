@@ -1,20 +1,17 @@
-package com.becomejavasenior.service.impl;
+package com.becomejavasenior.service;
 
 import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.DealDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.dao.impl.DealDaoImpl;
-import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.DealStage;
-import com.becomejavasenior.service.DealService;
+import com.becomejavasenior.service.impl.DealServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import javax.sql.DataSource;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,16 +20,14 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Created by aivlev on 3/25/16.
+ * Created by aivlev on 3/26/16.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(DealServiceImpl.class)
-public class DealServiceImplTest {
+public class DealServiceTest {
 
     private static final String SUCCESS_DEALS = "successDeals";
     private static final String FAILED_DEALS = "failedDeals";
@@ -42,7 +37,7 @@ public class DealServiceImplTest {
     private DealService dealService;
 
     @Mock
-    private DealDaoImpl dealDao;
+    private DealDao dealDao;
 
     @Mock
     private Deal deal;
@@ -51,7 +46,7 @@ public class DealServiceImplTest {
     DaoFactoryImpl daoFactory;
 
     @Before
-    public void init() throws Exception {
+    public void setUp() throws Exception {
         whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
         when(daoFactory.getDealDao()).thenReturn(dealDao);
         dealService = new DealServiceImpl();
@@ -163,5 +158,4 @@ public class DealServiceImplTest {
         assertEquals(DEALS_WITHOUT_TASKS_COUNT, result);
 
     }
-
 }

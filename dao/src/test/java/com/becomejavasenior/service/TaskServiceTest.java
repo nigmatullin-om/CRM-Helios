@@ -1,10 +1,10 @@
-package com.becomejavasenior.service.impl;
+package com.becomejavasenior.service;
 
 import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.TaskDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.dao.impl.TaskDaoImpl;
 import com.becomejavasenior.model.Task;
-import com.becomejavasenior.service.TaskService;
+import com.becomejavasenior.service.impl.TaskServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,16 +22,14 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Created by aivlev on 3/25/16.
+ * Created by aivlev on 3/26/16.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(TaskServiceImpl.class)
-public class TaskServiceImplTest {
+public class TaskServiceTest {
 
     private static final String NOT_FINISHED_DATE_VALUE = "2020-01-01 00:00:00";
     private static final String FINISHED_DATE_VALUE = "2016-03-23 00:00:00";
@@ -42,7 +40,7 @@ public class TaskServiceImplTest {
     private TaskService taskService;
 
     @Mock
-    private TaskDaoImpl taskDao;
+    private TaskDao taskDao;
 
     @Mock
     private Task task;
@@ -51,7 +49,7 @@ public class TaskServiceImplTest {
     DaoFactoryImpl daoFactory;
 
     @Before
-    public void init() throws Exception {
+    public void setUp() throws Exception {
         whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
         when(daoFactory.getTaskDao()).thenReturn(taskDao);
         taskService = new TaskServiceImpl();
@@ -177,5 +175,4 @@ public class TaskServiceImplTest {
 
 
     }
-
 }

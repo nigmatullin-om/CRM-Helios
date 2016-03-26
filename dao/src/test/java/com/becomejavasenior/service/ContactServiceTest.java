@@ -1,11 +1,10 @@
-package com.becomejavasenior.service.impl;
+package com.becomejavasenior.service;
 
+import com.becomejavasenior.dao.ContactDao;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.impl.ContactDaoImpl;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
-import com.becomejavasenior.service.ContactService;
+import com.becomejavasenior.service.impl.ContactServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,31 +12,27 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.sql.DataSource;
-
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Created by aivlev on 3/25/16.
+ * Created by aivlev on 3/26/16.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ContactServiceImpl.class)
-public class ContactServiceImplTest {
+public class ContactServiceTest {
 
     private static final int CONTACTS_COUNT = 2;
 
     private ContactService contactService;
 
     @Mock
-    private ContactDaoImpl contactDao;
+    private ContactDao contactDao;
 
     @Mock
     private Contact contact;
@@ -46,7 +41,7 @@ public class ContactServiceImplTest {
     DaoFactoryImpl daoFactory;
 
     @Before
-    public void init() throws Exception {
+    public void setUp() throws Exception {
         whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
         when(daoFactory.getContactDao()).thenReturn(contactDao);
         contactService = new ContactServiceImpl();
@@ -120,5 +115,4 @@ public class ContactServiceImplTest {
         assertEquals(CONTACTS_COUNT, result);
 
     }
-
 }

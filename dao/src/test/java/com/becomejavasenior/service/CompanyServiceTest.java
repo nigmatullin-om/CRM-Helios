@@ -1,10 +1,10 @@
-package com.becomejavasenior.service.impl;
+package com.becomejavasenior.service;
 
+import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.impl.CompanyDaoImpl;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Company;
-import com.becomejavasenior.service.CompanyService;
+import com.becomejavasenior.service.impl.CompanyServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,18 +21,18 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 /**
- * Created by aivlev on 3/24/16.
+ * Created by aivlev on 3/26/16.
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CompanyServiceImpl.class)
-public class CompanyServiceImplTest {
+public class CompanyServiceTest {
 
     private static final int COMPANIES_COUNT = 2;
 
     private CompanyService companyService;
 
     @Mock
-    private CompanyDaoImpl companyDao;
+    private CompanyDao companyDao;
 
     @Mock
     private Company company;
@@ -41,7 +41,7 @@ public class CompanyServiceImplTest {
     DaoFactoryImpl daoFactory;
 
     @Before
-    public void init() throws Exception {
+    public void setUp() throws Exception {
         whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
         when(daoFactory.getCompanyDao()).thenReturn(companyDao);
         companyService = new CompanyServiceImpl();
@@ -114,6 +114,4 @@ public class CompanyServiceImplTest {
         assertEquals(COMPANIES_COUNT, result);
 
     }
-
-
 }
