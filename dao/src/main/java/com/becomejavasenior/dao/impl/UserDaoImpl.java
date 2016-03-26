@@ -3,6 +3,8 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -21,6 +23,8 @@ public class UserDaoImpl extends CommonDao implements UserDao {
             " FROM crm_helios.user";
 
 
+    static final Logger log = LogManager.getLogger(UserDaoImpl.class);
+
     public void create(User user) throws DatabaseException {
         try (Connection connection = getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
@@ -37,6 +41,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
             preparedStatement.setBoolean(11, user.getDeleted());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't create the user entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -62,6 +67,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                     }
                 }
         } catch (SQLException e) {
+            log.error("Couldn't read from user entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         if (user == null){
@@ -87,6 +93,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                 preparedStatement.setInt(12, user.getId());
                 preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the user entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -97,6 +104,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                 preparedStatement.setInt(1, user.getId());
                 preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the user entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -120,6 +128,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                     users.add(user);
                 }
         } catch (SQLException e) {
+            log.error("Couldn't find from user entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return users;

@@ -2,9 +2,13 @@ package com.becomejavasenior.dao.impl;
 
 
 import com.becomejavasenior.dao.CommonDao;
-import com.becomejavasenior.dao.DaoFactory;
 import com.becomejavasenior.dao.DealDao;
 import com.becomejavasenior.model.*;
+import com.becomejavasenior.model.Deal;
+import com.becomejavasenior.model.DealStage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -46,6 +50,8 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     }
 
 
+    static final Logger log = LogManager.getLogger(DealDaoImpl.class);
+
     public void create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL)) {
@@ -60,6 +66,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setBoolean(9, deal.getDeleted());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't create the deal entity because of some SQL exception!");
             throw new  DatabaseException(e.getMessage());
         }
     }
@@ -74,6 +81,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             resultSet.next();
             deal = getDealByResultSet(resultSet);
         } catch (SQLException e) {
+            log.error("Couldn't read from company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         if (deal == null){
@@ -96,6 +104,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setInt(9, deal.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the deal entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -106,6 +115,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setInt(1, deal.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the deal entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -120,6 +130,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
                 deals.add(deal);
             }
         } catch (SQLException e) {
+            log.error("Couldn't find from deal entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return deals;

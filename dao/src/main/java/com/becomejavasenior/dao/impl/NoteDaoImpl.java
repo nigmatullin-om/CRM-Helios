@@ -4,6 +4,8 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.NoteDao;
 import com.becomejavasenior.model.Note;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -20,8 +22,10 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
                                         "VALUES (?, ?, ?)";
     private final String UPDATE_NOTE = "UPDATE crm_helios.note SET text=?, created_by=?, date_create=? WHERE id=?";
     private final String DELETE_NOTE = "DELETE FROM crm_helios.note WHERE id=?";
-    private final String FIND_ALL_NOTES = "SELECT * FROM crm_helios.note";
-    private final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM crm_helios.note WHERE deal_id = ?";
+    private final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM crm_helios.note";
+    private final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT id, text, date_create FROM crm_helios.note WHERE deal_id = ?";
+
+    static final Logger log = LogManager.getLogger(NoteDaoImpl.class);
 
     public void create(Note note) throws DatabaseException {
         try (Connection connection = getConnection();
@@ -31,6 +35,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
             preparedStatement.setDate(3, new java.sql.Date(note.getCreationDate().getTime()));
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't create the note entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -49,6 +54,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
                 }
             }
         } catch (SQLException e) {
+            log.error("Couldn't read from note entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return note;
@@ -63,6 +69,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
             preparedStatement.setInt(4, note.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the note entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -73,6 +80,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
             preparedStatement.setInt(1, note.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the note entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -90,6 +98,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
                 notes.add(note);
             }
         } catch (SQLException e) {
+            log.error("Couldn't find from note entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return  notes;

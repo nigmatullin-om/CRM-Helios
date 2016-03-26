@@ -4,6 +4,8 @@ import com.becomejavasenior.dao.*;
 import org.apache.commons.dbcp2.*;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.FileInputStream;
@@ -19,6 +21,8 @@ public class DaoFactoryImpl implements DaoFactory {
     private static String USER_NAME;
     private static String PASSWORD;
     private static DataSource dataSource;
+
+    static final Logger log = LogManager.getLogger(CompanyDaoImpl.class);
 
     private DataSource initDataSource(){
         loadProperties();
@@ -43,10 +47,9 @@ public class DaoFactoryImpl implements DaoFactory {
             USER_NAME = prop.getProperty("user_name");
             PASSWORD = prop.getProperty("password");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("can't find propereties file");
+            log.error("Couldn't find the properties file!");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Couldn't get properties!");
         }
     }
 

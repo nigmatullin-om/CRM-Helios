@@ -4,6 +4,8 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.TaskDao;
 import com.becomejavasenior.model.Task;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -25,6 +27,8 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     private final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM crm_helios.task";
 
 
+    static final Logger log = LogManager.getLogger(TaskDaoImpl.class);
+
     public void create(Task task) throws DatabaseException {
         try (Connection connection = getConnection();
                    PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TASK)){
@@ -40,6 +44,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             preparedStatement.setDate(10, new java.sql.Date(task.getCreationDate().getTime()));
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't create the task entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -62,6 +67,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
                 }
             }
         } catch (SQLException e) {
+            log.error("Couldn't read from task entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         if (task == null) {
@@ -86,6 +92,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             preparedStatement.setInt(11, task.getId());
             preparedStatement.execute();
             } catch (SQLException e) {
+            log.error("Couldn't update the task entity because of some SQL exception!");
                 throw new DatabaseException(e.getMessage());
             }
     }
@@ -96,6 +103,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             preparedStatement.setInt(1, task.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the task entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -117,6 +125,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
                 tasks.add(task);
             }
         } catch (SQLException e) {
+            log.error("Couldn't find from task entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return tasks;
