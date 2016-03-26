@@ -15,12 +15,13 @@ public class UserDaoImpl extends CommonDao implements UserDao {
     private final String CREATE_USER = "INSERT INTO user (name, password, photo_file_id, email, phone_mobile," +
                         "phone_work, lang_id, role_id, note, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private final String READ_USER = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
-                        "FROM user WHERE id = ?";
+            " FROM crm_helios.user WHERE id = ?";
     private final String UPDATE_USER = "UPDATE user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
             "phone_work=?, lang_id=?, role_id=?, note=?, date_create=?, deleted=? WHERE id=?";
     private final String DELETE_USER = "DELETE FROM user WHERE id=?";
-    private final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
-                            "FROM user";
+    private final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted" +
+            " FROM crm_helios.user";
+
 
     static final Logger log = LogManager.getLogger(UserDaoImpl.class);
 
@@ -46,7 +47,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
     }
 
     public User read(int id) throws DatabaseException {
-        User user = null;
+        User user = new User();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(READ_USER);) {
                 preparedStatement.setInt(1, id);
@@ -62,6 +63,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                         user.setNote(resultSet.getString("note"));
                         user.setCreationDate(resultSet.getDate("date_create"));
                         user.setDeleted(resultSet.getBoolean("deleted"));
+                        connection.close();
                     }
                 }
         } catch (SQLException e) {

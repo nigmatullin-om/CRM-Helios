@@ -16,14 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDaoImpl extends CommonDao implements TaskDao {
-    private final String READ_TASK = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task WHERE id=?";
-    private final String CREATE_TASK = "INSERT INTO task (name, finish_date, responsible_id, description, " +
+
+    private final String READ_TASK = "SELECT id, name, finish_date, description, date_create, done, deletedFROM crm_helios.task WHERE id=?";
+    private final String CREATE_TASK = "INSERT INTO crm_helios.task (name, finish_date, responsible_id, description, " +
                                     "contact_id, deal_id, company_id, created_by, date_create, deleted) " +
                                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_TASK = "UPDATE task SET name=?, finish_date=?, responsible_id=?, description=?, " +
+    private final String UPDATE_TASK = "UPDATE crm_helios.task SET name=?, finish_date=?, responsible_id=?, description=?, " +
                                     "contact_id=?, deal_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
-    private final String DELETE_TASK = "DELETE FROM task WHERE id=?";
-    private final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM task";
+    private final String DELETE_TASK = "DELETE FROM crm_helios.task WHERE id=?";
+    private final String FIND_ALL_TASKS = "SELECT id, name, finish_date, description, date_create, done, deleted FROM crm_helios.task";
+
 
     static final Logger log = LogManager.getLogger(TaskDaoImpl.class);
 

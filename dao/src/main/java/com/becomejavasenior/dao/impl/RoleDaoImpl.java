@@ -16,11 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleDaoImpl extends CommonDao implements RoleDao {
-    private final String CREATE_ROLE = "INSERT INTO role (role_name) VALUES (?)";
-    private final String READ_ROLE = "SELECT id, role_name FROM role WHERE id=?";
-    private final String UPDATE_ROLE = "UPDATE role SET role_name=? WHERE id=?";
-    private final String DELETE_ROLE = "DELETE FROM role WHERE id=?";
-    private final String FIND_ALL_ROLES = "SELECT id, role_name FROM role";
+
+    private final String CREATE_ROLE = "INSERT INTO crm_helios.role (role_name) VALUES (?)";
+    private final String READ_ROLE = "SELECT * FROM crm_helios.role WHERE id=?";
+    private final String UPDATE_ROLE = "UPDATE crm_helios.role SET role_name=? WHERE id=?";
+    private final String DELETE_ROLE = "DELETE FROM crm_helios.role WHERE id=?";
+    private final String FIND_ALL_ROLES = "SELECT id, role_name FROM crm_helios.role";
+
 
     static final Logger log = LogManager.getLogger(RoleDaoImpl.class);
 

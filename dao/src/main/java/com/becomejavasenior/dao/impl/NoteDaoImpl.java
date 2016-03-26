@@ -16,12 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteDaoImpl extends CommonDao implements NoteDao {
-    private final String READ_NOTE= "SELECT id, text, date_create FROM note WHERE id=?";
-    private final String CREATE_NOTE = "INSERT INTO note (text, created_by, date_create) " +
+
+    private final String READ_NOTE= "SELECT id, text, date_create FROM crm_helios.note WHERE id=?";
+    private final String CREATE_NOTE = "INSERT INTO crm_helios.note (text, created_by, date_create) " +
                                         "VALUES (?, ?, ?)";
-    private final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
-    private final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
-    private final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
+    private final String UPDATE_NOTE = "UPDATE crm_helios.note SET text=?, created_by=?, date_create=? WHERE id=?";
+    private final String DELETE_NOTE = "DELETE FROM crm_helios.note WHERE id=?";
+    private final String FIND_ALL_NOTES = "SELECT * FROM crm_helios.note";
+    private final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM crm_helios.note WHERE deal_id = ?";
 
     static final Logger log = LogManager.getLogger(NoteDaoImpl.class);
 
@@ -97,6 +99,32 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
             }
         } catch (SQLException e) {
             log.error("Couldn't find from note entity because of some SQL exception!");
+            throw new DatabaseException(e.getMessage());
+        }
+        return  notes;
+    }
+
+    @Override
+    public List<Note> findAllByDealId(int id) throws DatabaseException {
+        List<Note> notes = new ArrayList<Note>();
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_NOTES_BY_DEAL_ID)) {
+            preparedStatement.setInt(1, id);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()) {
+                    Note note = new Note();
+                    note.setId(resultSet.getInt("id"));
+                    note.setText(resultSet.getString("text"));
+                    note.setCreationDate(resultSet.getDate(7));
+                    note.setCreatedByUser(daoFactory.getUserDao().read(resultSet.getInt("created_by")));
+                    notes.add(note);
+                }
+            }
+            catch (SQLException e) {
+                throw new DatabaseException(e.getMessage());
+            }
+        } catch (SQLException e) {
             throw new DatabaseException(e.getMessage());
         }
         return  notes;
