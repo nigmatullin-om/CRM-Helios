@@ -34,7 +34,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     @Override
     public void create(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
             preparedStatement.setString(1, company.getName());
             preparedStatement.setInt(2, company.getResponsibleUser().getId());
             preparedStatement.setString(3, company.getWeb());
@@ -83,7 +83,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     @Override
     public void update(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY);) {
             preparedStatement.setString(1, company.getName());
             preparedStatement.setInt(2, company.getResponsibleUser().getId());
             preparedStatement.setString(3, company.getWeb());
@@ -104,7 +104,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     @Override
     public void delete(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY);) {
             preparedStatement.setInt(1, company.getId());
             preparedStatement.execute();
         } catch (SQLException e) {

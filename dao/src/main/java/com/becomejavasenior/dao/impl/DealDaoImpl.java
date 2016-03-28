@@ -18,6 +18,7 @@ import java.util.List;
 public class DealDaoImpl extends CommonDao implements DealDao {
 
     private static final String READ_DEAL= "SELECT id, name, budget, stage_id, date_create, deleted FROM deal WHERE id=?";
+
     private static final String CREATE_DEAL = "INSERT INTO deal (name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 

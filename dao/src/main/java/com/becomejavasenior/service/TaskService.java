@@ -18,14 +18,6 @@ public interface TaskService {
 
     void delete(Task task) throws DatabaseException;
 
-    void create(Task task) throws DatabaseException;
-
-    Task getTaskById(int id) throws DatabaseException;
-
-    void update(Task task) throws DatabaseException;
-
-    void delete(Task task) throws DatabaseException;
-
     List<Task> findAll() throws DatabaseException;
 
     Map<String,List<Task>> filterTasksByDone(List<Task> tasks);

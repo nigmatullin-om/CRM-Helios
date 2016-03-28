@@ -24,7 +24,6 @@ public class LanguageDaoImpl extends CommonDao implements LanguageDao {
 
     @Override
     public void delete(Language language) {
-
     }
 
     @Override
