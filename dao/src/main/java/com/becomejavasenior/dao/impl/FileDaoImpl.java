@@ -44,6 +44,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
             preparedStatement.setInt(1, id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()){
+                    file = new File();
                     file.setId(resultSet.getInt("id"));
                     file.setPath(resultSet.getString("path"));
                     file.setData(resultSet.getBytes("blob_data"));

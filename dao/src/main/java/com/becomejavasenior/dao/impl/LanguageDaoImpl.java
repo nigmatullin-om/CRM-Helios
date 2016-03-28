@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 import java.util.List;
 
 public class LanguageDaoImpl extends CommonDao implements LanguageDao {
-
     @Override
     public void create(Language language) {
     }
@@ -24,7 +23,6 @@ public class LanguageDaoImpl extends CommonDao implements LanguageDao {
 
     @Override
     public void delete(Language language) {
-
     }
 
     @Override

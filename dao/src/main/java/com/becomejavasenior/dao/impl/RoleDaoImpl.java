@@ -51,7 +51,6 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
         if (role == null){
             throw new DatabaseException("no result for id=" + id);
         }
-
         return role;
     }
 

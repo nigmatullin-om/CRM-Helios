@@ -9,7 +9,6 @@ import javax.sql.DataSource;
 import java.util.List;
 
 public class TagDaoImpl extends CommonDao implements TagDao {
-
     @Override
     public void create(Tag tag) {
 
