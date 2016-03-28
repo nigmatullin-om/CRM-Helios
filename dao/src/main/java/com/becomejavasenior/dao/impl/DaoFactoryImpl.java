@@ -28,7 +28,7 @@ public class DaoFactoryImpl implements DaoFactory {
     private static String PASSWORD_VALUE;
     private static DataSource dataSource;
 
-    static final Logger log = LogManager.getLogger(CompanyDaoImpl.class);
+    static final Logger log = LogManager.getLogger(DaoFactoryImpl.class);
 
     private DataSource initDataSource(){
         loadProperties();

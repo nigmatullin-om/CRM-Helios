@@ -16,15 +16,15 @@ public class UserDaoImpl extends CommonDao implements UserDao {
 
     static final Logger log = LogManager.getLogger(UserDaoImpl.class);
 
-    private static final String CREATE_USER = "INSERT INTO user (name, password, photo_file_id, email, phone_mobile," +
+    private static final String CREATE_USER = "INSERT INTO public.user (name, password, photo_file_id, email, phone_mobile," +
                         "phone_work, lang_id, role_id, note, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String READ_USER = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
-                        "FROM user WHERE id = ?";
-    private static final String UPDATE_USER = "UPDATE user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
+                        "FROM public.user WHERE id = ?";
+    private static final String UPDATE_USER = "UPDATE public.user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
             "phone_work=?, lang_id=?, role_id=?, note=?, date_create=?, deleted=? WHERE id=?";
-    private static final String DELETE_USER = "DELETE FROM user WHERE id=?";
+    private static final String DELETE_USER = "DELETE FROM public.user WHERE id=?";
     private static final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
-                            "FROM user";
+                            "FROM public.user";
 
 
     @Override

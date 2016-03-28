@@ -26,7 +26,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     private static final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
     private static final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
     private static final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
-    private static final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM crm_helios.note WHERE deal_id = ?";
+    private static final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM note WHERE deal_id = ?";
 
     @Override
     public void create(Note note) throws DatabaseException {

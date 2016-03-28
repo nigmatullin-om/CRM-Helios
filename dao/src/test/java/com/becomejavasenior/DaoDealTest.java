@@ -1,19 +1,18 @@
 package com.becomejavasenior;
 
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.DealDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.dao.impl.DatabaseException;
 import com.becomejavasenior.model.*;
-import junit.framework.*;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-
 import java.util.ArrayList;
 import java.util.Date;
 
-import static junit.framework.Assert.assertSame;
 import static junit.framework.TestCase.assertEquals;
 
 public class DaoDealTest {
@@ -84,8 +83,8 @@ public class DaoDealTest {
     @Test
     public void testReadDeal(){
         try {
-            assertEquals("some test deal" ,dealDao.read(3).getName());
-            assertEquals("some another deal" ,dealDao.read(4).getName());
+            assertEquals("some test deal" ,dealDao.getDealById(3).getName());
+            assertEquals("some another deal" ,dealDao.getDealById(4).getName());
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
