@@ -1,6 +1,8 @@
 package com.becomejavasenior.dao;
 
 
+import com.becomejavasenior.model.Company;
+import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
 
 import java.util.List;
@@ -13,4 +15,6 @@ public interface DealDao {
     List<Deal> findAll() throws DatabaseException;
     int countDealsWithTasks() throws DatabaseException;
     int countDealsWithoutTasks() throws DatabaseException;
+    List<Deal> getDealsForContactById(Contact contact) throws DatabaseException;
+    List<Deal> getDealsForCompanyById(Company company) throws DatabaseException;
 }

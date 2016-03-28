@@ -6,9 +6,10 @@ import com.becomejavasenior.model.Tag;
 import java.util.List;
 
 public interface TagDao {
-    void create(Tag tag);
-    Tag getTagById(int id);
-    void update(Tag tag);
-    void delete(Tag tag);
-    List<Tag> findAll();
+    void create(Tag tag)throws DatabaseException;
+    Tag getTagById(int id)throws DatabaseException;
+    void update(Tag tag)throws DatabaseException;
+    void delete(Tag tag)throws DatabaseException;
+    List<Tag> findAll()throws DatabaseException;
+    List<Tag> findAllByDealId(int id) throws DatabaseException;
 }

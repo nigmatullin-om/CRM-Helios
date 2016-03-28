@@ -5,6 +5,8 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.RoleDao;
 import com.becomejavasenior.model.Role;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleDaoImpl extends CommonDao implements RoleDao {
+    static final Logger log = LogManager.getLogger(RoleDaoImpl.class);
+
     private static final String CREATE_ROLE = "INSERT INTO role (role_name) VALUES (?)";
     private static final String READ_ROLE = "SELECT id, role_name FROM role WHERE id=?";
     private static final String UPDATE_ROLE = "UPDATE role SET role_name=? WHERE id=?";
@@ -28,6 +32,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             preparedStatement.setString(1, role.getName());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't create the role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -46,6 +51,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
                 }
             }
         } catch (SQLException e) {
+            log.error("Couldn't read from role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         if (role == null){
@@ -62,6 +68,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             preparedStatement.setInt(2, role.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -73,6 +80,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             preparedStatement.setInt(1, role.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -91,6 +99,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             }
         }
         catch (SQLException e){
+            log.error("Couldn't find from role entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return roles;

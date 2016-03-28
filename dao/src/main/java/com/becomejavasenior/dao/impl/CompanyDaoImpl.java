@@ -5,6 +5,8 @@ import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.PhoneType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
+
+    static final Logger log = LogManager.getLogger(CompanyDaoImpl.class);
+
     private static final String READ_COMPANY= "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
 
     private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
@@ -47,6 +52,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setBoolean(10, company.getDeleted());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't create the company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -55,11 +61,12 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     public Company getCompanyById(int id) throws DatabaseException {
         Company company = null;
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY)) {
             preparedStatement.setInt(1, id);
-            try(ResultSet resultSet = preparedStatement.executeQuery();) {
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     company = new Company();
+
                     company.setId(resultSet.getInt("id"));
                     company.setName(resultSet.getString("name"));
                     company.setWeb(resultSet.getString("web"));
@@ -69,9 +76,11 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                     company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
                     company.setCreationDate(resultSet.getDate("date_create"));
                     company.setDeleted(resultSet.getBoolean("deleted"));
+
                 }
             }
         } catch (SQLException e) {
+            log.error("Couldn't read from company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         if (company == null){
@@ -97,6 +106,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(11, company.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't update the company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -108,6 +118,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(1, company.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
+            log.error("Couldn't delete the company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -132,6 +143,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                 companies.add(company);
             }
         } catch (SQLException e) {
+            log.error("Couldn't find from company entity because of some SQL exception!");
             throw new DatabaseException(e.getMessage());
         }
         return companies;
