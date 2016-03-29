@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Добавление сделки</title>
@@ -60,7 +63,10 @@
                         <label class="control-label col-sm-4">Этап</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="dealStage" id="dealStage">
-                                <option value="one">One</option>
+                                <c:forEach items="${stages}" var="stage">
+                                    <option value="${stage.ordinal()}">${stage}</option>
+                                </c:forEach>
+
                                 <option value="two">Two</option>
                                 <option value="three">Three</option>
                                 <option value="four">Four</option>
@@ -157,7 +163,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-sm-8">Добавить Контакт</label>
+                        <label class="control-label col-sm-8">Добавить компанию</label>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-4">Название компании</label>
