@@ -57,7 +57,7 @@ public class TaskServiceTest {
 
     @Test
     public void testCreate() throws Exception {
-        doNothing().when(taskDao, "create", any(Task.class));
+        when(taskDao.create(any(Task.class))).thenReturn(1);
         taskService.create(task);
 
         verify(taskDao).create(task);
@@ -77,7 +77,7 @@ public class TaskServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        doNothing().when(taskDao, "update", any(Task.class));
+        when(taskDao.update(any(Task.class))).thenReturn(1);
         taskService.update(task);
 
         verify(taskDao).update(task);
@@ -86,7 +86,7 @@ public class TaskServiceTest {
 
     @Test
     public void testDelete() throws Exception {
-        doNothing().when(taskDao, "delete", any(Task.class));
+        when(taskDao.delete(any(Task.class))).thenReturn(1);
         taskService.delete(task);
 
         verify(taskDao).delete(task);

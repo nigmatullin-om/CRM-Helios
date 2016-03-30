@@ -25,8 +25,8 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
-    public void create(Deal deal) throws DatabaseException {
-        dealDao.create(deal);
+    public int create(Deal deal) throws DatabaseException {
+        return dealDao.create(deal);
     }
 
     @Override
@@ -35,13 +35,13 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
-    public void update(Deal deal) throws DatabaseException {
-        dealDao.update(deal);
+    public int update(Deal deal) throws DatabaseException {
+        return dealDao.update(deal);
     }
 
     @Override
-    public void delete(Deal deal) throws DatabaseException {
-        dealDao.delete(deal);
+    public int delete(Deal deal) throws DatabaseException {
+        return dealDao.delete(deal);
     }
 
     @Override

@@ -8,5 +8,14 @@ public enum DealStage implements Serializable {
     DECIDING,
     AGREEMENT,
     SUCCESS,
-    FAILED_AND_CLOSED
+    FAILED_AND_CLOSED;
+
+    public static DealStage getDealStageById(int id){
+        for(DealStage dealStage : DealStage.values()){
+            if(dealStage.ordinal() == id){
+                return dealStage;
+            }
+        }
+        return null;
+    }
 }

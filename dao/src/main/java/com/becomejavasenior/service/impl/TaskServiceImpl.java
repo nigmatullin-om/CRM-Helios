@@ -27,8 +27,8 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public void create(Task task) throws DatabaseException {
-        taskDao.create(task);
+    public int create(Task task) throws DatabaseException {
+        return taskDao.create(task);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void update(Task task) throws DatabaseException {
-        taskDao.update(task);
+    public int update(Task task) throws DatabaseException {
+        return taskDao.update(task);
     }
 
     @Override
-    public void delete(Task task) throws DatabaseException {
-        taskDao.delete(task);
+    public int delete(Task task) throws DatabaseException {
+        return taskDao.delete(task);
     }
 
     @Override

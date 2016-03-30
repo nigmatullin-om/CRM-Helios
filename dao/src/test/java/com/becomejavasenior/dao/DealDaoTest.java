@@ -1,4 +1,4 @@
-package com.becomejavasenior;
+package com.becomejavasenior.dao;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.DealDao;
@@ -15,7 +15,7 @@ import java.util.Date;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class DaoDealTest {
+public class DealDaoTest {
 //    public static  final String INSERT_TEST_DATA = "insert into crm_helios.deal values " +
 //            "(3, 'test data1', 250.00, 1, 1, 2, 1, '2013-03-10 12:00:00'),"+
 //            "(4, 'test data2', 200.00, 2, 4, 2, 2, '2012-03-10 11:00:00')";

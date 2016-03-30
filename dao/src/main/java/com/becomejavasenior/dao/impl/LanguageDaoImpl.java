@@ -3,14 +3,24 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.LanguageDao;
 import com.becomejavasenior.model.Language;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class LanguageDaoImpl extends CommonDao implements LanguageDao {
 
+    private static final Logger LOGGER = LogManager.getLogger(LanguageDaoImpl.class);
+
+    public LanguageDaoImpl(DataSource dataSource) {
+        super(dataSource);
+    }
+
     @Override
-    public void create(Language language) {
+    public int create(Language language) {
+        return 0;
     }
 
     @Override
@@ -19,11 +29,13 @@ public class LanguageDaoImpl extends CommonDao implements LanguageDao {
     }
 
     @Override
-    public void update(Language language) {
+    public int update(Language language) {
+        return 0;
     }
 
     @Override
-    public void delete(Language language) {
+    public int delete(Language language) {
+        return 0;
     }
 
     @Override
@@ -31,7 +43,4 @@ public class LanguageDaoImpl extends CommonDao implements LanguageDao {
         return null;
     }
 
-    public LanguageDaoImpl(DataSource dataSource) {
-        super(dataSource);
-    }
 }

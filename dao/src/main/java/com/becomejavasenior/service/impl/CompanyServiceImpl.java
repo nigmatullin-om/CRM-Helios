@@ -20,8 +20,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void create(Company company) throws DatabaseException {
-        companyDao.create(company);
+    public int create(Company company) throws DatabaseException {
+        return companyDao.create(company);
     }
 
     @Override
@@ -30,13 +30,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void update(Company company) throws DatabaseException {
-        companyDao.update(company);
+    public int update(Company company) throws DatabaseException {
+        return companyDao.update(company);
     }
 
     @Override
-    public void delete(Company company) throws DatabaseException {
-        companyDao.delete(company);
+    public int delete(Company company) throws DatabaseException {
+        return companyDao.delete(company);
     }
 
     @Override

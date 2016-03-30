@@ -11,13 +11,13 @@ import java.util.Map;
  */
 public interface DealService {
 
-    void create(Deal deal) throws DatabaseException;
+    int create(Deal deal) throws DatabaseException;
 
     Deal getDealById(int id) throws DatabaseException;
 
-    void update(Deal deal) throws DatabaseException;
+    int update(Deal deal) throws DatabaseException;
 
-    void delete(Deal deal) throws DatabaseException;
+    int delete(Deal deal) throws DatabaseException;
 
     List<Deal> findAll() throws DatabaseException;
 

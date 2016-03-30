@@ -49,7 +49,7 @@ public class CompanyServiceTest {
 
     @Test
     public void testCreate() throws Exception {
-        doNothing().when(companyDao, "create", any(Company.class));
+        when(companyDao.create(any(Company.class))).thenReturn(1);
         companyService.create(company);
 
         verify(companyDao).create(company);
@@ -68,7 +68,7 @@ public class CompanyServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        doNothing().when(companyDao, "update", any(Company.class));
+        when(companyDao.update(any(Company.class))).thenReturn(1);
         companyService.update(company);
 
         verify(companyDao).update(company);
@@ -76,7 +76,7 @@ public class CompanyServiceTest {
 
     @Test
     public void testDelete() throws Exception {
-        doNothing().when(companyDao, "delete", any(Company.class));
+        when(companyDao.delete(any(Company.class))).thenReturn(1);
         companyService.delete(company);
 
         verify(companyDao).delete(company);

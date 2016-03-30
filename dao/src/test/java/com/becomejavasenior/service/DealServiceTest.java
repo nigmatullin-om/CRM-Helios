@@ -54,7 +54,7 @@ public class DealServiceTest {
 
     @Test
     public void testCreate() throws Exception {
-        doNothing().when(dealDao, "create", any(Deal.class));
+        when(dealDao.create(any(Deal.class))).thenReturn(1);
         dealService.create(deal);
 
         verify(dealDao).create(deal);
@@ -72,7 +72,7 @@ public class DealServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        doNothing().when(dealDao, "update", any(Deal.class));
+        when(dealDao.update(any(Deal.class))).thenReturn(1);
         dealService.update(deal);
 
         verify(dealDao).update(deal);
@@ -80,7 +80,7 @@ public class DealServiceTest {
 
     @Test
     public void testDelete() throws Exception {
-        doNothing().when(dealDao, "delete", any(Deal.class));
+        when(dealDao.delete(any(Deal.class))).thenReturn(1);
         dealService.delete(deal);
 
         verify(dealDao).delete(deal);

@@ -10,13 +10,13 @@ import java.util.Map;
  * Created by aivlev on 3/24/16.
  */
 public interface TaskService {
-    void create(Task task) throws DatabaseException;
+    int create(Task task) throws DatabaseException;
 
     Task getTaskById(int id) throws DatabaseException;
 
-    void update(Task task) throws DatabaseException;
+    int update(Task task) throws DatabaseException;
 
-    void delete(Task task) throws DatabaseException;
+    int delete(Task task) throws DatabaseException;
 
     List<Task> findAll() throws DatabaseException;
 

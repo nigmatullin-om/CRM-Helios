@@ -11,13 +11,13 @@ import java.util.List;
  */
 public interface ContactService {
 
-    void create(Contact contact) throws DatabaseException;
+    int create(Contact contact) throws DatabaseException;
 
     Contact getContactById(int id) throws DatabaseException;
 
-    void update(Contact contact) throws DatabaseException;
+    int update(Contact contact) throws DatabaseException;
 
-    void delete(Contact contact) throws DatabaseException;
+    int delete(Contact contact) throws DatabaseException;
 
     List<Contact> findAll() throws DatabaseException;
 

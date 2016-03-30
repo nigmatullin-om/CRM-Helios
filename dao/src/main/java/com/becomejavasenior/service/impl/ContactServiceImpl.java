@@ -20,8 +20,8 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void create(Contact contact) throws DatabaseException {
-        contactDao.create(contact);
+    public int create(Contact contact) throws DatabaseException {
+        return contactDao.create(contact);
     }
 
     @Override
@@ -30,13 +30,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public void update(Contact contact) throws DatabaseException {
-        contactDao.update(contact);
+    public int update(Contact contact) throws DatabaseException {
+        return contactDao.update(contact);
     }
 
     @Override
-    public void delete(Contact contact) throws DatabaseException {
-        contactDao.delete(contact);
+    public int delete(Contact contact) throws DatabaseException {
+        return contactDao.delete(contact);
     }
 
     @Override

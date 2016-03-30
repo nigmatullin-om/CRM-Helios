@@ -15,6 +15,8 @@ import java.util.Properties;
 
 public class DaoFactoryImpl implements DaoFactory {
 
+    private static final Logger LOGGER = LogManager.getLogger(DaoFactoryImpl.class);
+
     private static final String URL = "url";
     private static final String PORT = "port";
     private static final String DB_NAME = "db_name";
@@ -28,20 +30,21 @@ public class DaoFactoryImpl implements DaoFactory {
     private static String PASSWORD_VALUE;
     private static DataSource dataSource;
 
-    static final Logger log = LogManager.getLogger(DaoFactoryImpl.class);
+    public DaoFactoryImpl() {
+    }
 
-    private DataSource initDataSource(){
+    private DataSource initDataSource() {
         loadProperties();
-        String connectURI= "jdbc:postgresql://" + URL_VALUE + ":" + PORT_VALUE + "/" + DB_NAME_VALUE;
-        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(connectURI, USER_NAME_VALUE, PASSWORD_VALUE);
+        String connectURI = "jdbc:postgresql://" + URL_VALUE + ":" + PORT_VALUE + "/" + DB_NAME_VALUE;
+        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI, USER_NAME_VALUE, PASSWORD_VALUE);
         PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-        ObjectPool<PoolableConnection> connectionPool =  new GenericObjectPool<>(poolableConnectionFactory);
+        ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
         poolableConnectionFactory.setPool(connectionPool);
         PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(connectionPool);
         return dataSource;
     }
 
-    private void loadProperties(){
+    private void loadProperties() {
         Properties prop = new Properties();
         InputStream input;
         try {
@@ -54,11 +57,11 @@ public class DaoFactoryImpl implements DaoFactory {
             PASSWORD_VALUE = prop.getProperty(PASSWORD);
             Class.forName(prop.getProperty(DRIVER_CLASS_NAME));
         } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
         } catch (FileNotFoundException e) {
-            log.error("Couldn't find the properties file!");
+            LOGGER.error("Getting a file properties was failed. Error - {}", new Object[]{e.getMessage()});
         } catch (IOException e) {
-            log.error("Couldn't get properties!");
+            LOGGER.error("Getting a properties was failed. Error - {}", new Object[]{e.getMessage()});
         }
     }
 
@@ -102,11 +105,8 @@ public class DaoFactoryImpl implements DaoFactory {
         return new UserDaoImpl(getDataSource());
     }
 
-    public DaoFactoryImpl() {
-    }
-
-    private DataSource getDataSource(){
-        if(dataSource == null){
+    private DataSource getDataSource() {
+        if (dataSource == null) {
             dataSource = initDataSource();
         }
         return dataSource;

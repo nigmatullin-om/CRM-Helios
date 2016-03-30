@@ -5,6 +5,8 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.TagDao;
 import com.becomejavasenior.model.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -15,13 +17,18 @@ import java.util.List;
 
 public class TagDaoImpl extends CommonDao implements TagDao {
 
-    private static final String FIND_ALL_BY_DEAL_ID ="SELECT * FROM tag JOIN tag_deal ON" +
+    private static final Logger LOGGER = LogManager.getLogger(TagDaoImpl.class);
+
+    private static final String FIND_ALL_BY_DEAL_ID = "SELECT * FROM tag JOIN tag_deal ON" +
             " tag.id = tag_deal.tag_id AND deal_id = ?";
 
+    public TagDaoImpl(DataSource dataSource) {
+        super(dataSource);
+    }
 
     @Override
-    public void create(Tag tag) {
-
+    public int create(Tag tag) {
+        return 0;
     }
 
     @Override
@@ -30,40 +37,40 @@ public class TagDaoImpl extends CommonDao implements TagDao {
     }
 
     @Override
-    public void update(Tag tag) {
+    public int update(Tag tag) {
+        return 0;
     }
 
     @Override
-    public void delete(Tag tag) {
+    public int delete(Tag tag) {
+        return 0;
     }
 
-    public List<Tag> findAll(){
+    @Override
+    public List<Tag> findAll() {
         return null;
     }
 
     @Override
     public List<Tag> findAllByDealId(int id) throws DatabaseException {
-        try (Connection connection =  getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_DEAL_ID)){
-             preparedStatement.setInt(1, id);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_DEAL_ID)) {
+            preparedStatement.setInt(1, id);
             DaoFactoryImpl daoFactory = new DaoFactoryImpl();
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                while (resultSet.next()){
-                    Tag tag = new Tag();
-                    tag.setId(resultSet.getInt(1));
-                    tag.setName(resultSet.getString(2));
-                    tag.setCreationDate(resultSet.getDate(4));
-                    tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
-                }
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Tag tag = new Tag();
+                tag.setId(resultSet.getInt(1));
+                tag.setName(resultSet.getString(2));
+                tag.setCreationDate(resultSet.getDate(4));
+                tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
             }
-        }
-         catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            LOGGER.error("Creating tasks was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
         }
         return null;
     }
 
-    public TagDaoImpl(DataSource dataSource) {
-        super(dataSource);
-    }
+
 }

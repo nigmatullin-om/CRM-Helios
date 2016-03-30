@@ -49,7 +49,7 @@ public class ContactServiceTest {
 
     @Test
     public void testCreate() throws Exception {
-        doNothing().when(contactDao, "create", any(Contact.class));
+        when(contactDao.create(any(Contact.class))).thenReturn(1);
         contactService.create(contact);
 
         verify(contactDao).create(contact);
@@ -68,7 +68,7 @@ public class ContactServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        doNothing().when(contactDao, "update", any(Contact.class));
+        when(contactDao.update(any(Contact.class))).thenReturn(1);
         contactService.update(contact);
 
         verify(contactDao).update(contact);
@@ -76,7 +76,7 @@ public class ContactServiceTest {
 
     @Test
     public void testDelete() throws Exception {
-        doNothing().when(contactDao, "delete", any(Contact.class));
+        when(contactDao.delete(any(Contact.class))).thenReturn(1);
         contactService.delete(contact);
 
         verify(contactDao).delete(contact);
