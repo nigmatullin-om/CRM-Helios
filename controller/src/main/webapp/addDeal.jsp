@@ -12,6 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="AddDeal.js"></script>
     <script>
         $(function() {
             $("#datepicker").datepicker();
@@ -25,7 +26,7 @@
 <body>
     <div class="container">
         <h1>Добавление сделки</h1>
-        <form class="form-horizontal" role="form" action="" method="post">
+        <form class="form-horizontal" role="form" action="/saveDeal" method="post">
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -41,36 +42,31 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-4">Ответственный</label>
+                        <label class="control-label col-sm-4">Ответственный ${var} & ${var}</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="dealResponsible" id="dealResponsible">
-                                <option value="one">One</option>
-                                <option value="two">Two</option>
-                                <option value="three">Three</option>
-                                <option value="four">Four</option>
-                                <option value="five">Five</option>
+                            <select class="form-control" value="-1" name="dealResponsible" id="dealResponsible" placeholder="SELECT">
+                                <option value="-1" selected disabled>Please select</option>
+                                <c:forEach items="${dealStages}" var="stage">
+                                    <option value="">${stage}</option>
+                                </c:forEach>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-4">Бюджет</label>
                         <div class="col-sm-7">
-                            <input type="text" class="form-control" name="dealBudget" id="dealBudget" >
+                            <input type="number" step="0.01" class="form-control" name="dealBudget" id="dealBudget" >
                         </div>
                         <label class="control-label col-sm-1">грн</label>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-4">Этап</label>
+                        <label class="control-label col-sm-4">Этап ${requestScope.get("var")} ${requestScope.get("var2")}</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="dealStage" id="dealStage">
-                                <c:forEach items="${stages}" var="stage">
-                                    <option value="${stage.ordinal()}">${stage}</option>
+                                <option value="-1" selected disabled>Please select</option>
+                                <c:forEach items="${dealStages}" var="stage">
+                                    <option value="">${stage}</option>
                                 </c:forEach>
-
-                                <option value="two">Two</option>
-                                <option value="three">Three</option>
-                                <option value="four">Four</option>
-                                <option value="five">Five</option>
                             </select>
                         </div>
                     </div>
@@ -83,7 +79,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-4">Дата создания</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="datepicker">
+                            <input type="text" class="form-control" id="datepicker" name="dealDate">
                         </div>
                     </div>
                     <div class="form-group">
@@ -268,7 +264,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <button type="button" class="btn control-button col-sm-8" name="save" id="save">Сохранить</button>
+                        <button type="submit" class="btn control-button col-sm-8" onclick="return checkDealForm()" name="save" id="save">Сохранить</button>
                     </div>
                 </div>
             </div>
