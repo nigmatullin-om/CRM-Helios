@@ -30,6 +30,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         super(dataSource);
     }
 
+    @Override
     public int create(User user) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
@@ -51,7 +52,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         }
     }
 
-
+    @Override
     public User getUserById(int id) throws DatabaseException {
         User user = null;
         try (Connection connection = getConnection();
@@ -82,6 +83,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         return user;
     }
 
+    @Override
     public int update(User user) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
@@ -104,6 +106,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         }
     }
 
+    @Override
     public int delete(User user) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER)) {
@@ -115,6 +118,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         }
     }
 
+    @Override
     public List<User> findAll() throws DatabaseException {
         List<User> users = new ArrayList<>();
         try (Connection connection = getConnection();

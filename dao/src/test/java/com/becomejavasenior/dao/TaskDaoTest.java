@@ -1,6 +1,5 @@
 package com.becomejavasenior.dao;
 
-import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
 import com.becomejavasenior.model.Task;
 import org.dbunit.dataset.DataSetException;
@@ -68,7 +67,7 @@ public class TaskDaoTest extends AbstractTestDao {
         return new FlatXmlDataSetBuilder().build(resourceAsStream);
     }
 
-/*    @Test
+    @Test
     public void testGetAllTasksForContactById() throws DatabaseException {
         List<Task> allTasksForContactBy1 = taskDao.getAllTasksForContactById(TEST_CONTACT_ID);
         int taskCountForCompanyId1 = 2;
@@ -96,5 +95,4 @@ public class TaskDaoTest extends AbstractTestDao {
         assertThat(allTasksForDealBy1, hasSize(allTaskCount));
     }
 
-    */
 }
