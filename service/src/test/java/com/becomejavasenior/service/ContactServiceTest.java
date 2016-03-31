@@ -5,10 +5,12 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.service.impl.ContactServiceImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -58,12 +60,12 @@ public class ContactServiceTest {
 
     @Test
     public void testGetContactById() throws Exception {
-        when(contactDao.getContactById(1)).thenReturn(contact);
+        PowerMockito.when(contactDao.getContactById(1)).thenReturn(contact);
 
         Contact resultContact = contactService.getContactById(1);
 
         verify(contactDao).getContactById(1);
-        assertEquals(contact, resultContact);
+        Assert.assertEquals(contact, resultContact);
     }
 
     @Test
@@ -108,7 +110,7 @@ public class ContactServiceTest {
 
     @Test
     public void testGetCount() throws DatabaseException {
-        when(contactDao.getCount()).thenReturn(CONTACTS_COUNT);
+        PowerMockito.when(contactDao.getCount()).thenReturn(CONTACTS_COUNT);
         int result = contactService.getCount();
 
         verify(contactDao).getCount();

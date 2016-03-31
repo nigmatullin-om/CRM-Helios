@@ -5,10 +5,12 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.service.impl.CompanyServiceImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -57,12 +59,12 @@ public class CompanyServiceTest {
 
     @Test
     public void testGetCompanyById() throws Exception {
-        when(companyDao.getCompanyById(1)).thenReturn(company);
+        PowerMockito.when(companyDao.getCompanyById(1)).thenReturn(company);
 
         Company resultCompany = companyService.getCompanyById(1);
 
         verify(companyDao).getCompanyById(1);
-        assertEquals(company, resultCompany);
+        Assert.assertEquals(company, resultCompany);
 
     }
 
@@ -107,7 +109,7 @@ public class CompanyServiceTest {
 
     @Test
     public void testGetCount() throws DatabaseException {
-        when(companyDao.getCount()).thenReturn(COMPANIES_COUNT);
+        PowerMockito.when(companyDao.getCount()).thenReturn(COMPANIES_COUNT);
         int result = companyService.getCount();
 
         verify(companyDao).getCount();

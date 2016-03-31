@@ -5,10 +5,12 @@ import com.becomejavasenior.dao.TaskDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Task;
 import com.becomejavasenior.service.impl.TaskServiceImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -57,7 +59,7 @@ public class TaskServiceTest {
 
     @Test
     public void testCreate() throws Exception {
-        when(taskDao.create(any(Task.class))).thenReturn(1);
+        PowerMockito.when(taskDao.create(any(Task.class))).thenReturn(1);
         taskService.create(task);
 
         verify(taskDao).create(task);
@@ -66,18 +68,18 @@ public class TaskServiceTest {
 
     @Test
     public void testGetTaskById() throws Exception {
-        when(taskDao.getTaskById(1)).thenReturn(task);
+        PowerMockito.when(taskDao.getTaskById(1)).thenReturn(task);
 
         Task resultTask = taskService.getTaskById(1);
 
         verify(taskDao).getTaskById(1);
-        assertEquals(task, resultTask);
+        Assert.assertEquals(task, resultTask);
 
     }
 
     @Test
     public void testUpdate() throws Exception {
-        when(taskDao.update(any(Task.class))).thenReturn(1);
+        PowerMockito.when(taskDao.update(any(Task.class))).thenReturn(1);
         taskService.update(task);
 
         verify(taskDao).update(task);
@@ -86,7 +88,7 @@ public class TaskServiceTest {
 
     @Test
     public void testDelete() throws Exception {
-        when(taskDao.delete(any(Task.class))).thenReturn(1);
+        PowerMockito.when(taskDao.delete(any(Task.class))).thenReturn(1);
         taskService.delete(task);
 
         verify(taskDao).delete(task);
