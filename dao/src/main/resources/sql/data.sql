@@ -30,7 +30,8 @@ insert into crm_helios.stage values (1, 'первичный контакт'),
 				    (5, 'успешно реализовано'),
 				    (6, 'закрыто и не реализовано');
 
-insert into crm_helios.user values (1, 'Андрей Ярмоленко', 'yar', NULL, 'yar@ukr.net', '+380963451234', '+380440912938', 1, 1, 'сильные стороны: общение с клиентом', '2016-03-08 04:05:06'), 
+insert into crm_helios.person
+values (1, 'Андрей Ярмоленко', 'yar', NULL, 'yar@ukr.net', '+380963451234', '+380440912938', 1, 1, 'сильные стороны: общение с клиентом', '2016-03-08 04:05:06'),
 				   (2, 'Евгений Хачериди', 'hac', NULL, 'haceridi@gmail.com', '+380975451274', '+380441912638', 2, 1, 'сильные стороны: игра головой', '2016-03-09 09:15:12');
 
 insert into crm_helios.company values (1, 'Елки', 1, 'elki.com.ua', 'info@elki.com.ua', 'Украина, Киев, Институтская-3', '+380440313936', 1, 1, '2016-03-10 08:10:00'), 
@@ -64,3 +65,12 @@ insert into crm_helios.tag_deal values (3, 1),
 
 insert into crm_helios.deal_contact values (1, 1),
 				           (2, 2);
+
+SELECT setval('tag_id_seq', (SELECT MAX(id) FROM crm_helios.tag));
+SELECT setval('contact_id_seq', (SELECT MAX(id) from crm_helios.contact));
+SELECT setval('deal_id_seq', (SELECT MAX(id) from crm_helios.deal));
+SELECT setval('file_id_seq', (SELECT MAX(id) from crm_helios.file));
+SELECT setval('note_id_seq', (SELECT MAX(id) from crm_helios.note));
+SELECT setval('person_id_seq', (SELECT MAX(id) from crm_helios.person));
+SELECT setval('tag_id_seq', (SELECT MAX(id) from crm_helios.tag));
+SELECT setval('task_id_seq', (SELECT MAX(id) from crm_helios.task));

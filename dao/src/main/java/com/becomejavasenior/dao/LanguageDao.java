@@ -6,9 +6,9 @@ import com.becomejavasenior.model.Language;
 import java.util.List;
 
 public interface LanguageDao {
-    void create(Language language);
-    Language read(int id);
-    void update(Language language);
-    void delete(Language language);
+    int create(Language language);
+    Language getLanguageById(int id);
+    int update(Language language);
+    int delete(Language language);
     List<Language> findAll();
 }

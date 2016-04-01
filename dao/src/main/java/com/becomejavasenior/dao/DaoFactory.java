@@ -11,5 +11,4 @@ public interface DaoFactory {
     TagDao getTagDao();
     TaskDao getTaskDao();
     UserDao getUserDao();
-
 }

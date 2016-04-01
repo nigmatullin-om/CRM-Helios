@@ -2,13 +2,13 @@ package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.CompanyDao;
+import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.PhoneType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,26 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
-    private final String READ_COMPANY= "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
 
-    private final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
-                                            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final Logger LOGGER = LogManager.getLogger(CompanyDaoImpl.class);
 
-    private final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
-                                            "created_by=?, date_create=?, deleted=? WHERE id=?";
+    private static final String READ_COMPANY = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
 
-    private final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
-    private final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
+    private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
+            "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    static final Logger log = LogManager.getLogger(CompanyDaoImpl.class);
+    private static final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
+            "created_by=?, date_create=?, deleted=? WHERE id=?";
+
+    private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
+    private static final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
+    private static final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
 
-    public void create(Company company) throws DatabaseException {
+    @Override
+    public int create(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
             preparedStatement.setString(1, company.getName());
             preparedStatement.setInt(2, company.getResponsibleUser().getId());
             preparedStatement.setString(3, company.getWeb());
@@ -47,21 +50,23 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(8, company.getCreatedByUser().getId());
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());
-            preparedStatement.execute();
+            return preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Couldn't create the company entity because of some SQL exception!");
+            LOGGER.error("Creating a company was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
     }
 
-    public Company read(int id) throws DatabaseException {
+    @Override
+    public Company getCompanyById(int id) throws DatabaseException {
         Company company = null;
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_COMPANY)) {
             preparedStatement.setInt(1, id);
-            try(ResultSet resultSet = preparedStatement.executeQuery();) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     company = new Company();
+
                     company.setId(resultSet.getInt("id"));
                     company.setName(resultSet.getString("name"));
                     company.setWeb(resultSet.getString("web"));
@@ -71,21 +76,23 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                     company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
                     company.setCreationDate(resultSet.getDate("date_create"));
                     company.setDeleted(resultSet.getBoolean("deleted"));
+
                 }
             }
         } catch (SQLException e) {
-            log.error("Couldn't read from company entity because of some SQL exception!");
+            LOGGER.error("Getting a company was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
-        if (company == null){
+        if (company == null) {
             throw new DatabaseException("no result for id=" + id);
         }
         return company;
     }
 
-    public void update(Company company) throws DatabaseException {
+    @Override
+    public int update(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMPANY)) {
             preparedStatement.setString(1, company.getName());
             preparedStatement.setInt(2, company.getResponsibleUser().getId());
             preparedStatement.setString(3, company.getWeb());
@@ -97,29 +104,31 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());
             preparedStatement.setInt(11, company.getId());
-            preparedStatement.execute();
+            return preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Couldn't update the company entity because of some SQL exception!");
+            LOGGER.error("Updating a company was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
     }
 
-    public void delete(Company company) throws DatabaseException {
+    @Override
+    public int delete(Company company) throws DatabaseException {
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_COMPANY)) {
             preparedStatement.setInt(1, company.getId());
-            preparedStatement.execute();
+            return preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Couldn't delete the company entity because of some SQL exception!");
+            LOGGER.error("Deleting a company was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
     }
 
+    @Override
     public List<Company> findAll() throws DatabaseException {
-        List<Company> companies = new ArrayList<Company>();
+        List<Company> companies = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_COMPANIES);
-             ResultSet resultSet = preparedStatement.executeQuery();) {
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 Company company = new Company();
                 company.setId(resultSet.getInt("id"));
@@ -134,10 +143,26 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                 companies.add(company);
             }
         } catch (SQLException e) {
-            log.error("Couldn't find from company entity because of some SQL exception!");
+            LOGGER.error("Getting companies was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
         return companies;
+    }
+
+    @Override
+    public int getCount() throws DatabaseException {
+        int count = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_COMPANIES_COUNT);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Counting companies was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return count;
     }
 }
 

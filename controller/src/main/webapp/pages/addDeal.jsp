@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="AddDeal.js"></script>
+    <script src="../resources/js/addDealForm.js"></script>
     <script>
         $(function() {
             $("#datepicker").datepicker();
@@ -42,12 +42,12 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-4">Ответственный ${var} & ${var}</label>
+                        <label class="control-label col-sm-4">Ответственный</label>
                         <div class="col-sm-8">
                             <select class="form-control" value="-1" name="dealResponsible" id="dealResponsible" placeholder="SELECT">
                                 <option value="-1" selected disabled>Please select</option>
-                                <c:forEach items="${dealStages}" var="stage">
-                                    <option value="">${stage}</option>
+                                <c:forEach items="${users}" var="user">
+                                    <option value="${user.id}">${user.name}</option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -65,7 +65,7 @@
                             <select class="form-control" name="dealStage" id="dealStage">
                                 <option value="-1" selected disabled>Please select</option>
                                 <c:forEach items="${dealStages}" var="stage">
-                                    <option value="">${stage}</option>
+                                    <option value="${stage.id}">${stage.name}</option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -84,12 +84,11 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-8">
-                            <select class="form-control" title="Выбрать контакт" name="dealContact" id="dealContact">
-                                <option value="one">One</option>
-                                <option value="two">Two</option>
-                                <option value="three">Three</option>
-                                <option value="four">Four</option>
-                                <option value="five">Five</option>
+                            <select class="form-control"  name="dealContact" id="dealContact">
+                                <option value="-1" selected disabled>Please select</option>
+                                <c:forEach items="${contacts}" var="contact">
+                                    <option value="${contact.id}">${contact.name}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <button type="button" class="btn control-button col-sm-4">Добавить</button>
@@ -117,12 +116,11 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-4">
-                            <select class="form-control" title="Выбрать контакт" name="contactPhoneType" id="contactPhoneType">
-                                <option value="one">One</option>
-                                <option value="two">Two</option>
-                                <option value="three">Three</option>
-                                <option value="four">Four</option>
-                                <option value="five">Five</option>
+                            <select class="form-control"  name="contactPhoneType" id="contactPhoneType">
+                                <option value="-1" selected disabled>Phone type</option>
+                                <c:forEach items="${phoneTypes}" var="phoneType">
+                                    <option value="${phoneType.id}">${phoneType.name}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div class="col-sm-8">
@@ -225,11 +223,10 @@
                         <label class="control-label col-sm-4">Ответственный</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="taskResponsible" id="taskResponsible">
-                                <option value="one">One</option>
-                                <option value="two">Two</option>
-                                <option value="three">Three</option>
-                                <option value="four">Four</option>
-                                <option value="five">Five</option>
+                                <option value="-1" selected disabled>Please select</option>
+                                <c:forEach items="${users}" var="user">
+                                    <option value="${user.id}">${user.name}</option>
+                                </c:forEach>
                             </select>
                         </div>
                     </div>
