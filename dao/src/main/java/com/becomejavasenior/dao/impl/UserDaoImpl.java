@@ -16,20 +16,19 @@ public class UserDaoImpl extends CommonDao implements UserDao {
 
     private static final Logger LOGGER = LogManager.getLogger(UserDaoImpl.class);
 
-    private static final String CREATE_USER = "INSERT INTO public.user (name, password, photo_file_id, email, phone_mobile," +
+    private static final String CREATE_USER = "INSERT INTO person (name, password, photo_file_id, email, phone_mobile," +
             "phone_work, lang_id, role_id, note, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String READ_USER = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
-            "FROM public.user WHERE id = ?";
-    private static final String UPDATE_USER = "UPDATE public.user SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
+            "FROM person WHERE id = ?";
+    private static final String UPDATE_USER = "UPDATE person SET name=?, password=?, photo_file_id=?, email=?, phone_mobile=?," +
             "phone_work=?, lang_id=?, role_id=?, note=?, date_create=?, deleted=? WHERE id=?";
-    private static final String DELETE_USER = "DELETE FROM public.user WHERE id=?";
+    private static final String DELETE_USER = "DELETE FROM person WHERE id=?";
     private static final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
-            "FROM public.user";
+            "FROM person";
 
     public UserDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
-
 
     @Override
     public int create(User user) throws DatabaseException {

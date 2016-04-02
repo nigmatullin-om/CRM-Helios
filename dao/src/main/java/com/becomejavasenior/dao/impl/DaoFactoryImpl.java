@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -17,52 +16,34 @@ public class DaoFactoryImpl implements DaoFactory {
 
     private static final Logger LOGGER = LogManager.getLogger(DaoFactoryImpl.class);
 
-    private static final String URL = "url";
-    private static final String PORT = "port";
-    private static final String DB_NAME = "db_name";
-    private static final String USER_NAME = "user_name";
-    private static final String PASSWORD = "password";
-    private static final String DRIVER_CLASS_NAME = "driverClassName";
-    private static String URL_VALUE;
-    private static String PORT_VALUE;
-    private static String DB_NAME_VALUE;
-    private static String USER_NAME_VALUE;
-    private static String PASSWORD_VALUE;
     private static DataSource dataSource;
 
     public DaoFactoryImpl() {
     }
 
-    private DataSource initDataSource() {
-        loadProperties();
-        String connectURI = "jdbc:postgresql://" + URL_VALUE + ":" + PORT_VALUE + "/" + DB_NAME_VALUE;
-        ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI, USER_NAME_VALUE, PASSWORD_VALUE);
+    private DataSource initDataSource(){
+        Properties props = getProperties();
+        try {
+            Class.forName(props.getProperty("driverClassName"));
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
+        }
+        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(props.getProperty("url"), props);
         PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-        ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
+        ObjectPool<PoolableConnection> connectionPool =  new GenericObjectPool<>(poolableConnectionFactory);
         poolableConnectionFactory.setPool(connectionPool);
         PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(connectionPool);
         return dataSource;
     }
 
-    private void loadProperties() {
-        Properties prop = new Properties();
-        InputStream input;
-        try {
-            input = Thread.currentThread().getContextClassLoader().getResourceAsStream("db_config.properties");
-            prop.load(input);
-            URL_VALUE = prop.getProperty(URL);
-            PORT_VALUE = prop.getProperty(PORT);
-            DB_NAME_VALUE = prop.getProperty(DB_NAME);
-            USER_NAME_VALUE = prop.getProperty(USER_NAME);
-            PASSWORD_VALUE = prop.getProperty(PASSWORD);
-            Class.forName(prop.getProperty(DRIVER_CLASS_NAME));
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Getting a file properties was failed. Error - {}", new Object[]{e.getMessage()});
+    private Properties getProperties(){
+        Properties props = new Properties();
+        try(InputStream fis = getClass().getClassLoader().getResourceAsStream("db_config.properties")) {
+            props.load(fis);
         } catch (IOException e) {
-            LOGGER.error("Getting a properties was failed. Error - {}", new Object[]{e.getMessage()});
+            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
         }
+        return props;
     }
 
     public CompanyDao getCompanyDao() {
