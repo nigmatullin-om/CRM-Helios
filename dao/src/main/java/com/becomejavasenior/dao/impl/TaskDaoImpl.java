@@ -17,22 +17,22 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(TaskDaoImpl.class);
 
     private static String GET_TASK_BY_ID = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
-            "description, finish_date, responsible_id, period FROM task WHERE id = ? AND deleted = FALSE";
+            "description, finish_date, responsible_id, period, task_type_id FROM task WHERE id = ? AND deleted = FALSE";
     private static String INSERT_TASK = "INSERT INTO task(id, responsible_id, contact_id, " +
-            "deal_id, company_id, created_by, name, finish_date, description, date_create, period, deleted) VALUES" +
-            "(DEFAULT, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, FALSE)";
+            "deal_id, company_id, created_by, name, finish_date, description, date_create, period, deleted, task_type_id) VALUES" +
+            "(DEFAULT, ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, FALSE, ?)";
     private static String SET_TASK_DELETED = "UPDATE task SET deleted=TRUE WHERE id = ?";
     private static String UPDATE_TASK = "UPDATE task SET responsible_id=?, contact_id=?, deal_id =?," +
-            " company_id=?, created_by=?, name=?, finish_date=?, description=?, date_create=?, period=? WHERE id =?";
+            " company_id=?, created_by=?, name=?, finish_date=?, description=?, date_create=?, period=?, task_type_id=? WHERE id =?";
 
     private static String GET_ALL_TASKS_FOR_CONTACT = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
-            "description, finish_date, responsible_id, period FROM task WHERE contact_id=? AND deleted=FALSE";
+            "description, finish_date, responsible_id, period, task_type_id FROM task WHERE contact_id=? AND deleted=FALSE";
     private static String GET_ALL_TASKS_FOR_DEAL = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
-            "description, finish_date, responsible_id, period FROM task WHERE deal_id=? AND deleted=FALSE";
+            "description, finish_date, responsible_id, period, task_type_id FROM task WHERE deal_id=? AND deleted=FALSE";
     private static String GET_ALL_TASKS_FOR_COMPANY = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
-            "description, finish_date, responsible_id, period FROM task WHERE company_id=? AND deleted=FALSE";
+            "description, finish_date, responsible_id, period, task_type_id FROM task WHERE company_id=? AND deleted=FALSE";
     private static String GET_ALL_TASKS = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
-            "description, finish_date, responsible_id, period FROM task WHERE deleted=FALSE";
+            "description, finish_date, responsible_id, period, task_type_id FROM task WHERE deleted=FALSE";
 
 
     private DaoFactory daoFactory;
@@ -101,7 +101,8 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
                 ps.setNull(10, java.sql.Types.INTEGER);
             }
 
-            ps.setInt(11, task.getId());
+            ps.setInt(11, task.getTaskType().getId());
+            ps.setInt(12, task.getId());
             return ps.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Updating a task was failed. Error - {}", new Object[]{e.getMessage()});
@@ -159,6 +160,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
 
             ps.setInt(10, task.getPeriod().ordinal());
+            ps.setInt(11, task.getTaskType().getId());
 
             return ps.executeUpdate();
 
@@ -272,6 +274,10 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         int periodOrdinal = resultSet.getInt("period");
         Period period = Period.values()[periodOrdinal];
         task.setPeriod(period);
+
+        int taskTypeId = resultSet.getInt("task_type_id");
+        TaskType task_type = daoFactory.getTaskTypeDao().getTaskTypeById(taskTypeId);
+        task.setTaskType(task_type);
 
         return task;
     }
