@@ -91,7 +91,7 @@
                                 </c:forEach>
                             </select>
                         </div>
-                        <button type="button" class="btn control-button col-sm-4">Добавить</button>
+                        <button type="button" onclick="return addContact()" class="btn control-button col-sm-4">Добавить</button>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-8">Добавить Контакт</label>

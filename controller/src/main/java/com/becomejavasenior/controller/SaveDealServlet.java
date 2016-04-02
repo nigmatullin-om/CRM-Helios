@@ -2,6 +2,15 @@ package com.becomejavasenior.controller;
 
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.DealStage;
+import com.becomejavasenior.model.PhoneType;
+import com.becomejavasenior.service.CompanyService;
+import com.becomejavasenior.service.ContactService;
+import com.becomejavasenior.service.DealService;
+import com.becomejavasenior.service.TaskService;
+import com.becomejavasenior.service.impl.CompanyServiceImpl;
+import com.becomejavasenior.service.impl.ContactServiceImpl;
+import com.becomejavasenior.service.impl.DealServiceImpl;
+import com.becomejavasenior.service.impl.TaskServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +31,18 @@ import java.util.Locale;
 @WebServlet("/saveDeal")
 public class SaveDealServlet extends HttpServlet {
     static final Logger log = LogManager.getLogger(SaveDealServlet.class);
+    private DealService dealService;
+    private ContactService contactService;
+    private CompanyService companyService;
+    private TaskService taskService;
+
+    @Override
+    public void init() throws ServletException {
+        dealService = new DealServiceImpl();
+        contactService = new ContactServiceImpl();
+        companyService = new CompanyServiceImpl();
+        taskService = new TaskServiceImpl();
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -46,8 +67,23 @@ public class SaveDealServlet extends HttpServlet {
         } catch (ParseException e) {
             log.error("can't parse date" + e);
         }
-        //---------------------------------------------------------
+        //-----read list of contacts-----------------------------------------
 
+        //----read new contact----------------------------------------------
+        String contactName = req.getParameter("contactName");
+        log.info("contact name = " + contactName);
+        String contactPosition = req.getParameter("contactPosition");
+        log.info("contact position = " + contactPosition);
+        int contactPhoneTypeInt = Integer.parseInt(req.getParameter("contactPhoneType"));
+        log.info("contact phone type = " + contactPhoneTypeInt);
+        PhoneType contactPhoneType;
+        if (contactPhoneTypeInt != -1){
+            contactPhoneType = PhoneType.values()[contactPhoneTypeInt];
+        }
+        String contactPhone = req.getParameter("contactPhone");
+        log.info("contact phone = " + contactPhone);
+        String contactSkype = req.getParameter("contactSkype");
+        log.info("contact skype = " + contactSkype);
 
     }
 }
