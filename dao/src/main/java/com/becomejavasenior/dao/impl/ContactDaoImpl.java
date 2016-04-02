@@ -6,18 +6,14 @@ import com.becomejavasenior.dao.ContactDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.PhoneType;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactDaoImpl extends CommonDao implements ContactDao {
 
@@ -39,9 +35,12 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             "ON contact.id = deal_contact.contact_id AND deal_id = ?";
     private static final String FIND_CONTACTS_BY_COMPANY_ID = "SELECT * FROM contact WHERE company_id = ?";
 
+    private static final String FIND_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact WHERE deal_id = ?";
+
     private static final String GET_CONTACT_FOR_TASK = "SELECT contact.id, contact.name, contact.phone, contact.email, " +
             "contact.skype,  contact.position,  contact.phone_type_id,  contact.date_create,  contact.deleted " +
             "FROM contact INNER JOIN task ON contact.id = task.contact_id WHERE task.id = ?";
+    private static final String CREATE_CONTACT_FOR_DEAL = "INSERT INTO deal_contact (contact_id, deal_id) VALUES (?, ?)";
 
     public ContactDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -50,7 +49,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
     @Override
     public int create(Contact contact) throws DatabaseException {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, contact.getName());
             preparedStatement.setString(2, contact.getPhone());
             preparedStatement.setString(3, contact.getEmail());
@@ -62,7 +61,14 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(9, contact.getResponsibleUser().getId());
             preparedStatement.setDate(10, new java.sql.Date(contact.getCreationDate().getTime()));
             preparedStatement.setBoolean(11, contact.getDeleted());
-            return preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            int last_inserted_id = 0;
+            if (rs.next()){
+                last_inserted_id = rs.getInt(1);
+            }
+
+            return last_inserted_id;
         } catch (SQLException e) {
             LOGGER.error("Creating a contact was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
@@ -120,7 +126,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     @Override
     public List<Contact> findAllByDealId(int id) throws DatabaseException {
-        return getContactsListByStatement(FIND_CONTACTS_BY_COMPANY_ID, id);
+        return getContactsListByStatement(FIND_CONTACTS_BY_DEAL_ID, id);
     }
 
     @Override
@@ -128,6 +134,23 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         return getContactsListByStatement(FIND_CONTACTS_BY_COMPANY_ID, id);
     }
 
+    @Override
+    public int createContactForDeal(int dealId, Contact contact) throws DatabaseException {
+        if (contact.getId() == 0){
+            int contactId = this.create(contact);
+            contact.setId(contactId);
+        }
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT_FOR_DEAL)){
+            preparedStatement.setInt(1, contact.getId());
+            preparedStatement.setInt(2, dealId);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Creating a deal_contact was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+    }
 
     @Override
     public int getCount() throws DatabaseException {
@@ -169,7 +192,9 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         List<Contact> contacts = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
-            preparedStatement.setInt(1, idClause);
+            if (idClause != 0){
+                preparedStatement.setInt(1, idClause);
+            }
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 contacts.add(getContactFromResultSet(resultSet));

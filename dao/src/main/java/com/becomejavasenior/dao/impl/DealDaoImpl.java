@@ -11,10 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +45,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     private static final String GET_DEAL_FOR_TASK = "SELECT deal.id, deal.name, deal.budget, deal.responsible_id, deal.stage_id, deal.company_id, deal.created_by, deal.date_create, deal.deleted " +
             "FROM deal INNER JOIN task ON deal.id = task.deal_id WHERE task.id = ?";
 
+    private static final String CREATE_DEAL_FOR_CONTACT = "INSERT INTO deal_contact (contact_id, deal_id) VALUES (?, ?)";
 
     public DealDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -57,7 +55,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     @Override
     public int create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, deal.getId());
             preparedStatement.setString(2, deal.getName());
             preparedStatement.setBigDecimal(3, deal.getBudget());
@@ -67,7 +65,14 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setInt(7, deal.getCreatedByUser().getId());
             preparedStatement.setDate(8, new java.sql.Date(deal.getCreationDate().getTime()));
             preparedStatement.setBoolean(9, deal.getDeleted());
-            return preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            int last_inserted_id = 0;
+            if (rs.next()){
+                last_inserted_id = rs.getInt(1);
+            }
+
+            return last_inserted_id;
         } catch (SQLException e) {
             LOGGER.error("Creating a deal was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
@@ -226,6 +231,24 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             throw new DatabaseException(e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public int createDealForContact(int contactId, Deal deal) throws DatabaseException {
+        if (deal.getId() == 0){
+            int dealId = this.create(deal);
+            deal.setId(dealId);
+        }
+
+        try (Connection connection = getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL_FOR_CONTACT);
+            preparedStatement.setInt(1, contactId);
+            preparedStatement.setInt(2, deal.getId());
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Creating a deal_contact was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     private Deal getDealByResultSet(ResultSet resultSet) throws DatabaseException, SQLException {

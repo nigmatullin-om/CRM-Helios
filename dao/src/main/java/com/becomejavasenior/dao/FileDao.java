@@ -15,5 +15,6 @@ public interface FileDao {
     List<File> findAll()throws DatabaseException;
     List<File> findAllByDealId(int id) throws DatabaseException;
     List<File> findAllByCompanyId(int id) throws DatabaseException;
+    List<File> findAllByContactId(int id) throws DatabaseException;
 
 }

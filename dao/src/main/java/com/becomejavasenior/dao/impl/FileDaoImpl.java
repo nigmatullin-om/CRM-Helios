@@ -171,5 +171,10 @@ public class FileDaoImpl extends CommonDao implements FileDao {
 
     }
 
+    @Override
+    public List<File> findAllByContactId(int id) throws DatabaseException {
+        return null;
+    }
+
 
 }

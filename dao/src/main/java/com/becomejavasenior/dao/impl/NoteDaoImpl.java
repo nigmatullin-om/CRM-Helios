@@ -164,5 +164,10 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         return notes;
     }
 
+    @Override
+    public List<Note> findAllByContactId(int id) throws DatabaseException {
+        return null;
+    }
+
 
 }
