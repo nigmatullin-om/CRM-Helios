@@ -6,10 +6,12 @@ import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.DealStage;
 import com.becomejavasenior.service.impl.DealServiceImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -62,12 +64,12 @@ public class DealServiceTest {
 
     @Test
     public void testGetDealById() throws Exception {
-        when(dealDao.getDealById(1)).thenReturn(deal);
+        PowerMockito.when(dealDao.getDealById(1)).thenReturn(deal);
 
         Deal resultDeal = dealService.getDealById(1);
 
         verify(dealDao).getDealById(1);
-        assertEquals(deal, resultDeal);
+        Assert.assertEquals(deal, resultDeal);
     }
 
     @Test
@@ -141,7 +143,7 @@ public class DealServiceTest {
 
     @Test
     public void testCountDealsWithTasks() throws DatabaseException {
-        when(dealDao.countDealsWithTasks()).thenReturn(DEALS_WITH_TASKS_COUNT);
+        PowerMockito.when(dealDao.countDealsWithTasks()).thenReturn(DEALS_WITH_TASKS_COUNT);
         int result = dealService.countDealsWithTasks();
 
         verify(dealDao).countDealsWithTasks();
@@ -151,7 +153,7 @@ public class DealServiceTest {
 
     @Test
     public void testCountDealsWithoutTasks() throws DatabaseException {
-        when(dealDao.countDealsWithoutTasks()).thenReturn(DEALS_WITHOUT_TASKS_COUNT);
+        PowerMockito.when(dealDao.countDealsWithoutTasks()).thenReturn(DEALS_WITHOUT_TASKS_COUNT);
         int result = dealService.countDealsWithoutTasks();
 
         verify(dealDao).countDealsWithoutTasks();
