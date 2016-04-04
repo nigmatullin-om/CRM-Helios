@@ -66,11 +66,11 @@ insert into crm_helios.tag_deal values (3, 1),
 insert into crm_helios.deal_contact values (1, 1),
 				           (2, 2);
 
-SELECT setval('tag_id_seq', (SELECT MAX(id) FROM crm_helios.tag));
-SELECT setval('contact_id_seq', (SELECT MAX(id) from crm_helios.contact));
-SELECT setval('deal_id_seq', (SELECT MAX(id) from crm_helios.deal));
-SELECT setval('file_id_seq', (SELECT MAX(id) from crm_helios.file));
-SELECT setval('note_id_seq', (SELECT MAX(id) from crm_helios.note));
-SELECT setval('person_id_seq', (SELECT MAX(id) from crm_helios.person));
-SELECT setval('tag_id_seq', (SELECT MAX(id) from crm_helios.tag));
-SELECT setval('task_id_seq', (SELECT MAX(id) from crm_helios.task));
+SELECT setval('crm_helios.company_id_seq', (SELECT MAX(id) FROM crm_helios.company));
+SELECT setval('crm_helios.contact_id_seq', (SELECT MAX(id) from crm_helios.contact));
+SELECT setval('crm_helios.deal_id_seq', (SELECT MAX(id) from crm_helios.deal));
+SELECT setval('crm_helios.file_id_seq', (SELECT MAX(id) from crm_helios.file));
+SELECT setval('crm_helios.note_id_seq', (SELECT MAX(id) from crm_helios.note));
+SELECT setval('crm_helios.person_id_seq', (SELECT MAX(id) from crm_helios.person));
+SELECT setval('crm_helios.tag_id_seq', (SELECT MAX(id) from crm_helios.tag));
+SELECT setval('crm_helios.task_id_seq', (SELECT MAX(id) from crm_helios.task));

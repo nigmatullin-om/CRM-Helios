@@ -26,6 +26,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
     private static final String DELETE_FILE = "DELETE FROM file WHERE id=?";
     private static final String FIND_ALL_FILES = "SELECT id, path, blob_data, date_create FROM file";
     private static final String FIND_ALL_FILES_BY_DEAL_ID = "SELECT * FROM file WHERE deal_id = ?";
+    private static final String FIND_FILES_BY_COMPANY_ID = "SELECT * FROM file WHERE company_id = ?";
 
     public FileDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -143,6 +144,31 @@ public class FileDaoImpl extends CommonDao implements FileDao {
             throw new DatabaseException(e.getMessage());
         }
         return files;
+    }
+
+    @Override
+    public List<File> findAllByCompanyId(int id) throws DatabaseException {
+        List<File> files = new ArrayList<>();
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_FILES_BY_COMPANY_ID)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                File file = new File();
+                file.setId(resultSet.getInt("id"));
+                file.setPath(resultSet.getString("path"));
+                file.setData(resultSet.getBytes(3));
+                file.setCreationDate(resultSet.getDate(9));
+                file.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+                files.add(file);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting files was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return files;
+
     }
 
 

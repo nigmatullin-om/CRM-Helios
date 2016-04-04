@@ -14,4 +14,5 @@ public interface ContactDao {
     List<Contact> findAll() throws DatabaseException;
     int getCount() throws DatabaseException;
     List<Contact> findAllByDealId (int id) throws DatabaseException;
+    List<Contact> findAllByCompanyId (int id) throws DatabaseException;
 }

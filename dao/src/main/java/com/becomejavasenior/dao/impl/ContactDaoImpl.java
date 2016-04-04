@@ -36,6 +36,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
     private static final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM contact";
     private static final String FIND_ALL_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact JOIN deal_contact " +
             "ON contact.id = deal_contact.contact_id AND deal_id = ?";
+    private static final String FIND_CONTACTS_BY_COMPANY_ID = "SELECT * FROM contact WHERE company_id = ?";
 
     public ContactDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -71,16 +72,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
-                    contact = new Contact();
-                    contact.setId(resultSet.getInt("id"));
-                    contact.setName(resultSet.getString("name"));
-                    contact.setPhone(resultSet.getString("phone"));
-                    contact.setEmail(resultSet.getString("email"));
-                    contact.setSkype(resultSet.getString("skype"));
-                    contact.setPosition(resultSet.getString("position"));
-                    contact.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
-                    contact.setCreationDate(resultSet.getDate("date_create"));
-                    contact.setDeleted(resultSet.getBoolean("deleted"));
+                    contact = getContactByRS(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -135,17 +127,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_CONTACTS);
              ResultSet resultSet = preparedStatement.executeQuery();) {
             while (resultSet.next()) {
-                Contact contact = new Contact();
-                contact.setId(resultSet.getInt("id"));
-                contact.setName(resultSet.getString("name"));
-                contact.setPhone(resultSet.getString("phone"));
-                contact.setEmail(resultSet.getString("email"));
-                contact.setSkype(resultSet.getString("skype"));
-                contact.setPosition(resultSet.getString("position"));
-                contact.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
-                contact.setCreationDate(resultSet.getDate("date_create"));
-                contact.setDeleted(resultSet.getBoolean("deleted"));
-                contacts.add(contact);
+                contacts.add(getContactByRS(resultSet));
             }
         } catch (SQLException e) {
             LOGGER.error("Getting contacts was failed. Error - {}", new Object[]{e.getMessage()});
@@ -162,23 +144,44 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Contact contact = new Contact();
-                contact.setId(resultSet.getInt(1));
-                contact.setName(resultSet.getString(2));
-                contact.setPhone(resultSet.getString(3));
-                contact.setEmail(resultSet.getString(4));
-                contact.setSkype(resultSet.getString(5));
-                contact.setPosition(resultSet.getString(6));
-                contact.setPhoneType(PhoneType.values()[resultSet.getInt(8)]);
-                contact.setCreationDate(resultSet.getDate(11));
-                //contact.setDeleted(resultSet.getBoolean(12));
-                contacts.add(contact);
+                contacts.add(getContactByRS(resultSet));
             }
         } catch (SQLException e) {
             LOGGER.error("Getting contacts was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
         return contacts;
+    }
+
+    @Override
+    public List<Contact> findAllByCompanyId(int id) throws DatabaseException {
+        List<Contact> contacts = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_CONTACTS_BY_COMPANY_ID)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                contacts.add(getContactByRS(resultSet));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting contacts was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return contacts;
+    }
+
+    private Contact getContactByRS(ResultSet rs) throws SQLException {
+        Contact contact = new Contact();
+        contact.setId(rs.getInt("id"));
+        contact.setName(rs.getString("name"));
+        contact.setPhone(rs.getString("phone"));
+        contact.setEmail(rs.getString("email"));
+        contact.setSkype(rs.getString("skype"));
+        contact.setPosition(rs.getString("position"));
+        contact.setPhoneType(PhoneType.values()[rs.getInt("phone_type_id")]);
+        contact.setCreationDate(rs.getDate("date_create"));
+        contact.setDeleted(rs.getBoolean("deleted"));
+        return contact;
     }
 
     @Override
