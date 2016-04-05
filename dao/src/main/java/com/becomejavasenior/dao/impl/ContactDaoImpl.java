@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +37,10 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
     private static final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM contact";
     private static final String FIND_ALL_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact JOIN deal_contact " +
             "ON contact.id = deal_contact.contact_id AND deal_id = ?";
+
+    private static final String GET_CONTACT_FOR_TASK = "SELECT contact.id, contact.name, contact.phone, contact.email, " +
+            "contact.skype,  contact.position,  contact.phone_type_id,  contact.date_create,  contact.deleted " +
+            "FROM contact INNER JOIN task ON contact.id = task.contact_id WHERE task.id = ?";
 
     public ContactDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -71,16 +76,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
-                    contact = new Contact();
-                    contact.setId(resultSet.getInt("id"));
-                    contact.setName(resultSet.getString("name"));
-                    contact.setPhone(resultSet.getString("phone"));
-                    contact.setEmail(resultSet.getString("email"));
-                    contact.setSkype(resultSet.getString("skype"));
-                    contact.setPosition(resultSet.getString("position"));
-                    contact.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
-                    contact.setCreationDate(resultSet.getDate("date_create"));
-                    contact.setDeleted(resultSet.getBoolean("deleted"));
+                    contact = getContactFromResultSet(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -195,6 +191,40 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             throw new DatabaseException(e.getMessage());
         }
         return count;
+    }
+
+    @Override
+    public Contact getContactForTask(Task task) throws DatabaseException {
+        Contact contact;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_CONTACT_FOR_TASK)) {
+            preparedStatement.setInt(1, task.getId());
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                boolean nextResultSet = resultSet.next();
+                if (nextResultSet) {
+                    return getContactFromResultSet(resultSet);
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting a contact was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    private Contact getContactFromResultSet(ResultSet resultSet) throws SQLException {
+        Contact contact = new Contact();
+        contact.setId(resultSet.getInt("id"));
+        contact.setName(resultSet.getString("name"));
+        contact.setPhone(resultSet.getString("phone"));
+        contact.setEmail(resultSet.getString("email"));
+        contact.setSkype(resultSet.getString("skype"));
+        contact.setPosition(resultSet.getString("position"));
+        contact.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+        contact.setCreationDate(resultSet.getDate("date_create"));
+        contact.setDeleted(resultSet.getBoolean("deleted"));
+        return contact;
     }
 
 }

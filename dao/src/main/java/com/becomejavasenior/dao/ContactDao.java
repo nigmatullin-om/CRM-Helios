@@ -2,6 +2,7 @@ package com.becomejavasenior.dao;
 
 
 import com.becomejavasenior.model.Contact;
+import com.becomejavasenior.model.Task;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface ContactDao {
     List<Contact> findAll() throws DatabaseException;
     int getCount() throws DatabaseException;
     List<Contact> findAllByDealId (int id) throws DatabaseException;
+
+    Contact getContactForTask(Task task) throws DatabaseException;
 }
