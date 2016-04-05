@@ -17,7 +17,7 @@ import java.io.InputStream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
 
-public class TestCompanyDao extends AbstractTestDao {
+public class CompanyDaoTest extends AbstractTestDao {
     public static final String COMPANY_TEST_DATA_XML = "companyTestData.xml";
     public static final int NO_COMPANY_FOR_TASK1 = 1;
     public static final int COMPANY4_FOR_TASK4 = 4;

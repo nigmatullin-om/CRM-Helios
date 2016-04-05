@@ -19,7 +19,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 
-public class TestContactDao extends AbstractTestDao {
+public class ContactDaoTest extends AbstractTestDao {
     public static final String CONTACT_TEST_DATA_XML = "contactTestData.xml";
     public static final int NO_CONTACT_FOR_TASK1 = 1;
     public static final int CONTACT4_FOR_TASK4 = 4;

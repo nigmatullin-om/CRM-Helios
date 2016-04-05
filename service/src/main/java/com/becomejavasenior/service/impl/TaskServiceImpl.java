@@ -7,9 +7,7 @@ import com.becomejavasenior.service.TaskService;
 
 import java.util.*;
 
-/**
- * Created by aivlev on 3/24/16.
- */
+
 public class TaskServiceImpl implements TaskService {
 
     private static final String DONE_TASKS = "doneTasks";
@@ -22,7 +20,12 @@ public class TaskServiceImpl implements TaskService {
     private UserDao userDao;
 
     public TaskServiceImpl(){
-        this.taskDao = new DaoFactoryImpl().getTaskDao();
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        this.taskDao = daoFactory.getTaskDao();
+        this.contactDao = daoFactory.getContactDao();
+        this.companyDao = daoFactory.getCompanyDao();
+        this.dealDao = daoFactory.getDealDao();
+        this.userDao = daoFactory.getUserDao();
     }
 
 
@@ -64,7 +67,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findAll() throws DatabaseException {
-        return taskDao.findAll();
+        List<Task> rawTasks = taskDao.findAll();
+        List<Task> tasksWithAllFields = new ArrayList<>();
+
+        for(Task task : rawTasks)
+        {
+           tasksWithAllFields.add(getTaskById(task.getId()));
+        }
+        return tasksWithAllFields;
     }
 
     @Override

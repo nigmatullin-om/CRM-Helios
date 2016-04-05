@@ -41,6 +41,9 @@
             <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/dashboard">Рабочий стол</a></li>
             </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/tasks">Задачи</a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
