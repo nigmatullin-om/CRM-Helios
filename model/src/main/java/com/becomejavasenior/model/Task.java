@@ -20,6 +20,7 @@ public class Task implements Serializable {
     private Date creationDate;
     private Boolean deleted;
     private boolean done;
+    private TaskType taskType;
 
     public int getId() {
         return id;
@@ -123,6 +124,14 @@ public class Task implements Serializable {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
     }
 
     @Override
