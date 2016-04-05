@@ -20,13 +20,34 @@
          return false;
      }
 
+     var dealStage = document.getElementById("dealStage").value;
+     console.log("deal stage=" + dealStage);
+     if(dealStage == -1){
+         alert("Этап не выбран");
+         return false;
+     }
+
+     var dealDate = document.getElementById("dealDate").value;
+     console.log("deal date=" + dealDate);
+     if(dealDate == ""){
+         alert("Дата не установлена");
+         return false;
+     }
+
      if(!checkContact()){
          return false;
      }
 
+     if (!checkCompany()){
+         return false;
+     }
+
+     if (!checkTask()){
+         return false;
+    }
+
      alert("completed!");
      return true;
-     /*return false;*/
 }
 
  function checkContact(){
@@ -46,19 +67,78 @@
          return true;
      }
 
-
      if (contactPosition != "" || contactPhoneType != "-1" || contactPhone != "" || contactSkype != ""){
          if (contactName == ""){
             alert("Имя контакта не заполнено");
              return false;
          }
-         /*else {
-             alert("Контакт будет добавлен");
-             return true;
-         }*/
+     }
+     alert("Контакт пуст");
+     return true;
+ }
+
+ function checkCompany(){
+     var companyName = document.getElementById("companyName").value;
+     console.log("company name = " + companyName);
+     var companyPhone = document.getElementById("companyPhone").value;
+     console.log("company phone = " + companyPhone);
+     var companyEmail = document.getElementById("companyEmail").value;
+     console.log("company email = " + companyEmail);
+     var companyWeb = document.getElementById("companyWeb").value;
+     console.log("company web = " + companyWeb);
+     var companyAdress = document.getElementById("companyAdress").value;
+     console.log("company adress = " + companyAdress);
+
+     if (companyName != ""){
+         alert("Компания будет добавлена!")
+         return true;
      }
 
-     alert("Контакт пуст");
+     if (companyAdress != "" || companyPhone != "" || companyEmail != "" || companyWeb != ""){
+         alert("Имя компании не заполнено!");
+         return false;
+     }
+ }
+
+ function checkTask(){
+     var taskPeriod = document.getElementById("taskPeriod").value;
+     console.log("task period = " + taskPeriod);
+     var taskDate = document.getElementById("taskDate").value;
+     console.log("task date = " + taskDate);
+     var taskTime = document.getElementById("taskTime").value;
+     console.log("task time = " + taskTime);
+     var taskResponsible = document.getElementById("taskResponsible").value;
+     console.log("task responsible = " + taskResponsible);
+     var taskType = document.getElementById("taskType").value;
+     console.log("task type = " + taskType);
+     var taskText = document.getElementById("taskText").value;
+     console.log("task text = " + taskText);
+     if (taskDate != "" || taskPeriod != "-1" || taskTime != "" || taskResponsible != "-1" || taskType != "-1" || taskText != ""){
+         if (taskPeriod == "-1"){
+             if (taskDate == "" || taskTime == ""){
+                 alert("Необходимо указать период или дату и время задачи");
+                 return false;
+             }
+         }
+         if (taskResponsible == "-1"){
+            alert("Ответственный за задачу не указан");
+             return false;
+         }
+         if (taskType == "-1"){
+             alert("Тип задачи не указан");
+             return false;
+         }
+         if (taskType == "-1"){
+             alert("Тип задачи не указан");
+             return false;
+         }
+         if (taskText == ""){
+             alert("Текст задачи не указан");
+             return false;
+         }
+
+     }
+     alert("Задача будет добавлена");
      return true;
  }
 
@@ -69,5 +149,10 @@
 
  function deleteContact(){
      alert("delete contact");
+     return false;
+ }
+
+ function addCompany(){
+     alert("add company");
      return false;
  }
