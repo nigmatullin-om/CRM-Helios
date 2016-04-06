@@ -63,7 +63,7 @@
      console.log("contactSkype: " + contactSkype);
 
      if (contactName != ""){
-         alert("Контакт будет добавлен")
+         alert("Контакт будет добавлен");
          return true;
      }
 

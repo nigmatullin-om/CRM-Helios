@@ -236,11 +236,10 @@
                         <label class="control-label col-sm-4">Тип задачи</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="taskType" id="taskType">
-                                <option value="one">One</option>
-                                <option value="two">Two</option>
-                                <option value="three">Three</option>
-                                <option value="four">Four</option>
-                                <option value="five">Five</option>
+                                <option value="-1" selected disabled>Please select</option>
+                                <c:forEach items="${taskTypes}" var="taskType">
+                                    <option value="${taskType.id}">${taskType.typeName}</option>
+                                </c:forEach>
                             </select>
                         </div>
                     </div>

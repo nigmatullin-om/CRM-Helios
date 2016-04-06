@@ -4,9 +4,11 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.CompanyService;
 import com.becomejavasenior.service.ContactService;
+import com.becomejavasenior.service.TaskTypeService;
 import com.becomejavasenior.service.UserService;
 import com.becomejavasenior.service.impl.CompanyServiceImpl;
 import com.becomejavasenior.service.impl.ContactServiceImpl;
+import com.becomejavasenior.service.impl.TaskTypeServiceImpl;
 import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,12 +28,14 @@ public class AddDealServlet extends HttpServlet {
     private UserService userService;
     private ContactService contactService;
     private CompanyService companyService;
+    private TaskTypeService taskTypeService;
 
     @Override
     public void init() throws ServletException {
         this.userService = new UserServiceImpl();
         this.contactService = new ContactServiceImpl();
         this.companyService = new CompanyServiceImpl();
+        this.taskTypeService = new TaskTypeServiceImpl();
     }
 
     @Override
@@ -96,6 +100,15 @@ public class AddDealServlet extends HttpServlet {
         }
         log.info("companies: " + companies);
         servletContext.setAttribute("companies", companies);
+
+        List<TaskType> taskTypes = new ArrayList<>();
+        try {
+            taskTypes = taskTypeService.findAll();
+        } catch (DatabaseException e) {
+            log.error("error while trying get task types" + e);
+        }
+        log.info("task types: " + taskTypes);
+        servletContext.setAttribute("taskTypes", taskTypes);
 
         RequestDispatcher requestDispatcher =  getServletContext().getRequestDispatcher("/pages/addDeal.jsp");
         log.info("forwarding to /addDeal.jsp");
