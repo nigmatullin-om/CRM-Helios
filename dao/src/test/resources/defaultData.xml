@@ -50,6 +50,7 @@
     <company id="2" name="Stick" responsible_id="2" web="palki.com.ua" email="info@palki.com.ua"
              adress="Ukraine, Odessa, Deribasovskaya 15" phone="380 482 343 830" phone_type_id="2" created_by="2"
              date_create="2016-10-03 12:14:40.0" deleted="false"/>
+
     <contact id="1" name="Andriy Pyatov" phone="+380442343976" email="pyatov@ukr.net" skype="pyatov84"
              position="manager" responsible_id="1" phone_type_id="2" company_id="1" created_by="1"
              date_create="2016-10-03 13:51:21.0" deleted="false"/>
@@ -85,11 +86,16 @@
     <tag_contact_company tag_id="2" contact_id="2" company_id="2"/>
     <tag_deal tag_id="3" deal_id="1"/>
     <tag_deal tag_id="4" deal_id="2"/>
+
     <task id="1" name="Meet" finish_date="2016-12-03 18:00:00.0" responsible_id="1"
-          description="to meet personally with the customer" contact_id="2" period="2" deal_id="2" company_id="2" task_type_id = "1"
-          created_by="1" date_create="2016-03-11 17:50:00.0" done="false" deleted="false"/>
+          description="to meet personally with the customer" period="2" deal_id="1"  company_id="[null]"
+          contact_id="[null]" task_type_id = "1" created_by="1" date_create="2016-03-11 17:50:00.0" done="false"
+          deleted="false"/>
     <task id="2" name="to prepare the agreement" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
-          description="to make the contract and send it to the client" contact_id="2" period="2" deal_id="2" task_type_id = "2"
-          company_id="2" created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
+          description="to make the contract and send it to the client" period="2" deal_id="[null]"  company_id="1"
+          contact_id="[null]" task_type_id = "2" created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
+    <task id="3" name="write test for DAO" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
+          description="I should write test for each DAO method" period="1" deal_id="[null]"  company_id="[null]"
+          contact_id="1" task_type_id = "1" created_by="1" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
 
 </dataset>

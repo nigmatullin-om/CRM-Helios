@@ -11,6 +11,7 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
@@ -72,7 +73,8 @@ public abstract class AbstractTestDao {
 
     protected IDataSet getDataSet() throws Exception {
         InputStream resourceAsStream =  getClass().getClassLoader().getResourceAsStream(DEFAULT_DATA_XML_PATH);
-        FlatXmlDataSet defaultDataSet = new FlatXmlDataSetBuilder().build(resourceAsStream);
+        ReplacementDataSet defaultDataSet = new ReplacementDataSet(new FlatXmlDataSetBuilder().build(resourceAsStream));
+        defaultDataSet.addReplacementObject("[null]", null);
 
         IDataSet[] dataSets = {defaultDataSet, getSpecificDataSet()};
         return new CompositeDataSet(dataSets);

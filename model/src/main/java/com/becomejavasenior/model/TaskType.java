@@ -1,6 +1,9 @@
 package com.becomejavasenior.model;
 
-public class TaskType {
+
+import java.io.Serializable;
+
+public class TaskType implements Serializable {
     private int id;
     private String typeName;
 
@@ -27,4 +30,5 @@ public class TaskType {
                 ", typeName='" + typeName + '\'' +
                 '}';
     }
+
 }
