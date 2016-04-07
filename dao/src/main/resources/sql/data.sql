@@ -66,7 +66,7 @@ insert into crm_helios.tag_deal values (3, 1),
 insert into crm_helios.deal_contact values (1, 1),
 				           (2, 2);
 
-SELECT setval('crm_helios.company_id_seq', (SELECT MAX(id) FROM crm_helios.company));
+SELECT setval('crm_helios.company_id_seq', (SELECT MAX(id) from crm_helios.company));
 SELECT setval('crm_helios.contact_id_seq', (SELECT MAX(id) from crm_helios.contact));
 SELECT setval('crm_helios.deal_id_seq', (SELECT MAX(id) from crm_helios.deal));
 SELECT setval('crm_helios.file_id_seq', (SELECT MAX(id) from crm_helios.file));

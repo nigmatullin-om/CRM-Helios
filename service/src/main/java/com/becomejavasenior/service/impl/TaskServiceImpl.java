@@ -1,28 +1,31 @@
 package com.becomejavasenior.service.impl;
 
-import com.becomejavasenior.dao.DaoFactory;
-import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TaskDao;
+import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.model.Deal;
-import com.becomejavasenior.model.DealStage;
-import com.becomejavasenior.model.Task;
+import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.TaskService;
 
 import java.util.*;
 
-/**
- * Created by aivlev on 3/24/16.
- */
+
 public class TaskServiceImpl implements TaskService {
 
     private static final String DONE_TASKS = "doneTasks";
     private static final String NOT_DONE_TASKS = "notDoneTasks";
 
     private TaskDao taskDao;
+    private ContactDao contactDao;
+    private CompanyDao companyDao;
+    private DealDao dealDao;
+    private UserDao userDao;
 
     public TaskServiceImpl(){
-        this.taskDao = new DaoFactoryImpl().getTaskDao();
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        this.taskDao = daoFactory.getTaskDao();
+        this.contactDao = daoFactory.getContactDao();
+        this.companyDao = daoFactory.getCompanyDao();
+        this.dealDao = daoFactory.getDealDao();
+        this.userDao = daoFactory.getUserDao();
     }
 
 
@@ -33,7 +36,23 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task getTaskById(int id) throws DatabaseException {
-        return taskDao.getTaskById(id);
+        Task taskById = taskDao.getTaskById(id);
+        Contact contactForTask = contactDao.getContactForTask(taskById);
+        taskById.setContact(contactForTask);
+
+        Company companyForTask = companyDao.getCompanyForTask(taskById);
+        taskById.setCompany(companyForTask);
+
+        Deal dealForTask = dealDao.getDealForTask(taskById);
+        taskById.setDeal(dealForTask);
+
+        User responsibleUserForTask = userDao.getResponsibleUserForTask(taskById);
+        taskById.setResponsibleUser(responsibleUserForTask);
+
+        User createdByUserForTask = userDao.createdByUserForTask(taskById);
+        taskById.setCreatedByUser(createdByUserForTask);
+
+        return taskById;
     }
 
     @Override
@@ -48,7 +67,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findAll() throws DatabaseException {
-        return taskDao.findAll();
+        List<Task> rawTasks = taskDao.findAll();
+        List<Task> tasksWithAllFields = new ArrayList<>();
+
+        for(Task task : rawTasks)
+        {
+           tasksWithAllFields.add(getTaskById(task.getId()));
+        }
+        return tasksWithAllFields;
     }
 
     @Override

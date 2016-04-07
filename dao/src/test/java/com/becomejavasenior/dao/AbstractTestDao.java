@@ -11,6 +11,7 @@ import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
@@ -72,7 +73,8 @@ public abstract class AbstractTestDao {
 
     protected IDataSet getDataSet() throws Exception {
         InputStream resourceAsStream =  getClass().getClassLoader().getResourceAsStream(DEFAULT_DATA_XML_PATH);
-        FlatXmlDataSet defaultDataSet = new FlatXmlDataSetBuilder().build(resourceAsStream);
+        ReplacementDataSet defaultDataSet = new ReplacementDataSet(new FlatXmlDataSetBuilder().build(resourceAsStream));
+        defaultDataSet.addReplacementObject("[null]", null);
 
         IDataSet[] dataSets = {defaultDataSet, getSpecificDataSet()};
         return new CompositeDataSet(dataSets);
@@ -80,13 +82,14 @@ public abstract class AbstractTestDao {
 
     private void fixIndexes() throws SQLException {
         Connection connection = getDataSource().getConnection();
-        String query = "SELECT setval('tag_id_seq', (SELECT MAX(id) FROM tag));\n" +
+        String query = "SELECT setval('company_id_seq', (SELECT MAX(id) FROM company));\n" +
                 "SELECT setval('contact_id_seq', (SELECT MAX(id) from contact));\n" +
                 "SELECT setval('deal_id_seq', (SELECT MAX(id) from deal));\n" +
                 "SELECT setval('file_id_seq', (SELECT MAX(id) from file));\n" +
                 "SELECT setval('note_id_seq', (SELECT MAX(id) from note));\n" +
                 "SELECT setval('person_id_seq', (SELECT MAX(id) from person));\n" +
                 "SELECT setval('tag_id_seq', (SELECT MAX(id) from tag));\n" +
+                "SELECT setval('task_type_id_seq', (SELECT MAX(id) from task_type));\n" +
                 "SELECT setval('task_id_seq', (SELECT MAX(id) from task));\n";
         connection.prepareStatement(query).execute();
     }

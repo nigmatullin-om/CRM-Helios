@@ -86,6 +86,10 @@ public class DaoFactoryImpl implements DaoFactory {
         return new UserDaoImpl(getDataSource());
     }
 
+    public TaskTypeDao getTaskTypeDao() {
+        return new TaskTypeDaoImpl(getDataSource());
+    }
+
     private DataSource getDataSource() {
         if (dataSource == null) {
             dataSource = initDataSource();

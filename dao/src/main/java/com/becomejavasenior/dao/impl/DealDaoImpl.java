@@ -36,14 +36,17 @@ public class DealDaoImpl extends CommonDao implements DealDao {
 
     private static final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
     private static final String FIND_ALL_DEALS = "SELECT id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted FROM deal";
-    private static final String COUNT_DEALS_WITH_TASKS = "Select count(*) from deal d WHERE d.id IN (Select t.id from task t)";
-    private static final String COUNT_DEALS_WITHOUT_TASKS = "Select count(*) from deal d WHERE d.id NOT IN (Select t.id from task t)";
+    private static final String COUNT_DEALS_WITH_TASKS = "SELECT count(*) FROM deal d WHERE d.id IN (SELECT t.id FROM task t)";
+    private static final String COUNT_DEALS_WITHOUT_TASKS = "SELECT count(*) FROM deal d WHERE d.id NOT IN (SELECT t.id FROM task t)";
 
     private final String FIND_ALL_DEAL_FOR_CONTACT = "SELECT id, name, budget,responsible_id, stage_id, company_id, date_create, created_by, deleted " +
             "FROM deal JOIN deal_contact ON deal.id = deal_contact.deal_id AND contact_id = ? AND deleted = FALSE ";
 
     private final String FIND_DEAL_FOR_COMPANY = "SELECT id, name, budget,responsible_id, stage_id, company_id, date_create, created_by, deleted " +
             " FROM deal WHERE company_id=? AND deleted = FALSE ";
+
+    private static final String GET_DEAL_FOR_TASK = "SELECT deal.id, deal.name, deal.budget, deal.responsible_id, deal.stage_id, deal.company_id, deal.created_by, deal.date_create, deal.deleted " +
+            "FROM deal INNER JOIN task ON deal.id = task.deal_id WHERE task.id = ?";
 
 
     public DealDaoImpl(DataSource dataSource) {
@@ -206,6 +209,23 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             throw new DatabaseException(e.getMessage());
         }
         return deals;
+    }
+
+    @Override
+    public Deal getDealForTask(Task task) throws DatabaseException {
+        Deal deal;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_DEAL_FOR_TASK)) {
+            preparedStatement.setInt(1, task.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return getDealByResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting a deal was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return null;
     }
 
     private Deal getDealByResultSet(ResultSet resultSet) throws DatabaseException, SQLException {
