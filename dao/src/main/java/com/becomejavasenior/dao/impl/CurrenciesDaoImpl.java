@@ -17,11 +17,11 @@ import java.util.List;
 
 public class CurrenciesDaoImpl  extends CommonDao implements CurrenciesDao {
 
-    private static final Logger LOGGER = LogManager.getLogger(CompanyDaoImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(CurrenciesDaoImpl.class);
 
-    private String  CREATE_COURRRENCIES = "INSERT INTO currencies (name, active_currency) VALUES (?, ?)";
-    private String  READ_ACTIVE_COURRRENCIES="SELECT id, name, email FROM currencies WHERE active_currency = true";
-    private String  READ_ALL_COURRRENCIES = "SELECT id, name, email FROM currencies";
+    private String  CREATE_CURRENCIES = "INSERT INTO currencies (name, active_currency) VALUES (?, ?)";
+    private String  READ_ACTIVE_CURRENCIES="SELECT id, name, active_currency FROM currencies WHERE active_currency = true";
+    private String  READ_ALL_CURRENCIES = "SELECT id, name, active_currency FROM currencies";
 
     public CurrenciesDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -52,7 +52,7 @@ public class CurrenciesDaoImpl  extends CommonDao implements CurrenciesDao {
     public List<Currencies> findAll() throws DatabaseException {
         List<Currencies> currenciesList = new ArrayList<Currencies>();
         try (Connection connection = getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(READ_ALL_COURRRENCIES);
+        PreparedStatement preparedStatement = connection.prepareStatement(READ_ALL_CURRENCIES);
         ResultSet resultSet = preparedStatement.executeQuery();){
             while (resultSet.next()){
                 Currencies currencies = new Currencies();
@@ -71,7 +71,7 @@ public class CurrenciesDaoImpl  extends CommonDao implements CurrenciesDao {
     public Currencies getActiveCurrencies() throws DatabaseException {
         Currencies currencies = new Currencies();
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(READ_ACTIVE_COURRRENCIES);
+             PreparedStatement preparedStatement = connection.prepareStatement(READ_ACTIVE_CURRENCIES);
              ResultSet resultSet = preparedStatement.executeQuery()){
                 if (resultSet.next()){
                     currencies.setId(resultSet.getInt("id"));
