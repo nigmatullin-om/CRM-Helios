@@ -5,6 +5,7 @@ import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.PhoneType;
+import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +32,10 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
     private static final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
     private static final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM company";
+
+    private static final String GET_COMPANY_FOR_TASK = "SELECT company.id, company.name, company.web, company.email,company. adress, company.phone," +
+            " company.phone_type_id, company.date_create, company.deleted " +
+            "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -65,18 +70,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    company = new Company();
-
-                    company.setId(resultSet.getInt("id"));
-                    company.setName(resultSet.getString("name"));
-                    company.setWeb(resultSet.getString("web"));
-                    company.setEmail(resultSet.getString("email"));
-                    company.setAddress(resultSet.getString("adress"));
-                    company.setPhone(resultSet.getString("phone"));
-                    company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
-                    company.setCreationDate(resultSet.getDate("date_create"));
-                    company.setDeleted(resultSet.getBoolean("deleted"));
-
+                    company = getCompanyForResultSet(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -163,6 +157,42 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             throw new DatabaseException(e.getMessage());
         }
         return count;
+    }
+
+    @Override
+    public Company getCompanyForTask(Task task) throws DatabaseException {
+        Company company;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_COMPANY_FOR_TASK)) {
+            preparedStatement.setInt(1, task.getId());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    company = getCompanyForResultSet(resultSet);
+                }
+                else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting a company was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return company;
+    }
+
+    private Company getCompanyForResultSet(ResultSet resultSet) throws SQLException {
+        Company company;
+        company = new Company();
+        company.setId(resultSet.getInt("id"));
+        company.setName(resultSet.getString("name"));
+        company.setWeb(resultSet.getString("web"));
+        company.setEmail(resultSet.getString("email"));
+        company.setAddress(resultSet.getString("adress"));
+        company.setPhone(resultSet.getString("phone"));
+        company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
+        company.setCreationDate(resultSet.getDate("date_create"));
+        company.setDeleted(resultSet.getBoolean("deleted"));
+        return company;
     }
 }
 

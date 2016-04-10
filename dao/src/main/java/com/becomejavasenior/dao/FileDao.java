@@ -14,5 +14,6 @@ public interface FileDao {
     int delete(File file)throws DatabaseException;
     List<File> findAll()throws DatabaseException;
     List<File> findAllByDealId(int id) throws DatabaseException;
+    List<File> findAllByCompanyId(int id) throws DatabaseException;
 
 }

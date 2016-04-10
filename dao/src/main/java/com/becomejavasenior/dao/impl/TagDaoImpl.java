@@ -72,5 +72,10 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         return null;
     }
 
+    @Override
+    public List<Tag> findAllByCompanyId(int id) throws DatabaseException {
+        return null;
+    }
+
 
 }

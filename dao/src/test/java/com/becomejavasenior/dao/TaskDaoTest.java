@@ -1,6 +1,7 @@
 package com.becomejavasenior.dao;
 
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
+import com.becomejavasenior.dao.impl.UserDaoImpl;
 import com.becomejavasenior.model.Task;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -25,6 +26,7 @@ public class TaskDaoTest extends AbstractTestDao {
     public static final int TEST_DEAL_ID = 1;
     public static final String TASK_TEST_DATA_XML = "taskTestData.xml";
     TaskDao taskDao = new TaskDaoImpl(getDataSource());
+    UserDao userDao = new UserDaoImpl(getDataSource());
 
     @Test
     public void testReadTask() throws DatabaseException {
@@ -35,6 +37,8 @@ public class TaskDaoTest extends AbstractTestDao {
     @Test
     public void testAddTask() throws DatabaseException {
         Task task = taskDao.getTaskById(TEST_TASK_ID);
+        task.setResponsibleUser(userDao.getResponsibleUserForTask(task));
+        task.setCreatedByUser(userDao.createdByUserForTask(task));
         int newTaskId = taskDao.create(task);
         Task newTask = taskDao.getTaskById(newTaskId);
         assertThat(task.getName(), equalTo(newTask.getName()));
@@ -52,6 +56,8 @@ public class TaskDaoTest extends AbstractTestDao {
     @Test
     public void testUpdatedTask() throws DatabaseException {
         Task task = taskDao.getTaskById(TEST_TASK_ID);
+        task.setResponsibleUser(userDao.getResponsibleUserForTask(task));
+        task.setCreatedByUser(userDao.createdByUserForTask(task));
         String newName = "new name";
         task.setName(newName);
         taskDao.update(task);
@@ -77,14 +83,14 @@ public class TaskDaoTest extends AbstractTestDao {
     @Test
     public void testGetAllTasksForCompanyById() throws DatabaseException {
         List<Task> allTasksForCompanyBy1 = taskDao.getAllTasksForCompanyById(TEST_COMPANY_ID);
-        int taskCountForCompanyId1 = 3;
+        int taskCountForCompanyId1 = 4;
         assertThat(allTasksForCompanyBy1, hasSize(taskCountForCompanyId1));
     }
 
     @Test
     public void testGetAllTasksForDealById() throws DatabaseException {
         List<Task> allTasksForDealBy1 = taskDao.getAllTasksForDealById(TEST_DEAL_ID);
-        int taskCountForDealId1 = 24;
+        int taskCountForDealId1 = 25;
         assertThat(allTasksForDealBy1, hasSize(taskCountForDealId1));
     }
 

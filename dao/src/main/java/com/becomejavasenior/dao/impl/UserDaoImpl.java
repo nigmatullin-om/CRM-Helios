@@ -3,6 +3,7 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.UserDao;
+import com.becomejavasenior.model.Task;
 import com.becomejavasenior.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,14 @@ public class UserDaoImpl extends CommonDao implements UserDao {
     private static final String DELETE_USER = "DELETE FROM person WHERE id=?";
     private static final String FIND_ALL_USERS = "SELECT id, name, password, email, phone_mobile, phone_work, note, date_create, deleted " +
             "FROM person";
+
+    private static final String GET_RESPONSIBLE_USER_FOR_TASK = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile, " +
+            "person.phone_work, person.note, person.date_create, person.deleted " +
+            "FROM person INNER JOIN task ON person.id = task.responsible_id WHERE task.id = ?";
+
+    private static final String GET_CREATED_BY_USER_FOR_TASK = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile, " +
+            "person.phone_work, person.note, person.date_create, person.deleted " +
+            "FROM person INNER JOIN task ON person.id = task.created_by WHERE task.id = ?";
 
     public UserDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -60,17 +69,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
-                    user = new User();
-                    user.setId(resultSet.getInt("id"));
-                    user.setName(resultSet.getString("name"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setEmail(resultSet.getString("email"));
-                    user.setMobilePhone(resultSet.getString("phone_mobile"));
-                    user.setWorkPhone(resultSet.getString("phone_work"));
-                    user.setNote(resultSet.getString("note"));
-                    user.setCreationDate(resultSet.getDate("date_create"));
-                    user.setDeleted(resultSet.getBoolean("deleted"));
-                    connection.close();
+                    user = getUserFromResultSet(resultSet);
                 }
             }
         } catch (SQLException e) {
@@ -144,5 +143,52 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         return users;
     }
 
+    @Override
+    public User getResponsibleUserForTask(Task task) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_RESPONSIBLE_USER_FOR_TASK)) {
+            preparedStatement.setInt(1, task.getId());
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                if (resultSet.next()) {
+                    return getUserFromResultSet(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting a user was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return null;
+    }
 
+    @Override
+    public User createdByUserForTask(Task task) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_CREATED_BY_USER_FOR_TASK)) {
+            preparedStatement.setInt(1, task.getId());
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                if (resultSet.next()) {
+                    return getUserFromResultSet(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting a user was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return null;
+    }
+
+    private User getUserFromResultSet(ResultSet resultSet) throws SQLException {
+        User user;
+        user = new User();
+        user.setId(resultSet.getInt("id"));
+        user.setName(resultSet.getString("name"));
+        user.setPassword(resultSet.getString("password"));
+        user.setEmail(resultSet.getString("email"));
+        user.setMobilePhone(resultSet.getString("phone_mobile"));
+        user.setWorkPhone(resultSet.getString("phone_work"));
+        user.setNote(resultSet.getString("note"));
+        user.setCreationDate(resultSet.getDate("date_create"));
+        user.setDeleted(resultSet.getBoolean("deleted"));
+        return user;
+    }
 }

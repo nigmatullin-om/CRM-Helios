@@ -236,7 +236,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         String taskName = resultSet.getString("name");
         task.setName(taskName);
 
-        int companyId = resultSet.getInt("company_id");
+/*        int companyId = resultSet.getInt("company_id");
         if(companyId != 0) {
             Company company = daoFactory.getCompanyDao().getCompanyById(companyId);
             task.setCompany(company);
@@ -252,11 +252,11 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         if(dealId != 0) {
             Deal deal = daoFactory.getDealDao().getDealById(dealId);
             task.setDeal(deal);
-        }
+        }*/
 
-        int createdById = resultSet.getInt("created_by");
+        /*int createdById = resultSet.getInt("created_by");
         User created_by = daoFactory.getUserDao().getUserById(createdById);
-        task.setCreatedByUser(created_by);
+        task.setCreatedByUser(created_by);*/
 
         Timestamp dateCreate = resultSet.getTimestamp("date_create");
         task.setCreationDate(dateCreate);
@@ -267,9 +267,9 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         Timestamp finishDate = resultSet.getTimestamp("finish_date");
         task.setFinishDate(finishDate);
 
-        int responsibleId = resultSet.getInt("responsible_id");
+       /* int responsibleId = resultSet.getInt("responsible_id");
         User responsible = daoFactory.getUserDao().getUserById(responsibleId);
-        task.setResponsibleUser(responsible);
+        task.setResponsibleUser(responsible);*/
 
         int periodOrdinal = resultSet.getInt("period");
         Period period = Period.values()[periodOrdinal];
