@@ -4,6 +4,7 @@ import com.becomejavasenior.dao.ContactDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Contact;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.service.ContactService;
 
 import java.util.List;
@@ -47,5 +48,15 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public int getCount() throws DatabaseException {
         return contactDao.getCount();
+    }
+
+    @Override
+    public int addContactToDeal(Contact contact, Deal deal) throws DatabaseException {
+        return contactDao.addContactToDeal(contact.getId(), deal.getId());
+    }
+
+    @Override
+    public int createWithId(Contact contact) throws DatabaseException {
+        return contactDao.createWithId(contact);
     }
 }

@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/addDeal")
-public class AddDealServlet extends HttpServlet {
-    static final Logger log = LogManager.getLogger(AddDealServlet.class);
+public class AddDealController extends HttpServlet {
+    private static final Logger log = LogManager.getLogger(AddDealController.class);
     private UserService userService;
     private ContactService contactService;
     private CompanyService companyService;
@@ -43,12 +43,12 @@ public class AddDealServlet extends HttpServlet {
         ServletContext servletContext = req.getServletContext();
 
         List<EnumAdapter> stages = new ArrayList<EnumAdapter>();
-        stages.add(new EnumAdapter(0, "Первичный контакт"));
-        stages.add(new EnumAdapter(1, "Переговоры"));
-        stages.add(new EnumAdapter(2, "Принятие решения"));
-        stages.add(new EnumAdapter(3, "Подписание сделки"));
-        stages.add(new EnumAdapter(4, "Успешно завершена"));
-        stages.add(new EnumAdapter(5, "Не завершено и закрыто"));
+        stages.add(new EnumAdapter(1, "Первичный контакт"));
+        stages.add(new EnumAdapter(2, "Переговоры"));
+        stages.add(new EnumAdapter(3, "Принятие решения"));
+        stages.add(new EnumAdapter(4, "Подписание сделки"));
+        stages.add(new EnumAdapter(5, "Успешно завершена"));
+        stages.add(new EnumAdapter(6, "Не завершено и закрыто"));
         log.info("deal stages: " + stages.toString());
         servletContext.setAttribute("dealStages", stages);
 

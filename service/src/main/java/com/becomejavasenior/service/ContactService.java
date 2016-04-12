@@ -3,6 +3,7 @@ package com.becomejavasenior.service;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Contact;
+import com.becomejavasenior.model.Deal;
 
 import java.util.List;
 
@@ -22,4 +23,8 @@ public interface ContactService {
     List<Contact> findAll() throws DatabaseException;
 
     int getCount() throws DatabaseException;
+
+    int createWithId(Contact contact) throws DatabaseException;
+
+    int addContactToDeal(Contact contact, Deal deal) throws DatabaseException;
 }

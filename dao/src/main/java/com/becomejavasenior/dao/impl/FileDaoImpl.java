@@ -9,10 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +23,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
     private static final String DELETE_FILE = "DELETE FROM file WHERE id=?";
     private static final String FIND_ALL_FILES = "SELECT id, path, blob_data, date_create FROM file";
     private static final String FIND_ALL_FILES_BY_DEAL_ID = "SELECT * FROM file WHERE deal_id = ?";
+    private static final String ADD_FILE_TO_DEAL = "UPDATE file SET deal_id=? WHERE id=?";
 
     public FileDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -145,5 +143,59 @@ public class FileDaoImpl extends CommonDao implements FileDao {
         return files;
     }
 
+    @Override
+    public int createWithId(File file) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_FILE, Statement.RETURN_GENERATED_KEYS)) {
 
+            if (file.getPath() == null){
+                preparedStatement.setNull(1, Types.VARCHAR);
+            }
+            else{
+                preparedStatement.setString(1, file.getPath());
+            }
+
+            preparedStatement.setBytes(2, file.getData());
+
+            if (file.getContact() == null){
+                preparedStatement.setNull(3, Types.INTEGER);
+            }
+            else {
+                preparedStatement.setInt(3, file.getContact().getId());
+            }
+
+            preparedStatement.setInt(4, file.getCreatedByUser().getId());
+            preparedStatement.setDate(5, new java.sql.Date(file.getCreationDate().getTime()));
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new file id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the file entity!");
+                    throw new DatabaseException("Couldn't create the file entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the file entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
+
+    @Override
+    public int addFileToDeal(int fileId, int dealId) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_FILE_TO_DEAL)) {
+            preparedStatement.setInt(1, dealId);
+            preparedStatement.setInt(2, fileId);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Adding a file to deal was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+    }
 }

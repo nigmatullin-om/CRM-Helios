@@ -109,4 +109,9 @@ public class TaskServiceImpl implements TaskService {
         }
         return runningTasks;
     }
+
+    @Override
+    public int createWithId(Task task) throws DatabaseException{
+        return taskDao.createWithId(task);
+    }
 }

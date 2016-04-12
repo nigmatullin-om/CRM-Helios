@@ -8,10 +8,7 @@ import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.PhoneType;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +28,10 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     private static final String UPDATE_CONTACT = "UPDATE contact SET name=?, phone=?, email=?, skype=?, position=?, responsible_id=?," +
             " phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
+
+    private static final String ADD_CONTACT_TO_DEAL = "INSERT INTO deal_contact (deal_id, contact_id) VALUES (?, ?)";
+
+
 
     private static final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
     private static final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact";
@@ -227,6 +228,53 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         return contact;
     }
 
+    @Override
+    public int addContactToDeal(int contactId, int dealId) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_CONTACT_TO_DEAL)) {
+            preparedStatement.setInt(1, dealId);
+            preparedStatement.setInt(2, contactId);
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("adding contact to deal was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    @Override
+    public int createWithId(Contact contact) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, contact.getName());
+            preparedStatement.setString(2, contact.getPhone());
+            preparedStatement.setString(3, contact.getEmail());
+            preparedStatement.setString(4, contact.getSkype());
+            preparedStatement.setString(5, contact.getPosition());
+            preparedStatement.setInt(6, contact.getResponsibleUser().getId());
+            preparedStatement.setInt(7, contact.getPhoneType().ordinal());
+            preparedStatement.setInt(8, contact.getCompany().getId());
+            preparedStatement.setInt(9, contact.getResponsibleUser().getId());
+            preparedStatement.setDate(10, new java.sql.Date(contact.getCreationDate().getTime()));
+            preparedStatement.setBoolean(11, contact.getDeleted());
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new contact id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the contact entity!");
+                    throw new DatabaseException("Couldn't create the contact entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the contact entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
 }
         /*id serial NOT NULL,
         name character varying(255) NOT NULL,

@@ -27,4 +27,6 @@ public interface DealService {
 
     int countDealsWithoutTasks() throws DatabaseException;
 
+    int createWithId( Deal deal) throws DatabaseException;
+
 }

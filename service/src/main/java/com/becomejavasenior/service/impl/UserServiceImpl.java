@@ -16,12 +16,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int create(User user) throws DatabaseException {
-        return 0;
+        return userDao.create(user);
     }
 
     @Override
     public User getUserById(int id) throws DatabaseException {
-        return null;
+        return userDao.getUserById(id);
     }
 
     @Override

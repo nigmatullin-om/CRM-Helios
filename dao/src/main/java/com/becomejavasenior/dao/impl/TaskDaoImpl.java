@@ -281,4 +281,73 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
 
         return task;
     }
+
+    @Override
+    public int createWithId(Task task) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(INSERT_TASK, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, task.getResponsibleUser().getId());
+
+            if (task.getContact() != null) {
+                ps.setInt(2, task.getContact().getId());
+            } else {
+                ps.setNull(2, java.sql.Types.INTEGER);
+            }
+
+            if (task.getDeal() != null) {
+                ps.setInt(3, task.getDeal().getId());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+
+            if (task.getCompany() != null) {
+                ps.setInt(4, task.getCompany().getId());
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+
+            ps.setInt(5, task.getCreatedByUser().getId());
+
+            ps.setString(6, task.getName());
+
+            if (task.getFinishDate() == null){
+                ps.setNull(7, Types.TIMESTAMP);
+            }
+            else {
+                ps.setTimestamp(7, new Timestamp(task.getFinishDate().getTime()));
+            }
+
+
+            ps.setString(8, task.getDescription());
+            ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
+
+            if (task.getPeriod() == null){
+                ps.setNull(10, Types.INTEGER);
+            }
+            else {
+                ps.setInt(10, task.getPeriod().ordinal());
+            }
+
+            ps.setInt(11, task.getTaskType().getId());
+
+            int affectedRows = ps.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = ps.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new task id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the task entity!");
+                    throw new DatabaseException("Couldn't create the task entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the task entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
 }

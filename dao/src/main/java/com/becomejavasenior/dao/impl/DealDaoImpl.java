@@ -11,10 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +23,8 @@ public class DealDaoImpl extends CommonDao implements DealDao {
 
     private static final String READ_DEAL = "SELECT id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted FROM deal WHERE id=?";
 
-    private static final String CREATE_DEAL = "INSERT INTO deal (id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
-            "VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String CREATE_DEAL = "INSERT INTO deal (name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 
     private static final String UPDATE_DEAL = "UPDATE deal SET name=?, budget=?, responsible_id=?, stage_id=?," +
@@ -58,15 +55,14 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     public int create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL)) {
-            preparedStatement.setInt(1, deal.getId());
-            preparedStatement.setString(2, deal.getName());
-            preparedStatement.setBigDecimal(3, deal.getBudget());
-            preparedStatement.setInt(4, deal.getResponsibleUser().getId());
-            preparedStatement.setInt(5, deal.getDealStage().ordinal());
-            preparedStatement.setInt(6, deal.getCompany().getId());
-            preparedStatement.setInt(7, deal.getCreatedByUser().getId());
-            preparedStatement.setDate(8, new java.sql.Date(deal.getCreationDate().getTime()));
-            preparedStatement.setBoolean(9, deal.getDeleted());
+            preparedStatement.setString(1, deal.getName());
+            preparedStatement.setBigDecimal(2, deal.getBudget());
+            preparedStatement.setInt(3, deal.getResponsibleUser().getId());
+            preparedStatement.setInt(4, deal.getDealStage().ordinal());
+            preparedStatement.setInt(5, deal.getCompany().getId());
+            preparedStatement.setInt(6, deal.getCreatedByUser().getId());
+            preparedStatement.setDate(7, new java.sql.Date(deal.getCreationDate().getTime()));
+            preparedStatement.setBoolean(8, deal.getDeleted());
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Creating a deal was failed. Error - {}", new Object[]{e.getMessage()});
@@ -260,4 +256,35 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         return deal;
     }
 
+    @Override
+    public int createWithId(Deal deal) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, deal.getName());
+            preparedStatement.setBigDecimal(2, deal.getBudget());
+            preparedStatement.setInt(3, deal.getResponsibleUser().getId());
+            preparedStatement.setInt(4, deal.getDealStage().ordinal());
+            preparedStatement.setInt(5, deal.getCompany().getId());
+            preparedStatement.setInt(6, deal.getCreatedByUser().getId());
+            preparedStatement.setDate(7, new java.sql.Date(deal.getCreationDate().getTime()));
+            preparedStatement.setBoolean(8, deal.getDeleted());
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new deal id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the deal entity!");
+                    throw new DatabaseException("Couldn't create the deal entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the deal entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
 }

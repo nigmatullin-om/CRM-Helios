@@ -29,8 +29,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Добавление сделки</h1>
-        <form class="form-horizontal" role="form" action="/saveDeal" method="post">
+        <h1 style="text-align:  center">Добавление сделки</h1>
+        <form class="form-horizontal" role="form" action="/saveDeal" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -64,7 +64,7 @@
                         <label class="control-label col-sm-1">грн</label>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-4">Этап ${requestScope.get("var")} ${requestScope.get("var2")}</label>
+                        <label class="control-label col-sm-4">Этап</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="dealStage" id="dealStage">
                                 <option value="-1" selected disabled>Please select</option>
@@ -86,6 +86,16 @@
                             <input type="text" class="form-control" id="dealDate" name="dealDate">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <label class="control-label col-sm-4">Добавить файл</label>
+                            <div class="col-sm-8">
+                                <input type="file" class="file" data-show-preview="false" name="fileName" id="fileName">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <div class="col-sm-8">
                             <select class="form-control"  name="dealContact" id="dealContact">
@@ -151,12 +161,12 @@
                         <div class="col-sm-4">
                             <select class="form-control"  name="company" id="company">
                                 <option value="-1" selected disabled>Please select</option>
-                                <c:forEach items="${companies}" var="company">
-                                    <option value="${company.id}">${company.name}</option>
+                                <c:forEach items="${companies}" var="companyItem">
+                                    <option value="${companyItem.id}">${companyItem.name}</option>
                                 </c:forEach>
                             </select>
                         </div>
-                        <button type="button" class="btn control-button col-sm-4" name="addCompany" id="addCompany">Добавить компанию</button>
+                        <button type="button" class="btn control-button col-sm-4" onclick="return addCompanyButtonFunction()" name="addCompany" id="addCompany">Добавить компанию</button>
                     </div>
 
                     <div class="form-group">
@@ -222,6 +232,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label col-sm-4">Имя задачи</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="taskName" id="taskName">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-sm-4">Ответственный</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="taskResponsible" id="taskResponsible">
@@ -249,26 +265,26 @@
                             <textarea class="form-control" rows="5" name="taskText" id="taskText"></textarea>
                         </div>
                     </div>
+
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <div class="col-sm-8">
-                            <button type="button" class="btn control-button col-sm-8" name="cancel" id="cancel">Отмена</button>
-                        </div>
+                        <label class="control-label col-sm-4"></label>
+                        <button type="submit" class="btn control-button col-sm-4" onclick="return checkDealForm()" name="save" id="save">Сохранить</button>
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <button type="submit" class="btn control-button col-sm-8" onclick="return checkDealForm()" name="save" id="save">Сохранить</button>
+                        <label class="control-label col-sm-4"></label>
+                        <button type="button" class="btn control-button col-sm-4" name="cancel" id="cancel">Отмена</button>
                     </div>
                 </div>
             </div>
 
         </form>
     </div>
-
 </body>
 </html>

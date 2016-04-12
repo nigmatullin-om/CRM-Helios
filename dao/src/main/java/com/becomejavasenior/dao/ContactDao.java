@@ -15,6 +15,7 @@ public interface ContactDao {
     List<Contact> findAll() throws DatabaseException;
     int getCount() throws DatabaseException;
     List<Contact> findAllByDealId (int id) throws DatabaseException;
-
     Contact getContactForTask(Task task) throws DatabaseException;
+    int createWithId(Contact contact) throws DatabaseException;
+    int addContactToDeal(int contactId, int dealId) throws DatabaseException;
 }

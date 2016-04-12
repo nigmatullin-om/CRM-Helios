@@ -9,10 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +24,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     private static final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
     private static final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
     private static final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM note WHERE deal_id = ?";
+    private static final String ADD_NOTE_TO_DEAL = "UPDATE note SET deal_id=? WHERE id=? ";
 
     public NoteDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -140,5 +138,46 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         return notes;
     }
 
+    @Override
+    public int createWithId(Note note) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NOTE, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, note.getText());
+            preparedStatement.setInt(2, note.getCreatedByUser().getId());
+            preparedStatement.setDate(3, new java.sql.Date(note.getCreationDate().getTime()));
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new note id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the note entity!");
+                    throw new DatabaseException("Couldn't create the note entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the note entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
 
+    @Override
+    public int addNoteToDeal(int noteId, int dealId) throws DatabaseException {
+        int affectedRows;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_NOTE_TO_DEAL)) {
+            preparedStatement.setInt(1, dealId);
+            preparedStatement.setInt(2, noteId);
+            affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the note entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return affectedRows;
+    }
 }

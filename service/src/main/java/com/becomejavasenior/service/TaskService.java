@@ -23,4 +23,6 @@ public interface TaskService {
     Map<String,List<Task>> filterTasksByDone(List<Task> tasks);
 
     List<Task> getRunningTasks(List<Task> notDoneTasks);
+
+    int createWithId(Task task) throws DatabaseException;
 }
