@@ -34,6 +34,9 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     private static String GET_ALL_TASKS = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
             "description, finish_date, responsible_id, period, task_type_id FROM task WHERE deleted=FALSE";
 
+    private static String GET_MAX_ID = "SELECT MAX(id) FROM task";
+
+
 
     private DaoFactory daoFactory;
 
@@ -125,6 +128,21 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     }
 
     @Override
+    public int getMaxId() throws DatabaseException {
+        int maxId = 0;
+        try(Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)){
+            ResultSet resultSet  = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                maxId = resultSet.getInt("max");
+            }
+        }catch (SQLException e) {
+            LOGGER.error(new Object[]{e.getMessage()});
+        }
+        return maxId;
+    }
+
+    @Override
     public int create(Task task) throws DatabaseException {
 
         try (Connection connection = getConnection();
@@ -149,12 +167,20 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             } else {
                 ps.setNull(4, java.sql.Types.INTEGER);
             }
-
-            ps.setInt(5, task.getCreatedByUser().getId());
+            if(task.getCreatedByUser()!=null){
+                ps.setInt(5, task.getCreatedByUser().getId());
+            }else{
+                ps.setNull(5, Types.INTEGER);
+            }
 
             ps.setString(6, task.getName());
 
-            ps.setTimestamp(7, new Timestamp(task.getFinishDate().getTime()));
+            if(task.getFinishDate()!=null){
+                ps.setDate(7,new java.sql.Date(task.getFinishDate().getYear(), task.getFinishDate().getMonth(),
+                        task.getFinishDate().getDate()));
+            }else {
+                ps.setNull(7,Types.DATE);
+            }
 
             ps.setString(8, task.getDescription());
             ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));

@@ -8,7 +8,7 @@
     <jsp:attribute name="bodyLayout">
                 <div class="container">
                     <div class="row">
-                        <form class="form-horizontal" action="/contact" method="post"  enctype="multipart/form-data">
+                        <form class="form-horizontal"  action="/contact" method="post" id="create-contact"  enctype="multipart/form-data">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name" class="col-md-4 control-label">Имя Фамилия</label>
@@ -25,7 +25,7 @@
                                 </div><!--tags-->
 
                                 <div class="form-group">
-                                    <label for="responsible" class="col-md-4 control-label">Ответственый</label>
+                                    <label for="responsible" class="col-md-4 control-label">Ответственный</label>
                                     <div class="col-md-6 col-md-offset-2">
                                         <select class="form-control" name="responsible" id ="responsible">
                                             <c:forEach items="${users}" var="user">
@@ -102,7 +102,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-5">
-                                                <input type="date" name="date" id="task-date" class="form-control">
+                                                <input type="date" name="task-date" id="task-date" class="form-control">
                                             </div>
                                         </div><!--period-->
 
@@ -131,7 +131,7 @@
                                         <div class="form-group">
                                             <label for="task-description" class="col-md-4 control-label">Текст задачи</label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" id = "task-description">
+                                                <input type="text" class="form-control" name="task-description" id = "task-description">
                                             </div>
                                         </div><!--task-description-->
                                     </div>
@@ -141,12 +141,12 @@
                                         <div class="form-group">
                                             <label  for="deal-name" class="col-md-4 control-label">Название сделки:</label>
                                             <div class="col-md-8">
-                                                <input type="text" id="deal-name" class="form-control">
+                                                <input type="text" id="deal-name" name="deal-name" class="form-control">
                                             </div>
                                         </div><!--deal-name-->
 
                                         <div class="form-group">
-                                            <label for="deal-stage" class="col-md-4 control-label">Етап:</label>
+                                            <label for="deal-stage" class="col-md-4 control-label">Этап:</label>
                                             <div class="col-md-6 col-md-offset-2">
                                                 <select class="form-control" name="deal-stage" id = "deal-stage">
                                                     <option value="1">Сегодня</option>
@@ -160,7 +160,7 @@
                                         </div><!--deal-stage-->
 
                                         <div class="form-group">
-                                            <label for="budget" class="col-md-4 control-label">Текст задачи</label>
+                                            <label for="budget" class="col-md-4 control-label">Бюджет</label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control"  name ="budget" id = "budget">
                                             </div>
@@ -175,14 +175,15 @@
                                                 Выбрать компанию
                                             </label>
                                             <label class="radio">
-                                                <input type="radio" name="radio" id="crate-company" value="create">
+                                                <input type="radio" name="radio" id="crate-company" value="create" checked>
                                                 Создать компанию
                                             </label>
                                         </div>
                                         <div class="col-md-6 col-md-offset-1">
-                                            <select class="form-control" name="select_company"  id ="deal">
+                                            <select class="form-control" name="select_company"  id ="deal" disabled>
+                                                <option value="0"></option>
                                             <c:forEach items="${companies}" var="company">
-                                                <option value=${company.getName()}>${company.getName()}</option>
+                                                <option value=${company.getId()}>${company.getName()}</option>
                                             </c:forEach>
                                             </select>
                                         </div>
@@ -191,35 +192,35 @@
                                         <div class="form-group">
                                             <label for="name-company" class="col-md-4 control-label">Название</label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" id="name-company">
+                                                <input type="text"  name="name-company" class="form-control" id="name-company">
                                             </div>
                                         </div> <!--name-->
 
                                         <div class="form-group">
-                                            <label for="phone" class="col-md-4 control-label">Телефон</label>
+                                            <label for="phone-company" class="col-md-4 control-label">Телефон</label>
                                             <div class="col-md-6 col-md-offset-2">
-                                                <input type="text" class="form-control" id="phone">
+                                                <input type="text" class="form-control" name="phone-company" id="phone-company">
                                             </div>
                                         </div><!--phone-->
 
                                         <div class="form-group">
                                             <label for="email-company" class="col-md-4 control-label">Email</label>
                                             <div class="col-md-6 col-md-offset-2">
-                                                <input type="email" class="form-control" id="email-company">
+                                                <input type="email" name="email-company" class="form-control" id="email-company">
                                             </div>
                                         </div><!--Email-->
 
                                         <div class="form-group">
-                                            <label for="web" class="col-md-4 control-label">Теги</label>
+                                            <label for="web-company" class="col-md-4 control-label">WEB адрес</label>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control" id="web">
+                                                <input type="text" class="form-control" name="web-company" id="web-company">
                                             </div>
                                         </div><!--web-->
 
                                         <div class="form-group">
-                                            <label for="address" class="col-md-4 control-label">Примечание</label>
+                                            <label for="note-company" class="col-md-4 control-label">Примечание</label>
                                             <div class="col-md-8">
-                                                <textarea class="form-control" rows="2" cols="25" id="address"></textarea>
+                                                <textarea class="form-control" rows="2" cols="25" name="note-company" id="note-company"></textarea>
                                             </div>
                                         </div><!--note-->
 
@@ -232,5 +233,6 @@
                         </form>
                     </div>
                 </div>
+
     </jsp:attribute>
 </t:pageLayout>

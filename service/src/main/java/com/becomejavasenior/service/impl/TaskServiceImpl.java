@@ -109,4 +109,9 @@ public class TaskServiceImpl implements TaskService {
         }
         return runningTasks;
     }
+
+    @Override
+    public int getMaxId() throws DatabaseException {
+        return taskDao.getMaxId();
+    }
 }

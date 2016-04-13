@@ -77,4 +77,15 @@ public class DealServiceImpl implements DealService {
     public int countDealsWithoutTasks() throws DatabaseException {
         return dealDao.countDealsWithoutTasks();
     }
+
+    @Override
+    public int updateDealContact(Deal deal) throws DatabaseException {
+        return dealDao.updateDealContact(deal);
+    }
+
+    @Override
+    public int getMaxId() throws DatabaseException {
+        return dealDao.getMaxId();
+    }
+
 }

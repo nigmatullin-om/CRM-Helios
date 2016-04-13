@@ -27,4 +27,8 @@ public interface DealService {
 
     int countDealsWithoutTasks() throws DatabaseException;
 
+    int updateDealContact(Deal deal) throws DatabaseException;
+
+    int getMaxId() throws DatabaseException;
+
 }

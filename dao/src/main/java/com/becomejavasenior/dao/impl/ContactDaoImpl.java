@@ -169,7 +169,9 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         List<Contact> contacts = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
-            preparedStatement.setInt(1, idClause);
+            if(idClause!=0){
+                preparedStatement.setInt(1, idClause);
+            }
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 contacts.add(getContactFromResultSet(resultSet));
