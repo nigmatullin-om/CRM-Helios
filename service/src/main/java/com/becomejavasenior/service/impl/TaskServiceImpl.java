@@ -5,6 +5,8 @@ import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.TaskService;
 
+import java.time.*;
+import java.time.temporal.WeekFields;
 import java.util.*;
 
 
@@ -12,6 +14,12 @@ public class TaskServiceImpl implements TaskService {
 
     private static final String DONE_TASKS = "doneTasks";
     private static final String NOT_DONE_TASKS = "notDoneTasks";
+    public static final String OVERDUE_TASKS = "overdue";
+    public static final String TODAY_TASKS = "today";
+    public static final String TOMORROW_TASKS = "tomorrow";
+    public static final int MINUTES_IN_HALF_HOUR = 30;
+    public static final int HALF_HOURS_IN_DAY = 48;
+    public static final int DAYS_IN_WEEK = 7;
 
     private TaskDao taskDao;
     private ContactDao contactDao;
@@ -19,7 +27,7 @@ public class TaskServiceImpl implements TaskService {
     private DealDao dealDao;
     private UserDao userDao;
 
-    public TaskServiceImpl(){
+    public TaskServiceImpl() {
         DaoFactoryImpl daoFactory = new DaoFactoryImpl();
         this.taskDao = daoFactory.getTaskDao();
         this.contactDao = daoFactory.getContactDao();
@@ -68,13 +76,91 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> findAll() throws DatabaseException {
         List<Task> rawTasks = taskDao.findAll();
-        List<Task> tasksWithAllFields = new ArrayList<>();
+        return fillTaskFields(rawTasks);
+    }
 
-        for(Task task : rawTasks)
-        {
-           tasksWithAllFields.add(getTaskById(task.getId()));
+
+    @Override
+    public Map<String, List<Task>> getTodoLineTasks(LocalDate localDate) throws DatabaseException {
+        Map<String, List<Task>> todoLineTasks = new LinkedHashMap<>();
+        todoLineTasks.put(OVERDUE_TASKS, new ArrayList<Task>());
+        todoLineTasks.put(TODAY_TASKS, new ArrayList<Task>());
+        todoLineTasks.put(TOMORROW_TASKS, new ArrayList<Task>());
+
+        LocalDate nextDay = localDate.plusDays(2);
+
+        for (Task task : findAll()) {
+            LocalDate taskFinishDate = getLocalDateTimeFromDate(task.getFinishDate()).toLocalDate();
+            if (taskFinishDate.isBefore(localDate)) {
+                todoLineTasks.get(OVERDUE_TASKS).add(task);
+            } else if (taskFinishDate.isEqual(localDate)) {
+                todoLineTasks.get(TODAY_TASKS).add(task);
+            } else if (taskFinishDate.isAfter(localDate) && taskFinishDate.isBefore(nextDay)) {
+                todoLineTasks.get(TOMORROW_TASKS).add(task);
+            }
+
         }
-        return tasksWithAllFields;
+        return todoLineTasks;
+    }
+
+    @Override
+    public Map<LocalDate, List<Task>> getTaskByDay(LocalDate startDate, int dayCount) throws DatabaseException {
+        Map<LocalDate, List<Task>> tasksByDay = new LinkedHashMap<>();
+
+        LocalDate day = startDate;
+        for (int i = 0; i < dayCount; i++) {
+            LocalDate nextDay = day.plusDays(1);
+            List<Task> tasksForToday = fillTaskFields(taskDao.getTasksBetweenDays(day, nextDay));
+            tasksByDay.put(day, tasksForToday);
+            day = nextDay;
+        }
+        return tasksByDay;
+    }
+
+    @Override
+    public Map<LocalTime, List<Task>> getTaskForDayByHalfHour(LocalDate day) throws DatabaseException {
+        Map<LocalDate, List<Task>> taskForDay = getTaskByDay(day, 1);
+
+        List<Task> taskList = taskForDay.values().iterator().next();
+        Map<LocalTime, List<Task>> taskMapHalfHour = new LinkedHashMap<>();
+
+        List<LocalTime> timeByHalfHour = timeTimeByHalfHour();
+        for (LocalTime halfHour : timeByHalfHour) {
+            LocalTime nextHalfHour = halfHour.plusMinutes(MINUTES_IN_HALF_HOUR);
+            List<Task> tasksForHalfHour = getTaskForTimePeriod(halfHour, nextHalfHour, taskList);
+            taskMapHalfHour.put(halfHour, tasksForHalfHour);
+        }
+        return taskMapHalfHour;
+
+    }
+
+    @Override
+    public Map<LocalTime, Map<DayOfWeek, List<Task>>> getTaskByHalfHourForWeek(LocalDate day) throws DatabaseException {
+        LocalDate firstDayOfThisWeek = day.with(WeekFields.of(Locale.getDefault()).dayOfWeek(), 1);
+
+        Map<LocalDate, List<Task>> tasksForWeekByDay = getTaskByDay(firstDayOfThisWeek, DAYS_IN_WEEK);
+        Map<LocalTime, Map<DayOfWeek, List<Task>>> tasksByHalfHourForWeek = new LinkedHashMap<>();
+
+        for (LocalTime halfHour : timeTimeByHalfHour()) {
+            tasksByHalfHourForWeek.put(halfHour, new LinkedHashMap<DayOfWeek, List<Task>>());
+        }
+
+        for (LocalTime halfHour : timeTimeByHalfHour()) {
+            for (LocalDate dayOfWeek : tasksForWeekByDay.keySet()) {
+                LocalTime nextHalfHour = halfHour.plusMinutes(MINUTES_IN_HALF_HOUR);
+                List<Task> tasksForHalfHour = getTaskForTimePeriod(halfHour, nextHalfHour, tasksForWeekByDay.get(dayOfWeek));
+                tasksByHalfHourForWeek.get(halfHour).put(dayOfWeek.getDayOfWeek(), tasksForHalfHour);
+            }
+
+        }
+        return tasksByHalfHourForWeek;
+
+    }
+
+    @Override
+    public Map<LocalDate, List<Task>> getTaskForMonthByDay(LocalDate date) throws DatabaseException {
+        LocalDate firstDayOfMonth = date.withDayOfMonth(1);
+        return getTaskByDay(firstDayOfMonth, firstDayOfMonth.lengthOfMonth());
     }
 
     @Override
@@ -83,9 +169,9 @@ public class TaskServiceImpl implements TaskService {
         List<Task> doneTasks = new LinkedList<>();
         List<Task> notDoneTasks = new LinkedList<>();
         ListIterator<Task> listIterator = tasks.listIterator();
-        while(listIterator.hasNext()){
+        while (listIterator.hasNext()) {
             Task tempTask = listIterator.next();
-            if(tempTask.isDone()){
+            if (tempTask.isDone()) {
                 doneTasks.add(tempTask);
             } else {
                 notDoneTasks.add(tempTask);
@@ -99,14 +185,53 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getRunningTasks(List<Task> notDoneTasks) {
         long currentTime = System.currentTimeMillis();
-                List<Task> runningTasks = new LinkedList<>();
+        List<Task> runningTasks = new LinkedList<>();
         ListIterator<Task> listIterator = notDoneTasks.listIterator();
-        while(listIterator.hasNext()){
+        while (listIterator.hasNext()) {
             Task tempTask = listIterator.next();
-            if(tempTask.getFinishDate().getTime() > currentTime){
+            if (tempTask.getFinishDate().getTime() > currentTime) {
                 runningTasks.add(tempTask);
             }
         }
         return runningTasks;
     }
+
+    private List<LocalTime> timeTimeByHalfHour() {
+        LocalTime localTime = LocalTime.MIN;
+        List<LocalTime> timeByHalfHour = new ArrayList<>();
+
+        for (int i = 0; i < HALF_HOURS_IN_DAY; i++) {
+            timeByHalfHour.add(localTime);
+            localTime = localTime.plusMinutes(MINUTES_IN_HALF_HOUR);
+        }
+        return timeByHalfHour;
+    }
+
+    private List<Task> getTaskForTimePeriod(LocalTime from, LocalTime to, List<Task> tasks) {
+        List<Task> tasksByTime = new ArrayList<>();
+        for (Task task : tasks) {
+            LocalDateTime taskFinishDateTime = getLocalDateTimeFromDate(task.getFinishDate());
+            LocalTime taskFinishTime = taskFinishDateTime.toLocalTime();
+
+            if (taskFinishTime.isAfter(from) && taskFinishTime.isBefore(to)) {
+                tasksByTime.add(task);
+            }
+        }
+        return tasksByTime;
+    }
+
+    private LocalDateTime getLocalDateTimeFromDate(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+
+
+    private List<Task> fillTaskFields(List<Task> rawTasks) throws DatabaseException {
+        List<Task> tasksWithAllFields = new ArrayList<>();
+
+        for (Task task : rawTasks) {
+            tasksWithAllFields.add(getTaskById(task.getId()));
+        }
+        return tasksWithAllFields;
+    }
+
 }
