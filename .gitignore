@@ -58,3 +58,8 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+################################
+######### DB Properties#########
+################################
+/dao/src/test/resources/testdb_config.properties
+/dao/src/main/resources/db_config.properties
