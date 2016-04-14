@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             "description, finish_date, responsible_id, period, task_type_id FROM task WHERE company_id=? AND deleted=FALSE";
     private static String GET_ALL_TASKS = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
             "description, finish_date, responsible_id, period, task_type_id FROM task WHERE deleted=FALSE";
+
+    private static String GET_ALL_TASKS_BETWEEN_DAYS= "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
+            "description, finish_date, responsible_id, period, task_type_id FROM task " +
+            "WHERE deleted=FALSE and finish_date >= ? and finish_date <= ?";
 
 
     private DaoFactory daoFactory;
@@ -186,6 +191,31 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     }
 
     @Override
+    public List<Task> getTasksBetweenDays(LocalDate startDate, LocalDate finishDate) throws DatabaseException {
+        List<Task> tasks = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_TASKS_BETWEEN_DAYS)) {
+
+            preparedStatement.setTimestamp(1,Timestamp.valueOf(startDate.atStartOfDay()));
+            LocalDate dayAfterFinish = finishDate.plusDays(1);
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(dayAfterFinish.atStartOfDay()));
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Task task = getTaskFromResultSet(resultSet);
+                tasks.add(task);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error("Creating tasks was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return tasks;
+    }
+
+    @Override
     public List<Task> findAll() throws DatabaseException {
         List<Task> tasks = new ArrayList<>();
 
@@ -236,28 +266,6 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         String taskName = resultSet.getString("name");
         task.setName(taskName);
 
-/*        int companyId = resultSet.getInt("company_id");
-        if(companyId != 0) {
-            Company company = daoFactory.getCompanyDao().getCompanyById(companyId);
-            task.setCompany(company);
-        }
-
-        int contactId = resultSet.getInt("contact_id");
-        if(contactId != 0) {
-            Contact contact = daoFactory.getContactDao().getContactById(contactId);
-            task.setContact(contact);
-        }
-
-        int dealId = resultSet.getInt("deal_id");
-        if(dealId != 0) {
-            Deal deal = daoFactory.getDealDao().getDealById(dealId);
-            task.setDeal(deal);
-        }*/
-
-        /*int createdById = resultSet.getInt("created_by");
-        User created_by = daoFactory.getUserDao().getUserById(createdById);
-        task.setCreatedByUser(created_by);*/
-
         Timestamp dateCreate = resultSet.getTimestamp("date_create");
         task.setCreationDate(dateCreate);
 
@@ -266,10 +274,6 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
 
         Timestamp finishDate = resultSet.getTimestamp("finish_date");
         task.setFinishDate(finishDate);
-
-       /* int responsibleId = resultSet.getInt("responsible_id");
-        User responsible = daoFactory.getUserDao().getUserById(responsibleId);
-        task.setResponsibleUser(responsible);*/
 
         int periodOrdinal = resultSet.getInt("period");
         Period period = Period.values()[periodOrdinal];

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -67,12 +68,6 @@ public class TaskDaoTest extends AbstractTestDao {
         assertThat(updatedTask.getName(), equalTo(newName));
     }
 
-    @Override
-    protected IDataSet getSpecificDataSet() throws DataSetException {
-        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(TASK_TEST_DATA_XML);
-        return new FlatXmlDataSetBuilder().build(resourceAsStream);
-    }
-
     @Test
     public void testGetAllTasksForContactById() throws DatabaseException {
         List<Task> allTasksForContactBy1 = taskDao.getAllTasksForContactById(TEST_CONTACT_ID);
@@ -100,5 +95,29 @@ public class TaskDaoTest extends AbstractTestDao {
         int allTaskCount = 31;
         assertThat(allTasksForDealBy1, hasSize(allTaskCount));
     }
+    
+    @Test
+    public void testGetTasksBetweenDays() throws DatabaseException {
+        LocalDate startDay = LocalDate.of(2016, 4, 12);
+        LocalDate finishDay = LocalDate.of(2016, 4, 15);
+        List<Task> tasksBetweenDays = taskDao.getTasksBetweenDays(startDay, finishDay);
+        int tasksBetweenCurrentDays = 4;
+        assertThat(tasksBetweenDays, hasSize(tasksBetweenCurrentDays));
+    }
 
+    @Test
+    public void testGetTasksBetweenDaysNoTasks() throws DatabaseException {
+        LocalDate startDay = LocalDate.of(2017, 3, 10);
+        LocalDate finishDay = LocalDate.of(2017, 3, 10);
+        List<Task> tasksBetweenDays = taskDao.getTasksBetweenDays(startDay, finishDay);
+        int tasksBetweenCurrentDays = 0;
+        assertThat(tasksBetweenDays, hasSize(tasksBetweenCurrentDays));
+    }
+
+
+    @Override
+    protected IDataSet getSpecificDataSet() throws DataSetException {
+        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(TASK_TEST_DATA_XML);
+        return new FlatXmlDataSetBuilder().build(resourceAsStream);
+    }
 }
