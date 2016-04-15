@@ -7,8 +7,6 @@ CREATE TABLE IF NOT EXISTS test_crm_helios.task_type (
   PRIMARY KEY (id)
 );
 
-insert into test_crm_helios.task_type VALUES (1, 'Follow-up');
-
 ALTER TABLE test_crm_helios.task ADD task_type_id INT NOT NULL DEFAULT 1;
 
 ALTER TABLE test_crm_helios.task
