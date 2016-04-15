@@ -188,7 +188,12 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
     private Contact getContactByStatement(String statement, int idClause) throws DatabaseException {
         List<Contact> contacts = getContactsListByStatement(statement, idClause);
 
-        return contacts.get(0);
+        if(contacts.size() == 0) {
+            return null;
+        }
+        else {
+            return contacts.get(0);
+        }
     }
 
 }

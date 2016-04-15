@@ -26,6 +26,11 @@ public class Contact implements Serializable{
     private List<Tag> tags;
     private List<Task> tasks;
 
+    public Contact(){
+        setCreationDate(new Date());
+        setDeleted(false);
+    }
+
     public List<Task> getTasks() {
         return tasks;
     }

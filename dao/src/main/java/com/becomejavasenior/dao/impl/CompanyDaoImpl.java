@@ -23,7 +23,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     private static final String READ_COMPANY = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
 
-    private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
+    private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id," +
             "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
@@ -51,7 +51,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setString(4, company.getEmail());
             preparedStatement.setString(5, company.getAddress());
             preparedStatement.setString(6, company.getPhone());
-            preparedStatement.setInt(7, company.getPhoneType().ordinal());
+            preparedStatement.setInt(7, company.getPhoneType().ordinal() +1 );
             preparedStatement.setInt(8, company.getCreatedByUser().getId());
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());

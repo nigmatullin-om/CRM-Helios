@@ -26,6 +26,11 @@ public class Company implements Serializable {
     private List<Contact> contacts;
     private List<Task> tasks;
 
+    public Company(){
+        setCreationDate(new Date());
+        setDeleted(false);
+    }
+
     public List<Task> getTasks() {
         return tasks;
     }
