@@ -5,24 +5,11 @@
     padding-left: 3px;
     padding-right: 3px;
 }
-.task-holder
-{
+.task-holder {
     border: 2px solid gainsboro;
     margin: 10px;
     padding: 10px;
     height: 100%;
-}
-
-.overdue-task {
-    background-color: #ffe7d6;
-}
-
-.today-task {
-    background-color: #feffac
-}
-
-.tomorrow-task {
-    background-color: #d8ffb2
 }
 
 .task-todo-container {
@@ -47,7 +34,7 @@ table.calendar > tbody > tr > td.no-events {
     padding: 3px;
 }
 table.calendar > tbody > tr > td.has-events {
-    width: 300px;
+    min-width: 300px;
     background-color: #effcff;
 }
 
@@ -66,4 +53,14 @@ table.calendar > tbody > tr > td > div {
     -moz-box-shadow: 2px 2px 3px #999;
     float: left;
 }
+table.calendar > tbody > tr > td > div.overdue-task {
+    background-color: #ffe7d6;
+}
 
+table.calendar > tbody > tr > td > div.today-task {
+    background-color: #feffac
+}
+
+table.calendar > tbody > tr > td > div.tomorrow-task {
+    background-color: #d8ffb2
+}

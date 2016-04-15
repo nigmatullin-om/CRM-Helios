@@ -15,6 +15,14 @@
         </div>
         <div class="container task-container">
             <table class="calendar table table-bordered table-hover">
+                <caption>
+                    <a href="?view=month&date=${prevMonth}" class="btn btn-info btn-xs active" role="button"><<</a>
+
+                    <fmt:parseDate value="${viewDate}" pattern="yyyy-MM-dd" var="parsedDate"
+                                   type="date"/>
+                    <fmt:formatDate value="${parsedDate}" type="date" pattern="MMM y"/>
+                    <a href="?view=month&date=${nextMonth}" class="btn btn-info btn-xs active" role="button">>></a>
+                </caption>
                 <thead>
                 <tr>
                     <th>День</th>
@@ -26,9 +34,11 @@
                 <c:forEach var="timeAndTask" items="${tasksForMonth}">
                     <tr>
                         <td class="time-in-table">
-                            <fmt:parseDate value="${timeAndTask.key}" pattern="yyyy-MM-dd" var="parsedDate"
-                                           type="date"/>
-                            <fmt:formatDate value="${parsedDate}" type="date" dateStyle="long"/>
+                                <fmt:parseDate value="${timeAndTask.key}" pattern="yyyy-MM-dd" var="parsedDate"
+                                               type="date"/>
+                            <a href="?view=day&date=${timeAndTask.key}">
+                            <fmt:formatDate value="${parsedDate}" type="date" pattern="dd, EEEE"/>
+                            </a>
                         </td>
 
 

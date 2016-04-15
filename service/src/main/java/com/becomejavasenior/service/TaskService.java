@@ -5,6 +5,7 @@ import com.becomejavasenior.model.Task;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,10 @@ public interface TaskService {
     Map<String,List<Task>> filterTasksByDone(List<Task> tasks);
 
     List<Task> getRunningTasks(List<Task> notDoneTasks);
+
+    void moveOnToday(int taskId) throws DatabaseException;
+
+    void moveOnTomorrow(int taskId) throws DatabaseException;
+
+    void updateTaskTime(Task task, LocalDateTime newDate) throws DatabaseException;
 }

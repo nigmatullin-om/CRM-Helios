@@ -196,6 +196,30 @@ public class TaskServiceImpl implements TaskService {
         return runningTasks;
     }
 
+    @Override
+    public void moveOnToday(int taskId) throws DatabaseException {
+        Task task = getTaskById(taskId);
+        LocalDateTime finishDateTime = LocalDateTime.ofInstant(task.getFinishDate().toInstant(), ZoneId.systemDefault());
+        LocalTime finishTime = finishDateTime.toLocalTime();
+        LocalDateTime newFinishDate = LocalDateTime.of(LocalDate.now(), finishTime);
+        updateTaskTime(task, newFinishDate);
+    }
+
+    @Override
+    public void moveOnTomorrow(int taskId) throws DatabaseException {
+        Task task = getTaskById(taskId);
+        LocalDateTime finishDateTime = LocalDateTime.ofInstant(task.getFinishDate().toInstant(), ZoneId.systemDefault());
+        LocalTime finishTime = finishDateTime.toLocalTime();
+        LocalDateTime newFinishDate = LocalDateTime.of(LocalDate.now().plusDays(1), finishTime);
+        updateTaskTime(task, newFinishDate);
+    }
+
+    @Override
+    public void updateTaskTime(Task task, LocalDateTime newDate) throws DatabaseException {
+        task.setFinishDate(Date.from(newDate.atZone(ZoneId.systemDefault()).toInstant()));
+        update(task);
+    }
+
     private List<LocalTime> timeTimeByHalfHour() {
         LocalTime localTime = LocalTime.MIN;
         List<LocalTime> timeByHalfHour = new ArrayList<>();
@@ -213,7 +237,7 @@ public class TaskServiceImpl implements TaskService {
             LocalDateTime taskFinishDateTime = getLocalDateTimeFromDate(task.getFinishDate());
             LocalTime taskFinishTime = taskFinishDateTime.toLocalTime();
 
-            if (taskFinishTime.isAfter(from) && taskFinishTime.isBefore(to)) {
+            if ((taskFinishTime.isAfter(from) && taskFinishTime.isBefore(to)) || taskFinishTime.equals(from)) {
                 tasksByTime.add(task);
             }
         }

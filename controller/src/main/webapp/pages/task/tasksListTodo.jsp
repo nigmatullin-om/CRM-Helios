@@ -13,154 +13,86 @@
             <a href="?view=week" class="btn btn-primary active" role="button">Неделя</a>
             <a href="?view=month" class="btn btn-primary active" role="button">Месяц</a>
         </div>
-        <div class="container task-todo-container task-holder">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="task-card overdue-task text-center">Просроченные задачи</div>
-            </div>
-            <div class="col-sm-4">
-                <div class="task-card today-task text-center">Задачи на сегодня
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="task-card tomorrow-task text-center">
-                Задачи на завтра
-                </div>
-            </div>
 
-        </div>
-    <div class="row">
-        <div class="col-sm-4">
+        <div class="container task-container">
+            <table class="calendar table table-bordered task-todo-container">
+                <caption>
+                    <fmt:parseDate value="${viewDate}" pattern="yyyy-MM-dd" var="parsedDate"
+                                   type="date"/>
+                    <fmt:formatDate value="${parsedDate}" type="date" dateStyle="LONG"/>
+                </caption>
 
-            <c:forEach items="${overdueTasks}" var="task">
-                <div class="task-card overdue-task">
-                    <ul>
-                        <li class="finish-date">
-                            Дата: <fmt:formatDate type="date"
-                                                  value="${task.getFinishDate()}"/>
-                        </li>
-                        <li class="finish-time">
-                            Время: <fmt:formatDate type="time" timeStyle="short"
-                                                   value="${task.getFinishDate()}"/>
-                        </li>
-                        <li class="responsible-user">
-                            Ответсвенный: ${task.getResponsibleUser().getName()}
-                        </li>
-                        <li class="task-type">
-                            Тип: ${task.getTaskType().getTypeName()}
-                        </li>
-                        <li class="description">
-                            Текс: ${task.getDescription()}
-                        </li>
-                        <li>
-                            <c:if test="${not empty task.getContact()}">
-                                Контакт: <br/>${task.getContact().getName()}
-                            </c:if>
+                <thead>
+                <tr>
+                    <th>Просроченные задачи</th>
+                    <th>Задачи на сегодня</th>
+                    <th>Задачи на завтра</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
 
-                            <c:if test="${not empty task.getDeal()}">
-                                Сделка <br/>${task.getDeal().getName()}
-                            </c:if>
+                    <c:forEach items="${todoTasks}" var="toDotask">
+                        <td class="task-card">
+                            <c:forEach items="${toDotask.value}" var="task">
+                                <div class="${toDotask.key}-task task-card">
+                                    <ul>
+                                        <li class="finish-date">
+                                            Дата: <fmt:formatDate type="date"
+                                                                  value="${task.getFinishDate()}"/>
+                                        </li>
+                                        <li class="finish-time">
+                                            Время: <fmt:formatDate type="time" timeStyle="short"
+                                                                   value="${task.getFinishDate()}"/>
+                                        </li>
+                                        <li class="responsible-user">
+                                            Ответсвенный: ${task.getResponsibleUser().getName()}
+                                        </li>
+                                        <li class="task-type">
+                                            Тип: ${task.getTaskType().getTypeName()}
+                                        </li>
+                                        <li class="description">
+                                            Текс: ${task.getDescription()}
+                                        </li>
+                                        <li>
+                                            <c:if test="${not empty task.getContact()}">
+                                                Контакт: <br/>${task.getContact().getName()}
+                                            </c:if>
 
-                            <c:if test="${not empty task.getCompany()}">
-                                Компания <br/>${task.getCompany().getName()}
-                            </c:if>
-                        </li>
-                    </ul>
-                    <button type="button" class="btn btn-default">
-                        На завтра
-                    </button>
-                </div>
-            </c:forEach>
+                                            <c:if test="${not empty task.getDeal()}">
+                                                Сделка <br/>${task.getDeal().getName()}
+                                            </c:if>
 
-        </div>
-        <div class="col-sm-4">
+                                            <c:if test="${not empty task.getCompany()}">
+                                                Компания <br/>${task.getCompany().getName()}
+                                            </c:if>
+                                        </li>
+                                    </ul>
+                                    <form action="/tasks" method="post">
+                                        <div class="btn-group">
+                                            <input hidden="true" name="taskId" value="${task.getId()}">
+                                            <button type="submit" class="btn btn-default" name="changeDate"
+                                                    value="onToday">
+                                                На сегодня
+                                            </button>
+                                            <button type="submit" class="btn btn-default" name="changeDate"
+                                                    value="onTomorrow">
+                                                Завтра
+                                            </button>
+                                        </div>
+                                    </form>
 
-            <c:forEach items="${todayTasks}" var="task">
-                <div class="task-card today-task">
-                    <ul>
-                        <li class="finish-date">
-                            Дата: <fmt:formatDate type="date"
-                                                  value="${task.getFinishDate()}"/>
-                        </li>
-                        <li class="finish-time">
-                            Время: <fmt:formatDate type="time" timeStyle="short"
-                                                   value="${task.getFinishDate()}"/>
-                        </li>
-                        <li class="responsible-user">
-                            Ответсвенный: ${task.getResponsibleUser().getName()}
-                        </li>
-                        <li class="task-type">
-                            Тип: ${task.getTaskType().getTypeName()}
-                        </li>
-                        <li class="description">
-                            Текс: ${task.getDescription()}
-                        </li>
-                        <li>
-                            <c:if test="${not empty task.getContact()}">
-                                Контакт: <br/>${task.getContact().getName()}
-                            </c:if>
+                                </div>
+                            </c:forEach>
 
-                            <c:if test="${not empty task.getDeal()}">
-                                Сделка <br/>${task.getDeal().getName()}
-                            </c:if>
+                        </td>
+                    </c:forEach>
 
-                            <c:if test="${not empty task.getCompany()}">
-                                Компания <br/>${task.getCompany().getName()}
-                            </c:if>
-                        </li>
-                    </ul>
-                    <button type="button" class="btn btn-default">
-                        На завтра
-                    </button>
-                </div>
-            </c:forEach>
-
-        </div>
-        <div class="col-sm-4">
-
-            <c:forEach items="${tomorrowTasks}" var="task">
-                <div class="task-card tomorrow-task">
-                    <ul>
-                        <li class="finish-date">
-                            Дата: <fmt:formatDate type="date"
-                                                  value="${task.getFinishDate()}"/>
-                        </li>
-                        <li class="finish-time">
-                            Время: <fmt:formatDate type="time" timeStyle="short"
-                                                   value="${task.getFinishDate()}"/>
-                        </li>
-                        <li class="responsible-user">
-                            Ответсвенный: ${task.getResponsibleUser().getName()}
-                        </li>
-                        <li class="task-type">
-                            Тип: ${task.getTaskType().getTypeName()}
-                        </li>
-                        <li class="description">
-                            Текс: ${task.getDescription()}
-                        </li>
-                        <li>
-                            <c:if test="${not empty task.getContact()}">
-                                Контакт: <br/>${task.getContact().getName()}
-                            </c:if>
-
-                            <c:if test="${not empty task.getDeal()}">
-                                Сделка <br/>${task.getDeal().getName()}
-                            </c:if>
-
-                            <c:if test="${not empty task.getCompany()}">
-                                Компания <br/>${task.getCompany().getName()}
-                            </c:if>
-                        </li>
-                    </ul>
-                    <button type="button" class="btn btn-default">
-                        На завтра
-                    </button>
-                </div>
-            </c:forEach>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
 
-    </div>
-    </div>
     </jsp:attribute>
 </t:pageLayout>

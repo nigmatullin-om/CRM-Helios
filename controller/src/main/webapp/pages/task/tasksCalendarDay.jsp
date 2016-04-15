@@ -15,10 +15,19 @@
         </div>
         <div class="container task-container">
             <table class="calendar table table-bordered table-hover">
+                <caption>
+                    <a href="?view=day&date=${prevDay}" class="btn btn-info btn-xs active" role="button"><<</a>
+
+                    <fmt:parseDate value="${viewDate}" pattern="yyyy-MM-dd" var="parsedDate"
+                                   type="date"/>
+                    <fmt:formatDate value="${parsedDate}" type="date"/>
+                    <a href="?view=day&date=${nextDay}" class="btn btn-info btn-xs active" role="button">>></a>
+                </caption>
                 <thead>
                 <tr>
-                    <th>Время </th>
-                    <th>${dayName}</th>
+                    <th>Время</th>
+                    <th>
+                            ${dayName}</th>
                 </tr>
                 </thead>
                 <tbody>
