@@ -29,4 +29,7 @@ public interface DealService {
 
     int createWithId( Deal deal) throws DatabaseException;
 
+    int createDealForContact(int contactId, Deal deal) throws DatabaseException;
+
+
 }

@@ -2,9 +2,10 @@ package com.becomejavasenior.service;
 
 
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.model.Contact;
-import com.becomejavasenior.model.Deal;
+import com.becomejavasenior.filter.ContactFilter;
+import com.becomejavasenior.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,8 @@ public interface ContactService {
     int create(Contact contact) throws DatabaseException;
 
     Contact getContactById(int id) throws DatabaseException;
+
+    ArrayList<Company> getContactsByFilter(ContactFilter contactFilter);
 
     int update(Contact contact) throws DatabaseException;
 
@@ -27,4 +30,7 @@ public interface ContactService {
     int createWithId(Contact contact) throws DatabaseException;
 
     int addContactToDeal(Contact contact, Deal deal) throws DatabaseException;
+
+    int createContactForDeal(int dealId, Contact contact) throws DatabaseException;
+
 }

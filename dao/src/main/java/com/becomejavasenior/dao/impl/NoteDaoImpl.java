@@ -25,6 +25,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     private static final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
     private static final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM note WHERE deal_id = ?";
     private static final String ADD_NOTE_TO_DEAL = "UPDATE note SET deal_id=? WHERE id=? ";
+    private static final String FIND_NOTES_BY_COMPANY_ID = "SELECT * FROM note WHERE company_id = ?";
 
     public NoteDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -164,6 +165,34 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         }
         return key;
     }
+    @Override
+    public List<Note> findAllByCompanyId(int id) throws DatabaseException {
+        List<Note> notes = new ArrayList<>();
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_NOTES_BY_COMPANY_ID)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Note note = new Note();
+                note.setId(resultSet.getInt("id"));
+                note.setText(resultSet.getString("text"));
+                note.setCreationDate(resultSet.getDate(7));
+                note.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+                notes.add(note);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting notes was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return notes;
+    }
+
+    @Override
+    public List<Note> findAllByContactId(int id) throws DatabaseException {
+        return null;
+    }
+
 
     @Override
     public int addNoteToDeal(int noteId, int dealId) throws DatabaseException {

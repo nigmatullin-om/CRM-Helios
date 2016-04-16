@@ -5,6 +5,7 @@ import com.becomejavasenior.model.File;
 import java.util.List;
 
 public interface FileDao {
+
     int create(File file) throws DatabaseException;
     File getFileById(int id) throws DatabaseException;
     int update(File file) throws DatabaseException;
@@ -13,4 +14,7 @@ public interface FileDao {
     List<File> findAllByDealId(int id) throws DatabaseException;
     int createWithId(File file) throws DatabaseException;
     int addFileToDeal(int fileId, int dealId) throws DatabaseException;
+    List<File> findAllByCompanyId(int id) throws DatabaseException;
+    List<File> findAllByContactId(int id) throws DatabaseException;
+
 }

@@ -15,4 +15,6 @@ public interface NoteDao {
     List<Note> findAllByDealId(int id) throws DatabaseException;
     int createWithId(Note note) throws DatabaseException;
     public int addNoteToDeal(int noteId, int dealId) throws DatabaseException;
+    List<Note> findAllByCompanyId(int id) throws DatabaseException;
+    List<Note> findAllByContactId(int id) throws DatabaseException;
 }

@@ -2,6 +2,7 @@ package com.becomejavasenior.dao;
 
 import com.becomejavasenior.model.Task;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskDao {
@@ -14,4 +15,5 @@ public interface TaskDao {
     List<Task> getAllTasksForCompanyById(int companyId) throws DatabaseException;
     List<Task> getAllTasksForDealById(int dealId) throws DatabaseException;
     int createWithId(Task task) throws DatabaseException;
+    List<Task> getTasksBetweenDays(LocalDate startDay, LocalDate finishDay) throws DatabaseException;
 }

@@ -1,13 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
 
-    <task id="3" name="Task for contact 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
+    <task id="4" name="Task for contact 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
           description="to make the contract and send it to the client" contact_id="1" period="2" deal_id="2"
           company_id="2" task_type_id = "2"
-          created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
-
-    <task id="4" name="Task for contact 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
-          description="to make the contract and send it to the client" contact_id="1" period="2" task_type_id = "2"
           created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
 
     <task id="5" name="Task for company 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
@@ -84,16 +80,16 @@
     <task id="26" name="Task for deal 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
           description="to make the contract and send it to the client" deal_id="1" period="2" task_type_id = "2"
           created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
-    <task id="27" name="Task for deal 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
+    <task id="27" name="Task for deal 1" finish_date="2016-04-12 18:00:00.0" responsible_id="2"
           description="to make the contract and send it to the client" deal_id="1" period="2" task_type_id = "2"
           created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
-    <task id="28" name="Task for deal 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
+    <task id="28" name="Task for deal 1" finish_date="2016-04-13 15:00:00.0" responsible_id="2"
           description="to make the contract and send it to the client" deal_id="1" period="2" task_type_id = "2"
           created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
-    <task id="29" name="Task for deal 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
+    <task id="29" name="Task for deal 1" finish_date="2016-04-14 14:00:00.0" responsible_id="2"
           description="to make the contract and send it to the client" deal_id="1" period="2" task_type_id = "2"
           created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
-    <task id="30" name="Task for deal 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
+    <task id="30" name="Task for deal 1" finish_date="2016-04-15 16:00:00.0" responsible_id="2"
           description="to make the contract and send it to the client" deal_id="1" period="2" task_type_id = "2"
           created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
     <task id="31" name="Task for deal 1" finish_date="2016-12-03 18:00:00.0" responsible_id="2"

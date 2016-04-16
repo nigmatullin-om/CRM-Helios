@@ -1,0 +1,66 @@
+.task-card {
+    width: 200px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+.task-holder {
+    border: 2px solid gainsboro;
+    margin: 10px;
+    padding: 10px;
+    height: 100%;
+}
+
+.task-todo-container {
+    width: 660px;
+}
+
+table.calendar > tbody > tr > td.time-in-table {
+    vertical-align: middle;
+    width: 30px;
+}
+
+table.calendar tbody > tr{
+    margin-bottom: 0;
+    width: auto;
+}
+
+table.calendar > thead > tr > th {
+    text-align: center;
+}
+table.calendar > tbody > tr > td.no-events {
+    background-color: #F4FFF5;
+    padding: 3px;
+}
+table.calendar > tbody > tr > td.has-events {
+    min-width: 300px;
+    background-color: #effcff;
+}
+
+table.calendar > tbody > tr > td > div {
+    padding: 1px;
+    min-height: 40px;
+    margin-bottom: 4px;
+    background-color: #e0f8ff;
+    color: #4D4B4B;
+    border: 1px solid #999999;
+    border-radius: 10px 10px;
+    -moz-border-radius: 10px 10px;
+    -webkit-border-radius: 10px 10px;
+    box-shadow: 2px 2px 3px #999;
+    -webkit-box-shadow: 2px 2px 3px #999;
+    -moz-box-shadow: 2px 2px 3px #999;
+    float: left;
+}
+table.calendar > tbody > tr > td > div.overdue-task {
+    background-color: #ffe7d6;
+}
+
+table.calendar > tbody > tr > td > div.today-task {
+    background-color: #feffac
+}
+
+table.calendar > tbody > tr > td > div.tomorrow-task {
+    background-color: #d8ffb2
+}
