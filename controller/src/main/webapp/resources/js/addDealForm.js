@@ -53,7 +53,7 @@
          return false;
     }
 
-     alert("completed!");
+     /*alert("completed!");*/
      return true;
 }
 
@@ -70,17 +70,17 @@
      console.log("contactSkype: " + contactSkype);
 
      if (contactName != ""){
-         alert("Контакт будет добавлен");
+         /*alert("Контакт будет добавлен");*/
          return true;
      }
 
      if (contactPosition != "" || contactPhoneType != "-1" || contactPhone != "" || contactSkype != ""){
          if (contactName == ""){
-            alert("Имя контакта не заполнено");
+            alert("Имя контакта не указано");
              return false;
          }
      }
-     alert("Контакт пуст");
+     /*alert("Контакт пуст");*/
      return true;
  }
 
@@ -141,20 +141,10 @@
      }
  }
 
- function addContact(){
-     alert("add contact");
-     return false;
- }
-
- function deleteContact(){
-     alert("delete contact");
-     return false;
- }
-
  function checkCompany(){
      var selectCompanyNameStatus = document.getElementById("companyName").getAttribute("disabled");
      console.log("select company name status = " + selectCompanyNameStatus);
-     alert("select company name status = " + selectCompanyNameStatus);
+     /*alert("select company name status = " + selectCompanyNameStatus);*/
      if (selectCompanyNameStatus != null){
          document.getElementById("companyName").value = "";
          return true;
@@ -201,7 +191,7 @@
  }
 
  function addCompanyButtonFunction(){
-     alert("add company button");
+     /*alert("add company button");*/
      var selectCompanyNameStatus = document.getElementById("companyName").getAttribute("disabled");
      console.log("selectCompanyNameStatus = " + selectCompanyNameStatus);
      var selectedCompanyId = document.getElementById("company").value;
@@ -214,7 +204,7 @@
          }
          else{
              console.log("selected company id = " + selectedCompanyId);
-             document.getElementById("addCompany").innerHTML = "Добаввить новую";
+             document.getElementById("addCompany").innerHTML = "Добавить новую";
              /*document.getElementById("company").setAttribute("disabled", "disabled");*/
              document.getElementById("companyName").setAttribute("disabled", "disabled");
              /*document.getElementById("companyName").value = "";*/

@@ -23,13 +23,19 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @WebServlet("/saveDeal")
 @MultipartConfig
 public class SaveDealController extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(SaveDealController.class);
+
+    private final String ADD_CONTACTS_KEY = "addContact";
+
     private DealService dealService;
     private ContactService contactService;
     private CompanyService companyService;
@@ -58,9 +64,10 @@ public class SaveDealController extends HttpServlet {
         File file = getFile(req);
         Note note = getNote(req);
         Company company = getCompany(req);
-        //-----read list of contacts-----------------------------------------
+        List<Contact> contacts = getContactsList(req);
 
         Contact contact = getContact(req);
+        /*Task task = null;*/
         Task task = getTask(req);
 
         try {
@@ -89,6 +96,12 @@ public class SaveDealController extends HttpServlet {
                 contactService.addContactToDeal(contact, deal);
             }
 
+            if (contacts.size() > 0){
+                for (Contact contactFromList : contacts){
+                    contactService.addContactToDeal(contactFromList, deal);
+                }
+            }
+
             if (task != null){
                 log.info("trying to save task");
                 task.setDeal(deal);
@@ -104,7 +117,6 @@ public class SaveDealController extends HttpServlet {
     }
 
     private Deal getDeal(HttpServletRequest req){
-        //------read deal--------------------------------------------
         String dealName = req.getParameter("dealName");
         log.info("deal name = " + dealName);
         String dealTags = req.getParameter("dealTags");
@@ -119,7 +131,6 @@ public class SaveDealController extends HttpServlet {
         log.info("deal stage = " + dealStageEnum.name());
         String dealNote = req.getParameter("dealNote");
         log.info("deal note = " + dealNote);
-        //---------------------------------------------------------
         DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
         try {
             Date dealDate =  dateFormat.parse(req.getParameter("dealDate".trim()));
@@ -135,12 +146,10 @@ public class SaveDealController extends HttpServlet {
         deal.setCreationDate(new Date());
         try {
             deal.setResponsibleUser(userService.getUserById(dealResponsibleId));
-            //deal.setCreatedByUser(userService.getUserById(currentUserId)); // TODO: 06.04.2016
-            deal.setCreatedByUser(userService.getUserById(1));
+            deal.setCreatedByUser(userService.getUserById(1));//TODO: 06.04.2016
         } catch (DatabaseException e) {
             log.error("error while getting user" + e);
         }
-        //tags // TODO: 06.04.2016
         return deal;
     }
 
@@ -173,7 +182,7 @@ public class SaveDealController extends HttpServlet {
             try {
                 contact.setResponsibleUser(userService.getUserById(1));  // TODO: 06.04.2016
             } catch (DatabaseException e) {
-                e.printStackTrace();
+                log.error("can't read user from DB:" + e);
             }
         }
         return contact;
@@ -207,7 +216,7 @@ public class SaveDealController extends HttpServlet {
                 company.setCreatedByUser(userService.getUserById(1)); // TODO: 06.04.2016
                 company.setResponsibleUser(userService.getUserById(1));// TODO: 06.04.2016
             } catch (DatabaseException e) {
-                e.printStackTrace();
+                log.error("can't read user from DB:" + e);
             }
         }
         else{
@@ -299,10 +308,11 @@ public class SaveDealController extends HttpServlet {
         File file = null;
         try {
             filePart = req.getPart("fileName");
-            if (filePart != null){
+            String fileName = extractFileName(filePart);
+            log.info("file name: " + fileName);
+            if (filePart != null && fileName != ""){
                 log.info("file was attached, trying to upload");
-                String fileName = extractFileName(filePart);
-                log.info("file name: " + fileName);
+
                 InputStream fileContent = filePart.getInputStream();
                 log.info("input stream was received!");
                 BufferedInputStream bufferedInputStream = new BufferedInputStream(fileContent);
@@ -319,9 +329,7 @@ public class SaveDealController extends HttpServlet {
                 log.info("file was not attached, returning null");
                 return null;
             }
-        } catch (IOException e) {
-            log.error("error while uploading file:" + e);
-        } catch (ServletException e) {
+        } catch (IOException | ServletException e) {
             log.error("error while uploading file:" + e);
         } catch (DatabaseException e){
             log.error("error while getting user from DB:" + e);
@@ -338,5 +346,27 @@ public class SaveDealController extends HttpServlet {
             }
         }
         return "";
+    }
+
+    private List<Contact> getContactsList(HttpServletRequest req){
+        List<Contact> contacts = new ArrayList<>();
+        Map<String, String[]> parametersMap = (Map<String, String[]>) req.getParameterMap();
+        for (Map.Entry<String, String[]> entry : parametersMap.entrySet() ) {
+            if (entry.getKey().contains(ADD_CONTACTS_KEY)){
+                log.info("add contact parameter name:" + entry.getKey());
+                log.info("value array length:" + entry.getValue().length);
+                for (int i = 0; i< entry.getValue().length; i++){
+                    log.info("add contact parameter value:" + entry.getValue()[i]);
+                }
+                int id = Integer.parseInt(entry.getValue()[0]);
+                try {
+                    Contact contact = contactService.getContactById(id);
+                    contacts.add(contact);
+                } catch (DatabaseException e) {
+                    log.error("can't read contact from DB + " + e);
+                }
+            }
+        }
+        return contacts;
     }
 }

@@ -15,6 +15,7 @@
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="../resources/js/clockpicker.js"></script>
     <script src="../resources/js/addDealForm.js"></script>
+    <script src="../resources/js/addContactsToDeal.js"></script>
     <script>
         $(function() {
             $("#dealDate").datepicker();
@@ -33,18 +34,21 @@
         <form class="form-horizontal" role="form" action="/saveDeal" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-sm-6">
+
                     <div class="form-group">
                         <label class="control-label col-sm-4">Название сделки</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="dealName" id="dealName">
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-4">Теги</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="dealTags" id="dealTags" >
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-4">Ответственный</label>
                         <div class="col-sm-8">
@@ -56,6 +60,7 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-4">Бюджет</label>
                         <div class="col-sm-7">
@@ -63,6 +68,7 @@
                         </div>
                         <label class="control-label col-sm-1">грн</label>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-4">Этап</label>
                         <div class="col-sm-8">
@@ -74,12 +80,14 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-4">Примечание</label>
                         <div class="col-sm-8">
                             <textarea class="form-control" rows="5" name="dealNote" id="dealNote"></textarea>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-4">Дата создания</label>
                         <div class="col-sm-8">
@@ -98,15 +106,19 @@
 
                     <div class="form-group">
                         <div class="col-sm-8">
-                            <select class="form-control"  name="dealContact" id="dealContact">
+                            <select class="form-control"  name="contact" id="contact">
                                 <option value="-1" selected disabled>Please select</option>
                                 <c:forEach items="${contacts}" var="contact">
                                     <option value="${contact.id}">${contact.name}</option>
                                 </c:forEach>
                             </select>
                         </div>
-                        <button type="button" onclick="return addContact()" class="btn control-button col-sm-4">Добавить</button>
+                        <button type="button" onclick="return addDealButton()" class="btn control-button col-sm-4">Добавить</button>
                     </div>
+
+                    <div class="form-group" id="contactsList">
+                    </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-8">Добавить Контакт</label>
                     </div>
