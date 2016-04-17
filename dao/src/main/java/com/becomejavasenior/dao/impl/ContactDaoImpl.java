@@ -19,17 +19,17 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     private static final Logger LOGGER = LogManager.getLogger(ContactDaoImpl.class);
 
-    private static final String READ_CONTACT = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact WHERE id=?";
+    private static final String READ_CONTACT = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted, date_modify, user_modify_id FROM contact WHERE id=?";
 
     private static final String CREATE_CONTACT = "INSERT INTO contact (name, phone, email, skype, position, responsible_id," +
             " phone_type_id, company_id, created_by, date_create, deleted) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_CONTACT = "UPDATE contact SET name=?, phone=?, email=?, skype=?, position=?, responsible_id=?," +
-            " phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
+            " phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=?, date_modify=?, user_modify_id=? WHERE id=?";
 
     private static final String DELETE_CONTACT = "DELETE FROM contact WHERE id=?";
-    private static final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted FROM contact";
+    private static final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted, date_modify, user_modify_id FROM contact";
     private static final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM contact";
     private static final String FIND_ALL_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact JOIN deal_contact " +
             "ON contact.id = deal_contact.contact_id AND deal_id = ?";
@@ -38,7 +38,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
     private static final String FIND_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact WHERE deal_id = ?";
 
     private static final String GET_CONTACT_FOR_TASK = "SELECT contact.id, contact.name, contact.phone, contact.email, " +
-            "contact.skype,  contact.position,  contact.phone_type_id,  contact.date_create,  contact.deleted " +
+            "contact.skype,  contact.position,  contact.phone_type_id,  contact.date_create,  contact.deleted, company.date_modify, company.user_modify_id " +
             "FROM contact INNER JOIN task ON contact.id = task.contact_id WHERE task.id = ?";
     private static final String CREATE_CONTACT_FOR_DEAL = "INSERT INTO deal_contact (contact_id, deal_id) VALUES (?, ?)";
 
@@ -99,7 +99,9 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(9, contact.getResponsibleUser().getId());
             preparedStatement.setDate(10, new java.sql.Date(contact.getCreationDate().getTime()));
             preparedStatement.setBoolean(11, contact.getDeleted());
-            preparedStatement.setInt(12, contact.getId());
+            preparedStatement.setDate(12, new java.sql.Date(contact.getModificationDate().getTime()));
+            preparedStatement.setInt(13, contact.getModifiedByUser().getId());
+            preparedStatement.setInt(14, contact.getId());
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Updating a contact was failed. Error - {}", new Object[]{e.getMessage()});
@@ -185,6 +187,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
         contact.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
         contact.setCreationDate(resultSet.getDate("date_create"));
         contact.setDeleted(resultSet.getBoolean("deleted"));
+        contact.setModificationDate(resultSet.getDate("date_modify"));
         return contact;
     }
 

@@ -21,20 +21,20 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     private static final Logger LOGGER = LogManager.getLogger(CompanyDaoImpl.class);
 
-    private static final String READ_COMPANY = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company WHERE id=?";
+    private static final String READ_COMPANY = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted, date_modify, user_modify_id FROM company WHERE id=?";
 
     private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id" +
             "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
-            "created_by=?, date_create=?, deleted=? WHERE id=?";
+            "created_by=?, date_create=?, deleted=?, date_modify=?, user_modify_id=? WHERE id=?";
 
     private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
-    private static final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted FROM company";
+    private static final String FIND_ALL_COMPANIES = "SELECT id, name, web, email, adress, phone, phone_type_id, date_create, deleted, date_modify, user_modify_id FROM company";
     private static final String GET_ALL_COMPANIES_COUNT = "SELECT count(*) FROM company";
 
     private static final String GET_COMPANY_FOR_TASK = "SELECT company.id, company.name, company.web, company.email,company. adress, company.phone," +
-            " company.phone_type_id, company.date_create, company.deleted " +
+            " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
 
     public CompanyDaoImpl(DataSource dataSource) {
@@ -97,7 +97,9 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setInt(8, company.getCreatedByUser().getId());
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());
-            preparedStatement.setInt(11, company.getId());
+            preparedStatement.setDate(11, new java.sql.Date(company.getModificationDate().getTime()));
+            preparedStatement.setInt(12, company.getModifiedByUser().getId());
+            preparedStatement.setInt(13, company.getId());
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Updating a company was failed. Error - {}", new Object[]{e.getMessage()});
@@ -134,6 +136,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
                 company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
                 company.setCreationDate(resultSet.getDate("date_create"));
                 company.setDeleted(resultSet.getBoolean("deleted"));
+                company.setModificationDate(resultSet.getDate("date_modify"));
                 companies.add(company);
             }
         } catch (SQLException e) {
@@ -192,6 +195,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         company.setPhoneType(PhoneType.values()[resultSet.getInt("phone_type_id")]);
         company.setCreationDate(resultSet.getDate("date_create"));
         company.setDeleted(resultSet.getBoolean("deleted"));
+        company.setModificationDate(resultSet.getDate("date_modify"));
         return company;
     }
 }
