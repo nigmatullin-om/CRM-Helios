@@ -19,6 +19,8 @@ public class Company implements Serializable {
     private User createdByUser;
     private Date creationDate;
     private Boolean deleted;
+    private Date modificationDate;
+    private User modifiedByUser;
 
     private List<Note> notes;
     private List<File> files;
@@ -152,6 +154,22 @@ public class Company implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
+    public void setModifiedByUser(User modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
+    }
+
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public User getModifiedByUser() {
+        return modifiedByUser;
     }
 
     @Override
