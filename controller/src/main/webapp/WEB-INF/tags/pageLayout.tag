@@ -44,6 +44,9 @@
             <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/tasks">Задачи</a></li>
             </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/addCompany">Добавить компанию</a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>

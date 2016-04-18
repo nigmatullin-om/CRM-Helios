@@ -64,3 +64,8 @@ table.calendar > tbody > tr > td > div.today-task {
 table.calendar > tbody > tr > td > div.tomorrow-task {
     background-color: #d8ffb2
 }
+
+.form-horizontal .form-group {
+    margin-right: 25px;
+    margin-left: 25px;
+}
