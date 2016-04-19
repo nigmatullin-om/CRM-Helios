@@ -1,5 +1,6 @@
 package com.becomejavasenior.controller;
 
+import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Task;
 import com.becomejavasenior.service.TaskService;
@@ -16,13 +17,8 @@ import java.time.*;
 import java.time.format.TextStyle;
 import java.util.*;
 
-@WebServlet("/tasks")
+@WebServlet("/view/tasks")
 public class TasksController extends HttpServlet {
-    private static final String TASK_LIST_TODO_JSP = "/pages/task/tasksListTodo.jsp";
-    private static final String TASK_LIST_DAY_JSP = "/pages/task/tasksCalendarDay.jsp";
-    private static final String TASK_LIST_WEEK_JSP = "/pages/task/tasksCalendarWeek.jsp";
-    private static final String TASK_LIST_MONTH_JSP = "/pages/task/tasksCalendarMonth.jsp";
-    private static final String TASK_LIST = "/pages/task/tasksList.jsp";
 
     private static final String TODO_TASKS = "todoTasks";
 
@@ -123,7 +119,7 @@ public class TasksController extends HttpServlet {
         request.setAttribute(NEXT_MONTH, currentTime.plusMonths(1));
         request.setAttribute(PREV_MONTH, currentTime.minusMonths(1));
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(TASK_LIST_MONTH_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_MONTH_JSP);
     }
 
     private String getViewType(HttpServletRequest request) {
@@ -141,7 +137,7 @@ public class TasksController extends HttpServlet {
             e.printStackTrace();
         }
         request.setAttribute(TASKS_LIST, tasks);
-        return getServletContext().getRequestDispatcher(TASK_LIST);
+        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST);
     }
 
     private RequestDispatcher processWeekTasks(HttpServletRequest request) {
@@ -163,7 +159,7 @@ public class TasksController extends HttpServlet {
         request.setAttribute(NEXT_WEEK, currentTime.plusWeeks(1));
         request.setAttribute(PREV_WEEK, currentTime.minusWeeks(1));
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(TASK_LIST_WEEK_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_WEEK_JSP);
     }
 
     private RequestDispatcher processDayTasks(HttpServletRequest request) {
@@ -180,7 +176,7 @@ public class TasksController extends HttpServlet {
         request.setAttribute(NEXT_DAY, currentTime.plusDays(1));
         request.setAttribute(PREV_DAY, currentTime.minusDays(1));
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(TASK_LIST_DAY_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_DAY_JSP);
     }
 
     private RequestDispatcher processTodoLine(HttpServletRequest request) {
@@ -194,7 +190,7 @@ public class TasksController extends HttpServlet {
         }
         request.setAttribute(TODO_TASKS, taskByDay);
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(TASK_LIST_TODO_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_TODO_JSP);
     }
 
     private LocalDate getDateFromRequest(HttpServletRequest request) {

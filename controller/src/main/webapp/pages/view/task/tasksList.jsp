@@ -4,24 +4,36 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<t:pageLayout title="Задачи">
+<c:set var ="userLocale" value="${cookie['localeCookie'].value}"/>
+<c:if test="${userLocale == ''}">
+    <c:set var ="userLocale" value="en_US"/>
+    ${cookie['localeCookie'].value} = "en_US"
+    ${cookie['localeCookie'].path} = "/"
+</c:if>
+<fmt:setLocale value="${userLocale}"/>
+<fmt:setBundle basename="LocaleText"/>
+<fmt:message key= "pageTasks" var="pageTasks"/>
+
+
+<t:pageLayout title="${pageTasks}">
     <jsp:attribute name="bodyLayout">
         <div class="task-view-links">
-            <a href="?view=list" class="btn btn-primary disabled" role="button">Список</a>
-            <a href="?view=todo" class="btn btn-primary active" role="button">To-do line</a>
-            <a href="?view=day" class="btn btn-primary active" role="button">День</a>
-            <a href="?view=week" class="btn btn-primary active" role="button">Неделя</a>
-            <a href="?view=month" class="btn btn-primary active" role="button">Месяц</a>
+            <a href="?view=list" class="btn btn-primary disabled" role="button"><fmt:message key="lblList"/> </a>
+            <a href="?view=todo" class="btn btn-primary active" role="button"><fmt:message key="lblToDoLine"/></a>
+            <a href="?view=day" class="btn btn-primary active" role="button"><fmt:message key="lblDay"/></a>
+            <a href="?view=week" class="btn btn-primary active" role="button"><fmt:message key="lblWeek"/></a>
+            <a href="?view=month" class="btn btn-primary active" role="button"><fmt:message key="lblMonth"/></a>
         </div>
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>Дата исполнения</th>
-        <th>Время</th>
-        <th>Ответственный</th>
-        <th>Контакт\сделка</th>
-        <th>Тип зададачи</th>
-        <th>Текст зададачи</th>
+        <th><fmt:message key="lblExecutionDate"/> </th>
+        <th><fmt:message key="lblTime"/> </th>
+        <th><fmt:message key="lblResponsible"/> </th>
+        <th><fmt:message key="lblContactOrDeal"/></th>
+        <th><fmt:message key="taskType"/> </th>
+        <th><fmt:message key="taskDescription"/> </th>
+
     </tr>
     </thead>
     <tbody>
@@ -35,16 +47,16 @@
 
             <c:choose>
                 <c:when test="${not empty task.getContact()}">
-                    <td class="contact-company-deal">Contact <br/>${task.getContact().getName()}</td>
+                    <td class="contact-company-deal"><fmt:message key="contactName"/> <br/>${task.getContact().getName()}</td>
                 </c:when>
 
                 <c:when test="${not empty task.getDeal()}">
-                    <td class="contact-company-deal">Deal <br/>${task.getDeal().getName()}</td>
+                    <td class="contact-company-deal"><fmt:message key="dealName"/>  <br/>${task.getDeal().getName()}</td>
                 </c:when>
 
                 <c:when test="${not empty task.getCompany()}">
                     <td class="contact-company-deal">
-                        Company <br/>${task.getCompany().getName()}
+                        <fmt:message key="companyName"/>  <br/>${task.getCompany().getName()}
                     </td>
                 </c:when>
                 <c:otherwise>

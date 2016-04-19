@@ -4,14 +4,25 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<t:pageLayout title="Задачи">
+<c:set var ="userLocale" value="${cookie['localeCookie'].value}"/>
+<c:if test="${userLocale == ''}">
+    <c:set var ="userLocale" value="en_US"/>
+    ${cookie['localeCookie'].value} = "en_US"
+    ${cookie['localeCookie'].path} = "/"
+</c:if>
+<fmt:setLocale value="${userLocale}"/>
+<fmt:setBundle basename="LocaleText"/>
+<fmt:message key= "pageTasks" var="pageTasks"/>
+
+
+<t:pageLayout title="${pageTasks}">
     <jsp:attribute name="bodyLayout">
         <div class="task-view-links">
-            <a href="?view=list" class="btn btn-primary active" role="button">Список</a>
-            <a href="?view=todo" class="btn btn-primary active" role="button">To-do line</a>
-            <a href="?view=day" class="btn btn-primary active" role="button">День</a>
-            <a href="?view=week" class="btn btn-primary active" role="button">Неделя</a>
-            <a href="?view=month" class="btn btn-primary disabled" role="button">Месяц</a>
+            <a href="?view=list" class="btn btn-primary active" role="button"><fmt:message key="lblList"/> </a>
+            <a href="?view=todo" class="btn btn-primary active" role="button"><fmt:message key="lblToDoLine"/></a>
+            <a href="?view=day" class="btn btn-primary active" role="button"><fmt:message key="lblDay"/></a>
+            <a href="?view=week" class="btn btn-primary active" role="button"><fmt:message key="lblWeek"/></a>
+            <a href="?view=month" class="btn btn-primary disabled" role="button"><fmt:message key="lblMonth"/></a>
         </div>
         <div class="container task-container">
             <table class="calendar table table-bordered table-hover">
@@ -25,8 +36,8 @@
                 </caption>
                 <thead>
                 <tr>
-                    <th>День</th>
-                    <th>Задачи</th>
+                    <th><fmt:message key="lblDay"/> </th>
+                    <th><fmt:message key="tasks"/> </th>
                 </tr>
                 </thead>
                 <tbody>

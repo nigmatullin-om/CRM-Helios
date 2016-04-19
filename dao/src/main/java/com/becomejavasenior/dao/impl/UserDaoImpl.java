@@ -137,7 +137,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                 users.add(user);
             }
         } catch (SQLException e) {
-            LOGGER.error("Getting users was failed. Error - {}", new Object[]{e.getMessage()});
+            LOGGER.error("Getting users was failed. Error - ", e);
             throw new DatabaseException(e.getMessage());
         }
         return users;

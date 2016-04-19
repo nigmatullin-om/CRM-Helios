@@ -4,16 +4,26 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<t:pageLayout title="Задачи">
+<c:set var ="userLocale" value="${cookie['localeCookie'].value}"/>
+<c:if test="${userLocale == ''}">
+    <c:set var ="userLocale" value="en_US"/>
+    ${cookie['localeCookie'].value} = "en_US"
+    ${cookie['localeCookie'].path} = "/"
+</c:if>
+<fmt:setLocale value="${userLocale}"/>
+<fmt:setBundle basename="LocaleText"/>
+<fmt:message key= "pageTasks" var="pageTasks"/>
+
+
+<t:pageLayout title="${pageTasks}">
     <jsp:attribute name="bodyLayout">
         <div class="task-view-links">
-            <a href="?view=list" class="btn btn-primary active" role="button">Список</a>
-            <a href="?view=todo" class="btn btn-primary disabled" role="button">To-do line</a>
-            <a href="?view=day" class="btn btn-primary active" role="button">День</a>
-            <a href="?view=week" class="btn btn-primary active" role="button">Неделя</a>
-            <a href="?view=month" class="btn btn-primary active" role="button">Месяц</a>
+            <a href="?view=list" class="btn btn-primary active" role="button"><fmt:message key="lblList"/> </a>
+            <a href="?view=todo" class="btn btn-primary disabled" role="button"><fmt:message key="lblToDoLine"/></a>
+            <a href="?view=day" class="btn btn-primary active" role="button"><fmt:message key="lblDay"/></a>
+            <a href="?view=week" class="btn btn-primary active" role="button"><fmt:message key="lblWeek"/></a>
+            <a href="?view=month" class="btn btn-primary active" role="button"><fmt:message key="lblMonth"/></a>
         </div>
-
         <div class="container task-container">
             <table class="calendar table table-bordered task-todo-container">
                 <caption>
@@ -24,9 +34,10 @@
 
                 <thead>
                 <tr>
-                    <th>Просроченные задачи</th>
-                    <th>Задачи на сегодня</th>
-                    <th>Задачи на завтра</th>
+                    <th><fmt:message key="tasksMatured"/></th>
+                    <th><fmt:message key="tasksForToday"/></th>
+                    <th><fmt:message key="tasksForTomorrow"/></th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -38,33 +49,33 @@
                                 <div class="${toDotask.key}-task task-card">
                                     <ul>
                                         <li class="finish-date">
-                                            Дата: <fmt:formatDate type="date"
+                                            <fmt:message key="lblDay"/>: <fmt:formatDate type="date"
                                                                   value="${task.getFinishDate()}"/>
                                         </li>
                                         <li class="finish-time">
-                                            Время: <fmt:formatDate type="time" timeStyle="short"
+                                            <fmt:message key="lblTime"/>: <fmt:formatDate type="time" timeStyle="short"
                                                                    value="${task.getFinishDate()}"/>
                                         </li>
                                         <li class="responsible-user">
-                                            Ответсвенный: ${task.getResponsibleUser().getName()}
+                                            <fmt:message key="lblResponsible"/>: ${task.getResponsibleUser().getName()}
                                         </li>
                                         <li class="task-type">
-                                            Тип: ${task.getTaskType().getTypeName()}
+                                            <fmt:message key="taskType"/>: ${task.getTaskType().getTypeName()}
                                         </li>
                                         <li class="description">
-                                            Текс: ${task.getDescription()}
+                                            <fmt:message key="lblDescription"/>: ${task.getDescription()}
                                         </li>
                                         <li>
                                             <c:if test="${not empty task.getContact()}">
-                                                Контакт: <br/>${task.getContact().getName()}
+                                                <fmt:message key="contactName"/>: <br/>${task.getContact().getName()}
                                             </c:if>
 
                                             <c:if test="${not empty task.getDeal()}">
-                                                Сделка <br/>${task.getDeal().getName()}
+                                                <fmt:message key="dealName"/>: <br/>${task.getDeal().getName()}
                                             </c:if>
 
                                             <c:if test="${not empty task.getCompany()}">
-                                                Компания <br/>${task.getCompany().getName()}
+                                                <fmt:message key="companyName"/>: <br/>${task.getCompany().getName()}
                                             </c:if>
                                         </li>
                                     </ul>
@@ -73,11 +84,11 @@
                                             <input hidden="true" name="taskId" value="${task.getId()}">
                                             <button type="submit" class="btn btn-default" name="changeDate"
                                                     value="onToday">
-                                                На сегодня
+                                                <fmt:message key="tasksForToday"/>
                                             </button>
                                             <button type="submit" class="btn btn-default" name="changeDate"
                                                     value="onTomorrow">
-                                                Завтра
+                                                <fmt:message key="tasksForTomorrow"/>
                                             </button>
                                         </div>
                                     </form>
