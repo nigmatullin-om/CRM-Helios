@@ -222,7 +222,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setString(4, contact.getSkype());
             preparedStatement.setString(5, contact.getPosition());
             preparedStatement.setInt(6, contact.getResponsibleUser().getId());
-            preparedStatement.setInt(7, contact.getPhoneType().ordinal());
+            preparedStatement.setInt(7, contact.getPhoneType().ordinal()+1);
             preparedStatement.setInt(8, contact.getCompany().getId());
             preparedStatement.setInt(9, contact.getResponsibleUser().getId());
             preparedStatement.setDate(10, new java.sql.Date(contact.getCreationDate().getTime()));

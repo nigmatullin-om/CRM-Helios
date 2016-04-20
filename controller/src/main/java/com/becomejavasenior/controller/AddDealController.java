@@ -53,12 +53,12 @@ public class AddDealController extends HttpServlet {
         servletContext.setAttribute("dealStages", stages);
 
         List<EnumAdapter> phoneTypes = new ArrayList<EnumAdapter>();
-        phoneTypes.add(new EnumAdapter(0, "Рабочий"));
-        phoneTypes.add(new EnumAdapter(1, "Прямой рабочий номер"));
-        phoneTypes.add(new EnumAdapter(2, "Домашний"));
-        phoneTypes.add(new EnumAdapter(3, "Мобильный"));
-        phoneTypes.add(new EnumAdapter(4, "Домашний"));
-        phoneTypes.add(new EnumAdapter(5, "Другое"));
+        phoneTypes.add(new EnumAdapter(1, "Рабочий"));
+        phoneTypes.add(new EnumAdapter(2, "Прямой рабочий номер"));
+        phoneTypes.add(new EnumAdapter(3, "Домашний"));
+        phoneTypes.add(new EnumAdapter(4, "Мобильный"));
+        phoneTypes.add(new EnumAdapter(5, "Домашний"));
+        phoneTypes.add(new EnumAdapter(6, "Другое"));
         log.info("phone types: " + phoneTypes.toString());
         servletContext.setAttribute("phoneTypes", phoneTypes);
 

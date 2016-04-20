@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -26,16 +26,17 @@
         $(function(){
             $("#taskTime").clockpicker();
         });
+        /*$(document).ready(onDocumentReady());*/
     </script>
 </head>
 <body>
     <div class="container">
         <h1 style="text-align:  center">Добавление сделки</h1>
-        <form class="form-horizontal" role="form" action="/saveDeal" method="post" enctype="multipart/form-data">
+        <form class="form-horizontal" id="addDealForm" role="form" action="/saveDeal" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-sm-6">
 
-                    <div class="form-group">
+                    <div class="form-group" id="dealNameBlock">
                         <label class="control-label col-sm-4">Название сделки</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="dealName" id="dealName">
@@ -49,7 +50,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="dealResponsibleBlock">
                         <label class="control-label col-sm-4">Ответственный</label>
                         <div class="col-sm-8">
                             <select class="form-control" value="-1" name="dealResponsible" id="dealResponsible" placeholder="SELECT">
@@ -61,7 +62,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="dealBudgetBlock">
                         <label class="control-label col-sm-4">Бюджет</label>
                         <div class="col-sm-7">
                             <input type="number" step="0.01" class="form-control" name="dealBudget" id="dealBudget" >
@@ -69,7 +70,7 @@
                         <label class="control-label col-sm-1">грн</label>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="dealStageBlock">
                         <label class="control-label col-sm-4">Этап</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="dealStage" id="dealStage">
@@ -81,14 +82,14 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="dealNoteBlock">
                         <label class="control-label col-sm-4">Примечание</label>
                         <div class="col-sm-8">
                             <textarea class="form-control" rows="5" name="dealNote" id="dealNote"></textarea>
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="dealDateBlock">
                         <label class="control-label col-sm-4">Дата создания</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="dealDate" name="dealDate">
@@ -116,31 +117,35 @@
                         <button type="button" onclick="return addDealButton()" class="btn control-button col-sm-4">Добавить</button>
                     </div>
 
-                    <div class="form-group" id="contactsList">
-                    </div>
+                    <%--<div class="form-group" id="contactsList">
+                    </div>--%>
 
                     <div class="form-group">
                         <label class="control-label col-sm-8">Добавить Контакт</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="contactNameBlock">
                         <label class="control-label col-sm-4">Имя Фамилия</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="contactName" id="contactName">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="contactCompanyBlock">
                         <label class="control-label col-sm-4">Компания</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="contactCompany" id="contactCompany">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="contactPositionBlock">
                         <label class="control-label col-sm-4">Должность</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="contactPosition" id="contactPosition">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="contactPhoneTypeBlock">
                         <div class="col-sm-4">
                             <select class="form-control"  name="contactPhoneType" id="contactPhoneType">
                                 <option value="-1" selected disabled>Please select</option>
@@ -153,13 +158,15 @@
                             <input type="text" class="form-control" name="contactPhone" id="contactPhone">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="contactEmailBlock">
                         <label class="control-label col-sm-4">Email</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="contactEmail" id="contactEmail">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="contactSkypeBlock">
                         <label class="control-label col-sm-4">Skype</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="contactSkype" id="contactSkype">
@@ -168,7 +175,7 @@
                 </div>
 
                 <div class="col-sm-6">
-                    <div class="form-group">
+                    <div class="form-group" id="companyBlock">
                         <label class="control-label col-sm-4">Компания</label>
                         <div class="col-sm-4">
                             <select class="form-control"  name="company" id="company">
@@ -184,31 +191,35 @@
                     <div class="form-group">
                         <label class="control-label col-sm-8">Добавить компанию</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="companyNameBlock">
                         <label class="control-label col-sm-4">Название компании</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="companyName" id="companyName">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="companyPhoneBlock">
                         <label class="control-label col-sm-4">Номер телефона</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="companyPhone" id="companyPhone">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="companyEmailBlock">
                         <label class="control-label col-sm-4">Email</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="companyEmail" id="companyEmail">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="companyWebBlock">
                         <label class="control-label col-sm-4">Web адресс</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="companyWeb" id="companyWeb">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="companyAdressBlock">
                         <label class="control-label col-sm-4">Адресс</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="companyAdress" id="companyAdress">
@@ -218,7 +229,8 @@
                     <div class="form-group">
                         <label class="control-label col-sm-8">Добавить действие</label>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="taskPeriodBlock">
                         <label class="control-label col-sm-4">Период</label>
                         <div class="col-sm-8">
                             <select class="form-control"  name="taskPeriod" id="taskPeriod">
@@ -229,10 +241,11 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label col-sm-8">или дату и время</label>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="taskDateTimeBlock">
                         <div class="col-sm-4">
                             <input type="text" class="form-control" id="taskDate" name="taskDate">
                         </div>
@@ -243,13 +256,15 @@
                             </span>
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="taskNameBlock">
                         <label class="control-label col-sm-4">Имя задачи</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" name="taskName" id="taskName">
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="taskResponsibleBlock">
                         <label class="control-label col-sm-4">Ответственный</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="taskResponsible" id="taskResponsible">
@@ -260,7 +275,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="taskTypeBlock">
                         <label class="control-label col-sm-4">Тип задачи</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="taskType" id="taskType">
@@ -271,7 +287,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group" id="taskTextBlock">
                         <label class="control-label col-sm-4">Текст задачи</label>
                         <div class="col-sm-8">
                             <textarea class="form-control" rows="5" name="taskText" id="taskText"></textarea>

@@ -7,7 +7,6 @@ import com.becomejavasenior.service.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -44,6 +43,7 @@ public class SaveDealController extends HttpServlet {
     private TaskTypeService taskTypeService;
     private NoteService noteService;
     private FileService fileService;
+    private TagService tagService;
 
 
     @Override
@@ -56,19 +56,20 @@ public class SaveDealController extends HttpServlet {
         taskTypeService = new TaskTypeServiceImpl();
         noteService = new NoteServiceImpl();
         fileService = new FileServiceImpl();
+        tagService = new TagServiceImpl();
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // TODO: 16.04.2016 get current user
         Deal deal = getDeal(req);
         File file = getFile(req);
         Note note = getNote(req);
         Company company = getCompany(req);
         List<Contact> contacts = getContactsList(req);
-
         Contact contact = getContact(req);
-        /*Task task = null;*/
         Task task = getTask(req);
+        List<Tag> tags = getTags(req);
 
         try {
             if (company.getId() == 0){
@@ -89,6 +90,30 @@ public class SaveDealController extends HttpServlet {
             note.setId(noteService.createWithId(note));
             noteService.addNoteToDeal(note, deal);
 
+            if (tags.size() > 0){
+                for (Tag tag : tags){
+                    Tag checkTag = tagService.getTagByName(tag.getName());
+                    if (checkTag != null){
+                        log.info("tag: " + tag.toString() + " allready exist in DB");
+                        tag = checkTag;
+                    }
+                    else{
+                        log.info("saving tag " + tag.toString() + " to DB");
+                        int id = tagService.createWithId(tag);
+                        tag.setId(id);
+                        log.info("new tag id: " + id);
+                    }
+
+                    int result = tagService.addTagToDeal(tag, deal);
+                    if (result > 0){
+                        log.info("tag was added to deal");
+                    }
+                    else {
+                        log.info("tag was not added to deal");
+                    }
+                }
+            }
+
             if (contact != null){
                 contact.setCompany(company);
                 contact.setId(contactService.createWithId(contact));
@@ -107,6 +132,7 @@ public class SaveDealController extends HttpServlet {
                 task.setDeal(deal);
                 task.setId(taskService.createWithId(task));
                 log.info("new task id = " + task.getId());
+
             }
         } catch (DatabaseException e) {
             log.error("error while saving to DB" + e);
@@ -131,7 +157,7 @@ public class SaveDealController extends HttpServlet {
         log.info("deal stage = " + dealStageEnum.name());
         String dealNote = req.getParameter("dealNote");
         log.info("deal note = " + dealNote);
-        DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         try {
             Date dealDate =  dateFormat.parse(req.getParameter("dealDate".trim()));
             log.info("deal date = " + dealDate.toString());
@@ -234,6 +260,9 @@ public class SaveDealController extends HttpServlet {
 
     private Task getTask(HttpServletRequest req){
         String taskPeriod = req.getParameter("taskPeriod");
+        if (taskPeriod == null){
+            taskPeriod = "-1";
+        }
         log.info("task period = " + taskPeriod);
         String taskDateStr = req.getParameter("taskDate");
         log.info("task Date = " + taskDateStr);
@@ -245,7 +274,8 @@ public class SaveDealController extends HttpServlet {
         User responsibleUser = null;
         User createdByUser = null;
         TaskType taskType = null;
-        DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
         if (!taskPeriod.equals("-1") || !taskTimeStr.equals("") && !taskDateStr.equals("")){
             if (!taskPeriod.equals("-1")){
                 taskPeriodEnum = Period.values()[Integer.parseInt(taskPeriod)];
@@ -253,16 +283,16 @@ public class SaveDealController extends HttpServlet {
             }
             else {
                 try {
-                    Date taskDate =  dateFormat.parse(req.getParameter("dealDate".trim()));
-                    log.info("deal date = " + taskDate.toString());
-                    Date taskTime =  dateFormat.parse(req.getParameter("dealTime".trim()));
-                    log.info("deal time = " + taskDate.toString());
+                    Date taskDate =  dateFormat.parse(taskDateStr);
+                    log.info("converted task date = " + taskDate.toString());
+                    Date taskTime =  convertTime(taskTimeStr);
+                    log.info("converted task time = " + taskDate.toString());
                     finishDate = new Date(taskDate.getTime() + taskTime.getTime());
+                    log.info("task finish date: " + finishDate.toString());
                 } catch (ParseException e) {
                     log.error("can't parse task date" + e);
                 }
             }
-
             try {
                 responsibleUser = userService.getUserById(Integer.parseInt(req.getParameter("taskResponsible")));
                 createdByUser = userService.getUserById(1); // TODO: 06.04.2016
@@ -309,8 +339,8 @@ public class SaveDealController extends HttpServlet {
         try {
             filePart = req.getPart("fileName");
             String fileName = extractFileName(filePart);
-            log.info("file name: " + fileName);
-            if (filePart != null && fileName != ""){
+            log.info("file name: ?" + fileName + "?");
+            if (!fileName.equals("")){
                 log.info("file was attached, trying to upload");
 
                 InputStream fileContent = filePart.getInputStream();
@@ -339,10 +369,13 @@ public class SaveDealController extends HttpServlet {
 
     private String extractFileName(Part part) {
         String contentDisp = part.getHeader("content-disposition");
+        String result;
         String[] items = contentDisp.split(";");
         for (String s : items) {
             if (s.trim().startsWith("filename")) {
-                return s.substring(s.indexOf("=") + 2, s.length()-1);
+                result = s.substring(s.indexOf("=") + 2, s.length()-1);
+                log.info("file name from request: " + result);
+                return result;
             }
         }
         return "";
@@ -368,5 +401,40 @@ public class SaveDealController extends HttpServlet {
             }
         }
         return contacts;
+    }
+
+    private List<Tag> getTags(HttpServletRequest req){
+        List<Tag> tags = new ArrayList<>();
+        String tagToSplit = req.getParameter("dealTags");
+        log.info("tags string: " + tagToSplit);
+        tags = TagSplitter.getTagListFromString(tagToSplit);
+        for (Tag tag : tags){
+            tag.setCreationDate(new Timestamp(new Date().getTime()));
+            try {
+                tag.setCreatedByUser(userService.getUserById(1)); //// TODO: 16.04.2016
+            }catch (DatabaseException e){
+                log.error("can't get tag from DB: " + e);
+            }
+        }
+        return tags;
+    }
+
+    private Date convertTime(String time){
+        Date date;
+        long timeInMilSec = 0;
+        String[] splitTime = time.split(":");
+        for (String s : splitTime){
+            /*log.info("splitted time: " + s);*/
+        }
+        int hours = Integer.parseInt(splitTime[0]);
+        /*log.info("hours: " + hours);*/
+        int minutes = Integer.parseInt(splitTime[1]);
+        /*log.info("minutes: " + minutes);*/
+        timeInMilSec += hours * 3600 * 1000;
+        timeInMilSec += minutes * 60 * 1000;
+        /*log.info("time in mils: " + timeInMilSec);*/
+        date = new Date(timeInMilSec);
+        /*log.info("date: " + date.toString());*/
+        return date;
     }
 }

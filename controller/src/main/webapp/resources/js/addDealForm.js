@@ -1,44 +1,70 @@
  function checkDealForm(){
+
     var dealName = document.getElementById("dealName").value;
      console.log("deal name =" + dealName);
     if(dealName == ""){
+        setDivError("dealNameBlock", "Имя сделки должно быть заполнено!");
         alert("Имя сделки должно быть заполнено!");
         return false;
+    }
+     else{
+        setDivOk("dealNameBlock");
     }
 
     var dealBudget = document.getElementById("dealBudget").value;
      console.log("budget = " + dealBudget);
      if(dealBudget == ""){
-         alert("Бюджет должен быть заполнен!");
+         setDivError("dealBudgetBlock", "Бюджет сделки не указан");
+         /*alert("Бюджет должен быть заполнен!");*/
          return false;
+     }
+     else {
+        setDivOk("dealBudgetBlock");
      }
 
      var dealResponsibleId = document.getElementById("dealResponsible").value;
      console.log("deal responsible id =" + dealResponsibleId);
-     if(dealResponsibleId == -1){
-         alert("Ответственный не выбран!");
+     if(dealResponsibleId == -1) {
+         setDivError("dealResponsibleBlock", "Ответственный за сделку не выбран!");
+         /*alert("Ответственный не выбран!");*/
          return false;
+     }
+     else {
+         setDivOk("dealResponsibleBlock");
+
      }
 
      var dealStage = document.getElementById("dealStage").value;
      console.log("deal stage=" + dealStage);
      if(dealStage == -1){
-         alert("Этап не выбран!");
+         setDivError("dealStageBlock", "Этап сделки не выбран!");
+         /*alert("Этап не выбран!");*/
          return false;
+     }
+     else {
+         setDivOk("dealStageBlock");
+     }
+
+     var dealNote = document.getElementById("dealNote").value;
+     console.log("deal note=" + dealNote);
+     if(dealNote == ""){
+         setDivError("dealNoteBlock", "Примечание к сделке не добавлено!");
+         /*alert("Примечание не указано!");*/
+         return false;
+     }
+     else {
+         setDivOk("dealNoteBlock");
      }
 
      var dealDate = document.getElementById("dealDate").value;
      console.log("deal date=" + dealDate);
      if(dealDate == ""){
-         alert("Дата не установлена!");
+         setDivError("dealDateBlock", "Дата не указана!");
+         /*alert("Дата не установлена!");*/
          return false;
      }
-
-     var dealNote = document.getElementById("dealNote").value;
-     console.log("deal тщеу=" + dealNote);
-     if(dealNote == ""){
-         alert("Примечание не указано!");
-         return false;
+     else {
+         setDivOk("dealDateBlock");
      }
 
      if(!checkContact()){
@@ -63,21 +89,64 @@
      var contactPhoneType = document.getElementById("contactPhoneType").value;
      var contactPhone = document.getElementById("contactPhone").value;
      var contactSkype = document.getElementById("contactSkype").value;
+     var contactCompany = document.getElementById("contactCompany").value;
+     var contactEmail = document.getElementById("contactEmail").value;
      console.log("contactName: " + contactName);
      console.log("contactPosition: " + contactPosition);
      console.log("contactPhoneType: " + contactPhoneType);
      console.log("contactPhone: " + contactPhone);
      console.log("contactSkype: " + contactSkype);
+     console.log("contactCompany: " + contactCompany);
+     console.log("contactEmail: " + contactEmail);
 
-     if (contactName != ""){
-         /*alert("Контакт будет добавлен");*/
-         return true;
-     }
-
-     if (contactPosition != "" || contactPhoneType != "-1" || contactPhone != "" || contactSkype != ""){
+     if (contactName != "" || contactPosition != "" || contactPhoneType != "-1" || contactPhone != "" || contactSkype != "" || contactCompany != ""){
          if (contactName == ""){
-            alert("Имя контакта не указано");
+             setDivError("contactNameBlock", "Имя и фамилия нового контакта не указаны!");
+             /*alert("Имя контакта не указано");*/
              return false;
+         }
+         else {
+             setDivOk("contactNameBlock");
+         }
+
+         if ( contactPosition == ""){
+             setDivError("contactPositionBlock", "Должность нового контакта не указана!");
+             return false;
+         }
+         else {
+             setDivOk("contactPositionBlock");
+         }
+
+         if (contactPhoneType == "-1" || contactPhone == ""){
+             setDivError("contactPhoneTypeBlock", "Телефрн нового контакта не указан!");
+             return false;
+         }
+         else {
+             setDivOk("contactPhoneTypeBlock");
+         }
+
+         if (contactSkype == ""){
+             setDivError("contactSkypeBlock", "Skype нового контакта не указан!");
+             return false;
+         }
+         else {
+             setDivOk("contactSkypeBlock");
+         }
+
+         if (contactCompany == ""){
+             setDivError("contactCompanyBlock", "Компания нового контакта не указана!");
+             return false;
+         }
+         else {
+             setDivOk("contactCompanyBlock");
+         }
+
+         if (contactEmail == ""){
+             setDivError("contactEmailBlock", "Email нового контакта не указан!");
+             return false;
+         }
+         else {
+             setDivOk("contactEmailBlock");
          }
      }
      /*alert("Контакт пуст");*/
@@ -107,36 +176,62 @@
 
          if (taskPeriod == "-1"){
              if (taskDate == "" || taskTime == ""){
-                 alert("Необходимо указать период или дату и время задачи");
+                 setDivError("taskPeriodBlock", "Необходимо указать период или дату и время задачи");
+                 setDivError("taskDateTimeBlock", "");
+                 /*alert("Необходимо указать период или дату и время задачи");*/
                  return false;
              }
+             else {
+                 setDivOk("taskDateTimeBlock");
+             }
+         }
+         else {
+             setDivOk("taskPeriodBlock");
          }
 
          if (taskName == ""){
-             alert("Имя задачи не указано");
+             setDivError("taskNameBlock", "Имя задачи не указано!");
+             /*alert("Имя задачи не указано");*/
              return false;
+         }
+         else {
+            setDivOk("taskNameBlock");
          }
 
          if (taskResponsible == "-1"){
-             alert("Ответственный за задачу не указан");
+             setDivError("taskResponsibleBlock","Ответственный за задачу не указан!");
+             /*alert("Ответственный за задачу не указан");*/
              return false;
+         }
+         else {
+             setDivOk("taskResponsibleBlock");
          }
 
          if (taskType == "-1"){
-             alert("Тип задачи не указан");
+             setDivError("taskTypeBlock", "Тип задачи не указан!");
+             /*alert("Тип задачи не указан");*/
              return false;
+         }
+         else {
+             setDivOk("taskTypeBlock");
          }
 
          if (taskText == ""){
-             alert("Текст задачи не указан");
+             setDivError("taskTextBlock", "Текст задачи не указан!");
+             /*alert("Текст задачи не указан");*/
              return false;
          }
+         else {
+             setDivOk("taskTextBlock");
+         }
 
-         alert("Задача будет добавлена");
+         console.log("Задача будет добавлена!");
+         /*alert("Задача будет добавлена");*/
          return true;
      }
      else {
-         alert("Задача пуста");
+         console.log("Задача пуста");
+         /*alert("Задача пуста");*/
          return true;
      }
  }
@@ -146,6 +241,7 @@
      console.log("select company name status = " + selectCompanyNameStatus);
      /*alert("select company name status = " + selectCompanyNameStatus);*/
      if (selectCompanyNameStatus != null){
+         setDivOk("companyBlock");
          document.getElementById("companyName").value = "";
          return true;
      }
@@ -162,28 +258,48 @@
          console.log("company adress = " + companyAdress);
 
          if (companyName == ""){
-             alert("Имя компании не заполнено!");
+             setDivError("companyNameBlock", "Имя компании не заполнено!");
+             /*alert("Имя компании не заполнено!");*/
              return false;
+         }
+         else {
+             setDivOk("companyNameBlock");
          }
 
          if (companyPhone == ""){
-             alert("Номер телефона компании не заполнен!");
+             setDivError("companyPhoneBlock", "Номер телефона компании не заполнен!");
+             /*alert("Номер телефона компании не заполнен!");*/
              return false;
+         }
+         else {
+             setDivOk("companyPhoneBlock");
          }
 
          if (companyEmail == ""){
-             alert("email компании не заполнен!");
+             setDivError("companyEmailBlock", "email компании не заполнен!");
+             /*alert("email компании не заполнен!");*/
              return false;
+         }
+         else {
+             setDivOk("companyEmailBlock");
          }
 
          if (companyAdress == ""){
-             alert("Адресс компании не заполнен!");
+             setDivError("companyAdressBlock", "");
+             /*alert("Адресс компании не заполнен!");*/
              return false;
+         }
+         else {
+             setDivOk("companyAdressBlock");
          }
 
          if (companyWeb == ""){
-             alert("Вэб адресс компании не заполнен!");
+             setDivError("companyWebBlock", "Вэб адресс компании не заполнен!");
+             /*alert("Вэб адресс компании не заполнен!");*/
              return false;
+         }
+         else {
+             setDivOk("companyWebBlock");
          }
 
          return true;
@@ -205,23 +321,16 @@
          else{
              console.log("selected company id = " + selectedCompanyId);
              document.getElementById("addCompany").innerHTML = "Добавить новую";
-             /*document.getElementById("company").setAttribute("disabled", "disabled");*/
              document.getElementById("companyName").setAttribute("disabled", "disabled");
-             /*document.getElementById("companyName").value = "";*/
              document.getElementById("companyPhone").setAttribute("disabled", "disabled");
-             /*document.getElementById("companyPhone").value = "";*/
              document.getElementById("companyWeb").setAttribute("disabled", "disabled");
-             /*document.getElementById("companyWeb").value = "";*/
              document.getElementById("companyEmail").setAttribute("disabled", "disabled");
-             /*document.getElementById("companyEmail").value = "";*/
              document.getElementById("companyAdress").setAttribute("disabled", "disabled");
-             /*document.getElementById("companyAdress").value = "";*/
          }
      }
      else{
          console.log("select company list disabled");
          document.getElementById("addCompany").innerHTML = "Добавить компанию";
-         /*document.getElementById("company").removeAttribute("disabled");*/
          document.getElementById("company").value = "-1";
          document.getElementById("companyName").removeAttribute("disabled");
          document.getElementById("companyPhone").removeAttribute("disabled");
@@ -231,3 +340,43 @@
      }
      return false;
  }
+
+ function testWarnings(){
+     var dealNameBlock = document.getElementById("dealNameBlock");
+     dealNameBlock.setAttribute("class", "form-group has-error");
+ }
+
+ function setDivError (divId, message ){
+     var div = document.getElementById(divId);
+     if (div != null){
+         div.setAttribute("class", "form-group has-error");
+         /*var inputField = div.getElementsByName("input");
+         if (input != null){
+             inputField.setAttribute("aria-describedby", "inputError2Status");
+         }*/
+         /*<span id="helpBlock2" class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>*/
+         var messageSpan = document.createElement("span");
+         messageSpan.setAttribute("id", divId + "span");
+         messageSpan.setAttribute("class", "help-block");
+         messageSpan.innerText = message;
+         div.appendChild(messageSpan);
+     }
+
+ }
+
+/*
+ function setDivWarning (divid ){
+     var div = document.getElementById(divId);
+     div.setAttribute("class", "form-group has-warning");
+
+ }*/
+
+ function setDivOk (divId){
+     var div = document.getElementById(divId);
+     div.setAttribute("class", "form-group has-success");
+     var element = document.getElementById(divId + "span");
+     if (element != null){
+         element.parentNode.removeChild(element);
+     }
+ }
+
