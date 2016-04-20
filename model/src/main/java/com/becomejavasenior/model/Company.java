@@ -1,6 +1,7 @@
 package com.becomejavasenior.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -130,7 +131,10 @@ public class Company implements Serializable {
     }
 
     public List<Note> getNotes() {
-        return notes;
+        if(notes!=null) {
+            return notes;
+        }
+        return new ArrayList<Note>();
     }
 
     public void setNotes(List<Note> notes) {

@@ -197,6 +197,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+
     public void moveOnToday(int taskId) throws DatabaseException {
         Task task = getTaskById(taskId);
         LocalDateTime finishDateTime = LocalDateTime.ofInstant(task.getFinishDate().toInstant(), ZoneId.systemDefault());
@@ -256,6 +257,11 @@ public class TaskServiceImpl implements TaskService {
             tasksWithAllFields.add(getTaskById(task.getId()));
         }
         return tasksWithAllFields;
+    }
+
+
+    public int getMaxId() throws DatabaseException {
+        return taskDao.getMaxId();
     }
 
 }

@@ -51,7 +51,7 @@
     </div><!-- /.container-fluid -->
 </nav>
 
-<div class="container">
+<div class="container" id = "main">
 
     <jsp:invoke fragment="bodyLayout"/>
     <hr>
@@ -60,6 +60,6 @@
         <p>© 2016 CRM-HELIOS.</p>
     </footer>
 </div>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/app.js"></script>
 </body>
 </html>

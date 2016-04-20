@@ -90,6 +90,8 @@ public class DaoFactoryImpl implements DaoFactory {
         return new TaskTypeDaoImpl(getDataSource());
     }
 
+    public CurrenciesDao getCurrenciesDao(){return  new CurrenciesDaoImpl(getDataSource());}
+
     private DataSource getDataSource() {
         if (dataSource == null) {
             dataSource = initDataSource();

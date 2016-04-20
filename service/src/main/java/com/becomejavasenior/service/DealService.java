@@ -29,5 +29,9 @@ public interface DealService {
 
     int createDealForContact(int contactId, Deal deal) throws DatabaseException;
 
+    int updateDealContact(Deal deal) throws DatabaseException;
+
+    int getMaxId() throws DatabaseException;
+
 
 }
