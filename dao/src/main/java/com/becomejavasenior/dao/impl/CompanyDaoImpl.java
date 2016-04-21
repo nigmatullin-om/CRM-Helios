@@ -10,11 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
@@ -36,6 +34,19 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     private static final String GET_COMPANY_FOR_TASK = "SELECT company.id, company.name, company.web, company.email,company. adress, company.phone," +
             " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
+    private static final String GET_ID_COMPANIES_FOR_USERNAME = "SELECT company.id FROM company INNER JOIN person ON person.id = company.responsible_id WHERE person.name = ?";
+    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task)";
+    private static final String GET_ID_COMPANIES_WITHOUT_DEALS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM deal)";
+    private static final String GET_ID_COMPANIES_WITH_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal)";
+    private static final String GET_ID_COMPANIES_WITH_OUTDATED_TASKS = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND done=FALSE AND finish_date < now()";
+    private static final String GET_ID_DELETED_COMPANIES = "SELECT id FROM company WHERE deleted=TRUE";
+    private static final String GET_ID_COMPANIES_CREATED_BY_PERIOD = "SELECT id FROM company WHERE date_create > ?";
+    private static final String GET_ID_COMPANIES_MODIFIED_BY_PERIOD = "SELECT id FROM company WHERE date_modify > ?";
+    private static final String GET_ID_COMPANIES_FOR_TASK_BY_PERIOD = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND finish_date > now() AND finish_date < ?";
+    private static final String GET_ID_COMPANIES_FOR_TAGNAME = "SELECT company.id FROM company JOIN tag_contact_company ON company.id = tag_contact_company.company_id " +
+            "JOIN tag ON tag.id = tag_contact_company.tag_id WHERE tag.name = ?";
+    private static final String GET_ID_COMPANIES_FOR_STAGENAME = "SELECT company.id FROM company JOIN deal ON company.id = deal.company_id " +
+            "JOIN stage ON stage.id = deal.stage_id WHERE stage.name = ?";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -198,6 +209,114 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         company.setModificationDate(resultSet.getDate("date_modify"));
         return company;
     }
+
+    private List<Integer> filterWithoutParameters(String filterQuery) throws DatabaseException {
+        List<Integer> listIdCompanies = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(filterQuery);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                listIdCompanies.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting id companies was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return listIdCompanies;
+    }
+
+    @Override
+    public List<Integer> withoutTasks() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_TASKS);
+    }
+
+    @Override
+    public List<Integer> withOutdatedTasks() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_COMPANIES_WITH_OUTDATED_TASKS);
+    }
+
+    @Override
+    public List<Integer> markedDelete() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_DELETED_COMPANIES);
+    }
+
+    private List<Integer> filterByTimestamp(Timestamp period, String filterQuery) throws DatabaseException {
+        List<Integer> listIdCompanies = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(filterQuery)) {
+            preparedStatement.setTimestamp(1, period);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                listIdCompanies.add(resultSet.getInt(1));
+            }
+        }
+        catch (SQLException e) {
+            LOGGER.error("Getting id companies was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return listIdCompanies;
+    }
+
+    @Override
+    public List<Integer> byPeriod(Timestamp period, String createdOrModified) throws DatabaseException {
+        switch (createdOrModified) {
+            case "created": return filterByTimestamp(period, GET_ID_COMPANIES_CREATED_BY_PERIOD);
+            case "modified": return filterByTimestamp(period, GET_ID_COMPANIES_MODIFIED_BY_PERIOD);
+            default:
+                try{
+                    throw new DatabaseException();
+                } catch (DatabaseException e) {
+                    LOGGER.error("The createdOrModified field is incorrect. Error - {}", new Object[]{e.getMessage()});
+                    throw e;
+                }
+        }
+    }
+
+    @Override
+    public List<Integer> byTask(Timestamp byTask) throws DatabaseException {
+        return filterByTimestamp(byTask, GET_ID_COMPANIES_FOR_TASK_BY_PERIOD);
+    }
+
+    private List<Integer> filterByName(String name, String filterQuery) throws DatabaseException {
+        List<Integer> listIdCompanies = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(filterQuery)) {
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                listIdCompanies.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting the id companies was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return listIdCompanies;
+    }
+
+    @Override
+    public List<Integer> byUser(String userName) throws DatabaseException {
+        return filterByName(userName, GET_ID_COMPANIES_FOR_USERNAME);
+    }
+
+    @Override
+    public List<Integer> byTag(String tagName) throws DatabaseException {
+        return filterByName(tagName, GET_ID_COMPANIES_FOR_TAGNAME);
+    }
+
+    @Override
+    public List<Integer> byStage(String[] byStages) throws DatabaseException {
+        HashSet<Integer> listIdCompanies = new HashSet<>();
+        for(String stage: byStages) {
+            switch (stage) {
+                case "without deals": listIdCompanies.addAll(filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_DEALS)); break;
+                case "without open deals": listIdCompanies.addAll(filterWithoutParameters(GET_ID_COMPANIES_WITH_OPEN_DEALS)); break;
+                default: listIdCompanies.addAll(filterByName(stage, GET_ID_COMPANIES_FOR_STAGENAME));
+            }
+        }
+        return new ArrayList<>(listIdCompanies);
+    }
+
+
 }
 
     /*id serial NOT NULL,

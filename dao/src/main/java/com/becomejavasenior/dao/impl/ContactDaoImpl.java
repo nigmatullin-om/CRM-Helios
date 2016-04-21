@@ -32,13 +32,14 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
     private static final String FIND_ALL_CONTACTS = "SELECT id, name, phone, email, skype, position, phone_type_id, date_create, deleted, date_modify, user_modify_id FROM contact";
     private static final String GET_ALL_CONTACTS_COUNT = "SELECT count(*) FROM contact";
     private static final String FIND_ALL_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact JOIN deal_contact " +
-            "ON contact.id = deal_contact.contact_id AND deal_id = ?";
+            "ON contact.id = deal_contact.contact_id AND deal_contact.deal_id = ?";
     private static final String FIND_CONTACTS_BY_COMPANY_ID = "SELECT * FROM contact WHERE company_id = ?";
 
-    private static final String FIND_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact WHERE deal_id = ?";
+    private static final String FIND_CONTACTS_BY_DEAL_ID = "SELECT * FROM contact INNER JOIN deal_contact ON " +
+                        "contact.id = deal_contact.contact_id WHERE deal_contact.deal_id = ?";
 
     private static final String GET_CONTACT_FOR_TASK = "SELECT contact.id, contact.name, contact.phone, contact.email, " +
-            "contact.skype,  contact.position,  contact.phone_type_id,  contact.date_create,  contact.deleted, company.date_modify, company.user_modify_id " +
+            "contact.skype,  contact.position,  contact.phone_type_id,  contact.date_create,  contact.deleted, contact.date_modify, contact.user_modify_id " +
             "FROM contact INNER JOIN task ON contact.id = task.contact_id WHERE task.id = ?";
     private static final String CREATE_CONTACT_FOR_DEAL = "INSERT INTO deal_contact (contact_id, deal_id) VALUES (?, ?)";
 

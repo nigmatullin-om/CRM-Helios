@@ -13,4 +13,5 @@ public interface TagDao {
     List<Tag> findAll()throws DatabaseException;
     List<Tag> findAllByDealId(int id) throws DatabaseException;
     List<Tag> findAllByCompanyId(int id) throws DatabaseException;
+    List<Tag> findAllByAllContacts() throws DatabaseException;
 }

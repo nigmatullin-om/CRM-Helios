@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TagDaoImpl extends CommonDao implements TagDao {
@@ -21,6 +22,8 @@ public class TagDaoImpl extends CommonDao implements TagDao {
 
     private static final String FIND_ALL_BY_DEAL_ID = "SELECT * FROM tag JOIN tag_deal ON" +
             " tag.id = tag_deal.tag_id AND deal_id = ?";
+    private static final String FIND_ALL_BY_ALL_CONTACTS_ID = "SELECT * FROM tag JOIN tag_contact_company ON" +
+            " tag.id = tag_contact_company.tag_id";
 
     public TagDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -77,5 +80,26 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         return null;
     }
 
-
+    @Override
+    public List<Tag> findAllByAllContacts() throws DatabaseException {
+        List<Tag> tags = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_ALL_CONTACTS_ID);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+            while (resultSet.next()) {
+                Tag tag = new Tag();
+                tag.setId(resultSet.getInt("id"));
+                tag.setName(resultSet.getString("name"));
+                int user = resultSet.getInt("id");
+                tag.setCreatedByUser(daoFactory.getUserDao().getUserById(user));
+                tag.setCreationDate(resultSet.getDate("date_create"));
+                tags.add(tag);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting tags was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return tags;
+    }
 }

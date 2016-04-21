@@ -4,11 +4,10 @@ package com.becomejavasenior.service;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 
+import java.sql.Timestamp;
 import java.util.List;
 
-/**
- * Created by aivlev on 3/23/16.
- */
+
 public interface CompanyService {
 
     int create(Company company) throws DatabaseException;
@@ -22,5 +21,21 @@ public interface CompanyService {
     List<Company> findAll() throws DatabaseException;
 
     int getCount() throws DatabaseException;
+
+    List<Integer> withoutTasks() throws DatabaseException;
+
+    List<Integer> withOutdatedTasks() throws DatabaseException;
+
+    List<Integer> markedDelete() throws DatabaseException;
+
+    List<Integer> byPeriod(Timestamp period, String createdOrModified) throws DatabaseException;
+
+    List<Integer> byTask(Timestamp byTask) throws DatabaseException;
+
+    List<Integer> byUser(String userName) throws DatabaseException;
+
+    List<Integer> byTag(String tagName) throws DatabaseException;
+
+    List<Integer> byStage(String[] byStages) throws DatabaseException;
 
 }
