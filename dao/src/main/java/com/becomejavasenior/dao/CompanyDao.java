@@ -10,6 +10,7 @@ public interface CompanyDao {
     int create(Company company) throws DatabaseException;
     Company getCompanyById(int id) throws DatabaseException;
     int update(Company company) throws DatabaseException;
+    int getMaxId()throws  DatabaseException;
     int delete(Company company) throws DatabaseException;
     List<Company> findAll() throws DatabaseException;
     int getCount() throws DatabaseException;

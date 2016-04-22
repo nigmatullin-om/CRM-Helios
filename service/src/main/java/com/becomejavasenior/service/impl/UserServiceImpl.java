@@ -5,14 +5,16 @@ import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.User;
 import com.becomejavasenior.service.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.util.List;
+import java.util.*;
+
 
 public class UserServiceImpl implements UserService {
-    private static Logger log = LogManager.getLogger(UserServiceImpl.class);
     private UserDao userDao;
+
+    public UserServiceImpl() {
+        this.userDao = new DaoFactoryImpl().getUserDao();
+    }
 
     @Override
     public int create(User user) throws DatabaseException {
@@ -26,12 +28,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int update(User user) throws DatabaseException {
-        return 0;
+        return userDao.update(user);
     }
 
     @Override
     public int delete(User user) throws DatabaseException {
-        return 0;
+        return userDao.delete(user);
     }
 
     @Override
@@ -39,7 +41,5 @@ public class UserServiceImpl implements UserService {
         return userDao.findAll();
     }
 
-    public UserServiceImpl() {
-        this.userDao = new DaoFactoryImpl().getUserDao();
-    }
 }
+

@@ -11,6 +11,7 @@ public interface NoteDao {
     Note getNoteById(int id) throws DatabaseException;
     int update(Note note) throws DatabaseException;
     int delete(Note note) throws DatabaseException;
+    int getMaxId() throws DatabaseException;
     List<Note> findAll() throws DatabaseException;
     List<Note> findAllByDealId(int id) throws DatabaseException;
     int createWithId(Note note) throws DatabaseException;

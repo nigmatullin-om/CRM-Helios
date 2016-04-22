@@ -44,11 +44,14 @@
             <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/tasks">Задачи</a></li>
             </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/addCompany">Добавить компанию</a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
 
-<div class="container">
+<div class="container" id = "main">
 
     <jsp:invoke fragment="bodyLayout"/>
     <hr>
@@ -57,6 +60,6 @@
         <p>© 2016 CRM-HELIOS.</p>
     </footer>
 </div>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/app.js"></script>
 </body>
 </html>

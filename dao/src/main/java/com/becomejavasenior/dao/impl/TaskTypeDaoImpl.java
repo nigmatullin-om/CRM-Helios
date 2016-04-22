@@ -17,6 +17,7 @@ public class TaskTypeDaoImpl extends CommonDao implements TaskTypeDao {
 
     private static String GET_TASK_TYPE_BY_ID= "SELECT id, type_name FROM task_type WHERE id = ?";
     private static String INSERT_TASK_TYPE = "INSERT INTO task_type(id, type_name) VALUES (DEFAULT, ?)";
+    private static String FINDL_ALL = "SELECT id, type_name FROM task_type";
     private static String FIND_ALL_TASKS = "SELECT id, type_name FROM task_type";
 
     public TaskTypeDaoImpl(DataSource dataSource) {
@@ -61,18 +62,18 @@ public class TaskTypeDaoImpl extends CommonDao implements TaskTypeDao {
 
     @Override
     public List<TaskType> findAll() throws DatabaseException {
-        List<TaskType> taskTypes = new ArrayList<>();
-        try (Connection connection = getConnection();
-             PreparedStatement ps = connection.prepareStatement(FIND_ALL_TASKS);
-             ResultSet resultSet = ps.executeQuery()) {
-            while (resultSet.next()){
+        List<TaskType> taskTypes = new ArrayList<TaskType>();
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FINDL_ALL)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
                 TaskType taskType = new TaskType();
-                taskType.setId(resultSet.getInt("id"));
                 taskType.setTypeName(resultSet.getString("type_name"));
+                taskType.setId(resultSet.getInt("id"));
                 taskTypes.add(taskType);
             }
         } catch (SQLException e) {
-            LOGGER.error("Creating a task type was failed. Error - {}", e.getMessage());
+            LOGGER.error("Getting a task was failed. Error - {}", e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
         return taskTypes;

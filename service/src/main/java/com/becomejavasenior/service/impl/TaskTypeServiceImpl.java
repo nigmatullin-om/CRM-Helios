@@ -8,12 +8,16 @@ import com.becomejavasenior.service.TaskTypeService;
 
 import java.util.List;
 
+
 public class TaskTypeServiceImpl implements TaskTypeService {
     private TaskTypeDao taskTypeDao;
 
+    public TaskTypeServiceImpl() {
+        this.taskTypeDao = new DaoFactoryImpl().getTaskTypeDao();
+    }
     @Override
-    public List<TaskType> findAll() throws DatabaseException {
-        return taskTypeDao.findAll();
+    public int create(TaskType taskType) throws DatabaseException {
+        return taskTypeDao.create(taskType);
     }
 
     @Override
@@ -21,7 +25,8 @@ public class TaskTypeServiceImpl implements TaskTypeService {
         return taskTypeDao.getTaskTypeById(id);
     }
 
-    public TaskTypeServiceImpl() {
-        taskTypeDao = new DaoFactoryImpl().getTaskTypeDao();
+    @Override
+    public List<TaskType> findAll() throws DatabaseException {
+        return taskTypeDao.findAll();
     }
 }

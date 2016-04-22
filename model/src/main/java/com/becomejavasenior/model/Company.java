@@ -1,6 +1,7 @@
 package com.becomejavasenior.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -19,12 +20,19 @@ public class Company implements Serializable {
     private User createdByUser;
     private Date creationDate;
     private Boolean deleted;
+    private Date modificationDate;
+    private User modifiedByUser;
 
     private List<Note> notes;
     private List<File> files;
     private List<Tag> tags;
     private List<Contact> contacts;
     private List<Task> tasks;
+
+    public Company(){
+        setCreationDate(new Date());
+        setDeleted(false);
+    }
 
     public List<Task> getTasks() {
         return tasks;
@@ -123,7 +131,10 @@ public class Company implements Serializable {
     }
 
     public List<Note> getNotes() {
-        return notes;
+        if(notes!=null) {
+            return notes;
+        }
+        return new ArrayList<Note>();
     }
 
     public void setNotes(List<Note> notes) {
@@ -152,6 +163,22 @@ public class Company implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
+    public void setModifiedByUser(User modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
+    }
+
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public User getModifiedByUser() {
+        return modifiedByUser;
     }
 
     @Override

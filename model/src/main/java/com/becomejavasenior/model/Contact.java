@@ -2,6 +2,7 @@ package com.becomejavasenior.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,14 +21,24 @@ public class Contact implements Serializable{
     private Company company;
     private Date creationDate;
     private Boolean deleted;
+    private Date modificationDate;
+    private User modifiedByUser;
 
     private List<Note> notes;
     private List<File> files;
     private List<Tag> tags;
     private List<Task> tasks;
 
+    public Contact(){
+        setCreationDate(new Date());
+        setDeleted(false);
+    }
+
     public List<Task> getTasks() {
-        return tasks;
+        if(tasks!=null){
+            return tasks;
+        }
+        return new ArrayList<Task>();
     }
 
     public void setTasks(List<Task> tasks) {
@@ -144,6 +155,22 @@ public class Contact implements Serializable{
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public User getModifiedByUser() {
+        return modifiedByUser;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
+    public void setModifiedByUser(User modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
     }
 
     @Override

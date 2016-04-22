@@ -8,5 +8,6 @@ public enum PhoneType implements Serializable {
     MOBILE,
     FAX,
     HOME_PHONE,
-    OTHER
+    OTHER;
+
 }
