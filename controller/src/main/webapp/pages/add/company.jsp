@@ -4,42 +4,55 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<t:pageLayout title="Добавление компании">
+<%@ page language="java" import="java.util.*" %>
+
+<c:set var ="userLocale" value="${cookie['localeCookie'].value}"/>
+<c:if test="${userLocale == ''}">
+    <c:set var ="userLocale" value="en_US"/>
+    ${cookie['localeCookie'].value} = "en_US"
+    ${cookie['localeCookie'].path} = "/"
+</c:if>
+<fmt:setLocale value="${userLocale}"/>
+<fmt:setBundle basename="LocaleText"/>
+<fmt:message key= "pageCompanyAdd" var="pageCompanyAdd"/>
+
+<t:pageLayout title="${pageCompanyAdd}">
     <jsp:attribute name="bodyLayout">
+
 <div class="container">
-    <h1 class="page-header text-center">Добавление компании</h1>
-    <form class="form-horizontal" action="/addCompany" method="post">
+    <h1 class="page-header text-center">${pageCompanyAdd}</h1>
+    <form class="form-horizontal" action="/add/company" method="post">
         <div class="row">
 
             <div class="col-md-3 col-sm-3">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Поля компании</h4>
+                        <h4 class="panel-title"><fmt:message key= "companyPanelTitle"/></h4>
                     </div>
                     <div class="row" style="margin-top: 30px">
                         <fieldset class="form-group">
-                            <label for="companyName">Название компании</label>
+                            <label for="companyName"><fmt:message key= "companyName"/></label>
                             <input type="text" class="form-control" id="companyName" name="companyName">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="companyTags">Теги</label>
+                            <label for="companyTags"><fmt:message key= "companyTags"/></label>
                             <input type="text" class="form-control" id="companyTags" name="companyTags">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="companyResponsible">Ответственный</label>
+                            <label for="companyResponsible"><fmt:message key= "companyResponsible"/></label>
                             <select class="form-control" id="companyResponsible" name="companyResponsible">
-                                <option value="-1" selected disabled>Please select</option>
+                                <option value="-1" selected disabled><fmt:message key= "pleaseSelect"/></option>
                                 <c:forEach items="${usersList}" var="user">
                                     <option value=${user.id}>${user.name}</option>
                                 </c:forEach>
                             </select>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="contactPhoneType">Номер телефона</label>
+                            <label for="companyPhone"><fmt:message key= "companyPhone"/></label>
                             <select class="form-control" id="companyPhoneType" name="companyPhoneType">
-                                <option value="-1" selected disabled>Please select</option>
+                                <option value="-1" selected disabled><fmt:message key= "pleaseSelect"/></option>
                                 <c:forEach items="${phoneTypes}" var="phoneType">
-                                    <option value=${phoneType}>${phoneType}</option>
+                                    <option value=${phoneType}><fmt:message key = "${phoneType}"/></option>
                                 </c:forEach>
                             </select>
                             <input type="text" class="form-control" id="companyPhone" name="companyPhone"
@@ -47,11 +60,11 @@
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label for="companyEmail">Email</label>
+                            <label for="companyEmail"><fmt:message key= "companyEmail"/></label>
                             <input type="email" class="form-control" id="companyEmail" name="companyEmail">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="companyNote">Примечания</label>
+                            <label for="companyNote"><fmt:message key= "companyNote"/></label>
                             <textarea class="form-control" id="companyNote" name="companyNote" rows="3"></textarea>
                         </fieldset>
                     </div>
@@ -61,34 +74,34 @@
             <div class="col-md-3 col-sm-3">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Добавить контакт</h4>
+                        <h4 class="panel-title"><fmt:message key= "contactAdd"/></h4>
                     </div>
                     <div class="row" style="margin-top: 30px">
                         <fieldset class="form-group">
-                            <label for="contactName">Имя фамилия</label>
+                            <label for="contactName"><fmt:message key= "contactName"/></label>
                             <input type="text" class="form-control" id="contactName" name="contactName">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="contactPosition">Должность</label>
+                            <label for="contactPosition"><fmt:message key= "contactPosition"/></label>
                             <input type="text" class="form-control" id="contactPosition" name="contactPosition">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="contactPhoneType">Телефон</label>
+                            <label for="contactPhone"><fmt:message key= "contactPhone"/></label>
                             <select class="form-control" id="contactPhoneType" name="contactPhoneType">
-                                <option value="-1" selected disabled>Please select</option>
+                                <option value="-1" selected disabled><fmt:message key= "pleaseSelect"/></option>
                                 <c:forEach items="${phoneTypes}" var="phoneType">
-                                    <option value=${phoneType}>${phoneType}</option>
+                                    <option value=${phoneType}><fmt:message key= "${phoneType}"/></option>
                                 </c:forEach>
                             </select>
                             <input type="text" class="form-control" id="contactPhone" name="contactPhone"
                                    style="margin-top: 10px">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="contactEmail">Email</label>
+                            <label for="contactEmail"><fmt:message key= "contactEmail"/></label>
                             <input type="email" class="form-control" id="contactEmail" name="contactEmail">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="contactSkype">Skype</label>
+                            <label for="contactSkype"><fmt:message key= "contactSkype"/></label>
                             <input type="text" class="form-control" id="contactSkype" name="contactSkype">
                         </fieldset>
                     </div>
@@ -98,24 +111,24 @@
             <div class="col-md-3 col-sm-3">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Добавить Сделку</h4>
+                        <h4 class="panel-title"><fmt:message key= "dealAdd"/></h4>
                     </div>
                     <div class="row" style="margin-top: 30px">
                         <fieldset class="form-group">
-                            <label for="dealName">Название сделки</label>
+                            <label for="dealName"><fmt:message key= "dealName"/></label>
                             <input type="text" class="form-control" id="dealName" name="dealName">
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="dealStage">Этап</label>
+                            <label for="dealStage"><fmt:message key= "dealStage"/></label>
                             <select class="form-control" id="dealStage" name="dealStage">
-                                <option value="-1" selected disabled>Please select</option>
+                                <option value="-1" selected disabled><fmt:message key= "pleaseSelect"/></option>
                                 <c:forEach items="${dealStages}" var="stage">
-                                    <option value=${stage}>${stage}</option>
+                                    <option value=${stage}><fmt:message key= "${stage}"/></option>
                                 </c:forEach>
                             </select>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="dealBudget">Сумма</label>
+                            <label for="dealBudget"><fmt:message key= "dealBudget"/></label>
                             <input type="text" class="form-control" id="dealBudget" name="dealBudget">
                         </fieldset>
                     </div>
@@ -124,13 +137,13 @@
             <div class="col-md-3 col-sm-3">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Запланировать действие</h4>
+                        <h4 class="panel-title"><fmt:message key= "taskAdd"/></h4>
                     </div>
                     <div class="row" style="margin-top: 30px">
                         <fieldset class="form-group">
-                            <label for="taskPeriod">Когда</label>
+                            <label for="taskPeriod"><fmt:message key= "taskPeriod"/></label>
                             <select class="form-control" id="taskPeriod" name="taskPeriod">
-                                <option value="-1" selected disabled>Please select</option>
+                                <option value="-1" selected disabled><fmt:message key= "pleaseSelect"/></option>
                                 <c:forEach items="${taskPeriods}" var="period">
                                     <option value=${period}>${period}</option>
                                 </c:forEach>
@@ -157,16 +170,16 @@
                         </fieldset>
 
                         <fieldset class="form-group">
-                            <label for="taskResponsible">Ответственный</label>
+                            <label for="taskResponsible"><fmt:message key= "taskResponsible"/></label>
                             <select class="form-control" id="taskResponsible" name="taskResponsible">
-                                <option value="-1" selected disabled>Please select</option>
+                                <option value="-1" selected disabled><fmt:message key= "pleaseSelect"/></option>
                                 <c:forEach items="${usersList}" var="user">
                                     <option value=${user.id}>${user.name}</option>
                                 </c:forEach>
                             </select>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label for="companyNote">Описание задачи</label>
+                            <label for="taskDescription"><fmt:message key= "taskDescription"/></label>
                             <textarea class="form-control" id="taskDescription" name="taskDescription"
                                       rows="3"></textarea>
                         </fieldset>
@@ -182,9 +195,11 @@
         <div class="row" style="text-align:center;">
             <div class="col-md-12 col-sm-12">
                 <button type="submit" class="btn btn-success btn-large" onclick="return checkAddCompanyForm()">
-                    Сохранить
+                    <fmt:message key= "buttonSubmit"/>
                 </button>
-                <button type="reset" class="btn btn-danger btn-large" style="margin-left: 40px">Отмена</button>
+                <button type="reset" class="btn btn-danger btn-large" style="margin-left: 40px">
+                    <fmt:message key= "buttonReset"/>
+                </button>
             </div>
         </div>
     </form>

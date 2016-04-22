@@ -69,3 +69,16 @@ form.onclick = function (event) {
             document.getElementsByName('select_company')[0].firstElementChild.removeAttribute('selected');
         }
     }
+function SetCookie(c_name,value)
+{
+    document.cookie=c_name+ "=" + value + ";path=/"
+    location.reload()
+}
+
+function getLocaleCookie()
+{
+    var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + "localeCookie".replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}

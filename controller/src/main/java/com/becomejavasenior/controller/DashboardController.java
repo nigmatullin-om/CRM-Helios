@@ -1,5 +1,6 @@
 package com.becomejavasenior.controller;
 
+import com.becomejavasenior.controller.constant.*;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
@@ -27,8 +28,6 @@ import java.util.Map;
  */
 @WebServlet("/dashboard")
 public class DashboardController extends HttpServlet {
-
-    private static final String DASHBOARD_VIEW = "/pages/dashboard.jsp";
 
     private static final String SUCCESS_DEALS = "successDeals";
     private static final String FAILED_DEALS = "failedDeals";
@@ -108,7 +107,7 @@ public class DashboardController extends HttpServlet {
         request.setAttribute(RUNNING_TASKS_COUNT, runningTasks.size());
         request.setAttribute(DONE_TASKS_COUNT, doneTasksCount);
         request.setAttribute(NOT_DONE_TASKS_COUNT, notDoneTasksCount);
-        RequestDispatcher rd = getServletContext().getRequestDispatcher(DASHBOARD_VIEW);
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.DASHBOARD_VIEW);
         rd.forward(request, response);
     }
 
