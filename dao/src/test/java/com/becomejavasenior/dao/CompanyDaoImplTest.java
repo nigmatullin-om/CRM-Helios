@@ -29,7 +29,7 @@ public class CompanyDaoImplTest {
         companyDao = daoFactory.getCompanyDao();
     }
 
-    @Test
+    /*@Test
     public void testCreateWithId() throws Exception {
         Company company = getCompanyWithName(COMPANY_NAME);
         int id = companyDao.createWithId(company);
@@ -43,7 +43,7 @@ public class CompanyDaoImplTest {
         Assert.assertTrue(result > 0);
 
 
-    }
+    }*/
 
     public Company getCompanyWithName (String name){
         Company company = new Company();

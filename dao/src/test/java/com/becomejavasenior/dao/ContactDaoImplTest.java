@@ -35,7 +35,7 @@ public class ContactDaoImplTest {
         contactDao = daoFactory.getContactDao();
     }
 
-    @Test
+    /*@Test
     public void testAddContactToDeal() throws Exception {
         Deal deal = getDeal();
         Contact contact = getCompanyWithName(CONTACT_NAME);
@@ -49,9 +49,9 @@ public class ContactDaoImplTest {
         contact.setDeleted(true);
         result = contactDao.update(contact);
         Assert.assertTrue(result > 0);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testCreateWithId() throws Exception {
         Contact contact = getCompanyWithName(CONTACT_NAME);
         int id = contactDao.createWithId(contact);
@@ -64,7 +64,7 @@ public class ContactDaoImplTest {
         int result = contactDao.delete(controlContact);
         Assert.assertTrue(result > 0);
 
-    }
+    }*/
 
     public Contact getCompanyWithName(String name){
         Contact contact = new Contact();

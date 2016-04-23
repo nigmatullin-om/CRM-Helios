@@ -33,7 +33,7 @@ public class DealDaoImplTest {
         companyDao = daoFactory.getCompanyDao();
     }
 
-    @Test
+   /* @Test
     public void testCreateWithId() throws Exception {
         Deal deal = getDealWithName(DEAL_NAME);
         int id = dealDao.createWithId(deal);
@@ -44,7 +44,7 @@ public class DealDaoImplTest {
 
         int result = dealDao.delete(controlDeal);
         if (result == 0) throw new AssertionError();
-    }
+    }*/
 
     public Deal getDealWithName(String name){
         Deal deal = new Deal();

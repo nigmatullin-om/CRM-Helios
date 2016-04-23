@@ -32,7 +32,7 @@ public class TagDaoImplTest {
         dealDao = daoFactory.getDealDao();
     }
 
-    @Test
+    /*@Test
     public void testCreateAndGetTagByName() throws Exception {
         String random  = Double.toString(Math.random());
         String tagName = TAG_NAME + random;
@@ -46,9 +46,9 @@ public class TagDaoImplTest {
 
         int result = tagDao.delete(controlTag);
         Assert.assertTrue(result > 0);
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void testAddTagToDeal() throws DatabaseException {
         Deal deal = getDeal();
         String random  = Double.toString(Math.random());
@@ -58,7 +58,7 @@ public class TagDaoImplTest {
         tag.setId(id);
         int result = tagDao.addTagToDeal(id, deal.getId());
         Assert.assertTrue(result > 0);
-    }
+    }*/
 
     private Deal getDeal(){
         Deal deal = null;

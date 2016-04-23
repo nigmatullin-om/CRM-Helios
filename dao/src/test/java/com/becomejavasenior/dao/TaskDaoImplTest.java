@@ -32,7 +32,7 @@ public class TaskDaoImplTest {
         taskDao = daoFactory.getTaskDao();
     }
 
-    @Test
+    /*@Test
     public void testCreateWithId() throws Exception {
         Task  task = getTaskWithName(TASK_NAME);
         int id = taskDao.createWithId(task);
@@ -44,7 +44,7 @@ public class TaskDaoImplTest {
 
         int result  = taskDao.delete(controlTask);
         Assert.assertTrue(result > 0);
-    }
+    }*/
 
     private Task getTaskWithName (String name){
         Task task = new Task();
