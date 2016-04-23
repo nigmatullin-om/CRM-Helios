@@ -61,6 +61,10 @@
             <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/add/company"><fmt:message key= "pageCompanyAdd"/></a></li>
             </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/addDeal">Добавить сделку</a></li>
+            </ul>
+
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>

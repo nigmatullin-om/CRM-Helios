@@ -15,5 +15,6 @@ public interface TaskDao {
     List<Task> getAllTasksForContactById(int contactId) throws DatabaseException;
     List<Task> getAllTasksForCompanyById(int companyId) throws DatabaseException;
     List<Task> getAllTasksForDealById(int dealId) throws DatabaseException;
+    int createWithId(Task task) throws DatabaseException;
     List<Task> getTasksBetweenDays(LocalDate startDay, LocalDate finishDay) throws DatabaseException;
 }

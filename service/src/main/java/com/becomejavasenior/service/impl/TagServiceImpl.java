@@ -9,6 +9,7 @@ import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Tag;
 import com.becomejavasenior.service.TagService;
+import com.becomejavasenior.model.Deal;
 
 import java.util.List;
 
@@ -78,5 +79,20 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findAllByCompanyId(int id) throws DatabaseException {
         return tagDao.findAllByDealId(id);
+    }
+
+    @Override
+    public int createWithId(Tag tag) throws DatabaseException {
+        return tagDao.createWithId(tag);
+    }
+
+    @Override
+    public int addTagToDeal(Tag tag, Deal deal) throws DatabaseException {
+        return tagDao.addTagToDeal(tag.getId(), deal.getId());
+    }
+
+    @Override
+    public Tag findTagByName(String name) throws DatabaseException {
+        return tagDao.findTagByName(name);
     }
 }

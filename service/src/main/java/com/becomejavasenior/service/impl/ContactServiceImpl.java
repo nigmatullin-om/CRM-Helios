@@ -6,6 +6,7 @@ import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.filter.ContactFilter;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.service.ContactService;
 
 import java.util.ArrayList;
@@ -61,5 +62,15 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public int createContactForDeal(int dealId, Contact contact) throws DatabaseException {
         return contactDao.createContactForDeal(dealId, contact);
+    }
+
+    @Override
+    public int addContactToDeal(Contact contact, Deal deal) throws DatabaseException {
+        return contactDao.addContactToDeal(contact.getId(), deal.getId());
+    }
+
+    @Override
+    public int createWithId(Contact contact) throws DatabaseException {
+        return contactDao.createWithId(contact);
     }
 }

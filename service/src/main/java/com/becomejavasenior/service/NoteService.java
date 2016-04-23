@@ -2,6 +2,7 @@ package com.becomejavasenior.service;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Note;
+import com.becomejavasenior.model.Deal;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface NoteService {
     List<Note> findAll() throws DatabaseException;
     List<Note> findAllByDealId(int id) throws DatabaseException;
     List<Note> findAllByCompanyId(int id) throws DatabaseException;
+    int createWithId(Note note) throws DatabaseException;
+    int addNoteToDeal(Note note, Deal deal) throws DatabaseException;
 }

@@ -5,6 +5,7 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Tag;
+import com.becomejavasenior.model.Deal;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface TagService {
     List<Tag> findAll()throws DatabaseException;
     List<Tag> findAllByDealId(int id) throws DatabaseException;
     List<Tag> findAllByCompanyId(int id) throws DatabaseException;
+    int  createWithId(Tag tag) throws DatabaseException;
+    int  addTagToDeal(Tag tag, Deal deal) throws DatabaseException;
+    Tag findTagByName(String name) throws DatabaseException;
 }

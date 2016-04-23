@@ -15,4 +15,5 @@ public interface CompanyDao {
     List<Company> findAll() throws DatabaseException;
     int getCount() throws DatabaseException;
     Company getCompanyForTask(Task task) throws DatabaseException;
+    int createWithId(Company company) throws DatabaseException;
 }

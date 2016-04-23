@@ -79,6 +79,11 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
+    public int createWithId(Deal deal) throws DatabaseException {
+        return dealDao.createWithId(deal);
+    }
+
+    @Override
 
     public int createDealForContact(int contactId, Deal deal) throws DatabaseException {
         return dealDao.createDealForContact(contactId, deal);

@@ -5,6 +5,7 @@ import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.dao.impl.NoteDaoImpl;
 import com.becomejavasenior.model.Note;
 import com.becomejavasenior.service.NoteService;
+import com.becomejavasenior.model.Deal;
 
 import java.util.List;
 
@@ -52,5 +53,15 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public List<Note> findAllByCompanyId(int id) throws DatabaseException {
         return findAllByCompanyId(id);
+    }
+
+    @Override
+    public int createWithId(Note note) throws DatabaseException {
+        return noteDao.createWithId(note);
+    }
+
+    @Override
+    public int addNoteToDeal(Note note, Deal deal) throws DatabaseException {
+        return noteDao.addNoteToDeal(note.getId(), deal.getId());
     }
 }

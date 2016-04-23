@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
 import java.sql.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     private static final String CREATE_COMPANY = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id," +
             "created_by, date_create, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private static final String CREATE_COMPANY_WITH_ID = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id," +
+            "created_by, date_create, deleted, date_modify, user_modify_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
             "created_by=?, date_create=?, deleted=?, date_modify=?, user_modify_id=? WHERE id=?";
@@ -237,6 +241,54 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         company.setDeleted(resultSet.getBoolean("deleted"));
         company.setModificationDate(resultSet.getDate("date_modify"));
         return company;
+    }
+
+    @Override
+    public int createWithId(Company company) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY_WITH_ID, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, company.getName());
+            preparedStatement.setInt(2, company.getResponsibleUser().getId());
+            preparedStatement.setString(3, company.getWeb());
+            preparedStatement.setString(4, company.getEmail());
+            preparedStatement.setString(5, company.getAddress());
+            preparedStatement.setString(6, company.getPhone());
+            preparedStatement.setInt(7, company.getPhoneType().ordinal());
+            preparedStatement.setInt(8, company.getCreatedByUser().getId());
+            preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
+            preparedStatement.setBoolean(10, company.getDeleted());
+
+            if (company.getModificationDate() == null){
+                preparedStatement.setNull(11, Types.INTEGER);
+            }
+            else {
+                preparedStatement.setDate(11, new java.sql.Date(company.getModificationDate().getTime()));
+            }
+            if (company.getModifiedByUser() == null){
+                preparedStatement.setNull(12, Types.INTEGER);
+            }
+            else {
+                preparedStatement.setInt(12, company.getModifiedByUser().getId());
+            }
+
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new company id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the company entity!");
+                    throw new DatabaseException("Couldn't create the company entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the company entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
     }
 }
 

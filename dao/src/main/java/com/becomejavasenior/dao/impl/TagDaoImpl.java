@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.*;
 import java.util.List;
 
 public class TagDaoImpl extends CommonDao implements TagDao {
@@ -25,12 +26,17 @@ public class TagDaoImpl extends CommonDao implements TagDao {
     private static final String FIND_ALL_BY_DEAL_ID = "SELECT * FROM tag JOIN tag_deal ON" +
             " tag.id = tag_deal.tag_id AND deal_id = ?";
     private static final String FIND_BY_NAME = "SELECT  id, name, created_by, date_create FROM tag WHERE name = ?";
-    //private static final String
     private static final String CREATE = "INSERT INTO tag(id, name, created_by, date_create )VALUES (DEFAULT,?,?,?)";
     private static final String CREATE_RELATIVE_WITH_TAG_AD_CONTACT =
             "INSERT INTO tag_contact_company(tag_id, contact_id, company_id) VALUES (?,?,?)";
     private static final String FIND_ALL = "SELECT  id, name, created_by, date_create FROM tag";
     private static final String GET_MAX_ID = "SELECT max(id) FROM tag";
+
+    private static final String CREATE_TAG = "INSERT INTO tag (name, created_by, date_create) VALUES (?, ?, ?)";
+    private static final String DELETE_TAG = "DELETE FROM tag WHERE id=?";
+    private static final String GET_TAG_BY_NAME = "SELECT id, name, created_by, date_create FROM tag WHERE name=?";
+    private static final String ADD_TAG_TO_DEAL = "INSERT INTO tag_deal (tag_id, deal_id) VALUES (?, ?)";
+
     public TagDaoImpl(DataSource dataSource) {
         super(dataSource);
     }
@@ -98,8 +104,15 @@ public class TagDaoImpl extends CommonDao implements TagDao {
     }
 
     @Override
-    public int delete(Tag tag) {
-        return 0;
+    public int delete(Tag tag) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TAG)) {
+            preparedStatement.setInt(1, tag.getId());
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Deleting a tag was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     @Override
@@ -165,5 +178,67 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         return null;
     }
 
+    @Override
+    public Tag findTagByName(String name) throws DatabaseException {
+        Tag tag = null;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_TAG_BY_NAME)){
+            preparedStatement.setString(1, name);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    tag = new Tag();
+                    tag.setId(resultSet.getInt("id"));
+                    tag.setName(resultSet.getString("name"));
+                    tag.setCreationDate(resultSet.getDate("date_create"));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't read the tag entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return tag;
+    }
 
+    @Override
+    public int createWithId(Tag tag) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TAG, Statement.RETURN_GENERATED_KEYS)){
+            preparedStatement.setString(1, tag.getName());
+            preparedStatement.setInt(2, tag.getCreatedByUser().getId());
+            preparedStatement.setTimestamp(3, new java.sql.Timestamp(tag.getCreationDate().getTime()));
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new tag id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the tag entity!");
+                    throw new DatabaseException("Couldn't create the tag entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the tag entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
+
+    @Override
+    public int addTagToDeal(int tagId, int dealId) throws DatabaseException {
+        int affectedRows;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_TAG_TO_DEAL)){
+            preparedStatement.setInt(1, tagId);
+            preparedStatement.setInt(2, dealId);
+            affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("add tag to deal affected rows = " + affectedRows);
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't add tag to deal because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return affectedRows;
+    }
 }

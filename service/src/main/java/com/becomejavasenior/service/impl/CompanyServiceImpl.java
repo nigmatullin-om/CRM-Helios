@@ -48,4 +48,9 @@ public class CompanyServiceImpl implements CompanyService {
     public int getCount() throws DatabaseException {
         return companyDao.getCount();
     }
+
+    @Override
+    public int createWithId(Company company) throws DatabaseException {
+        return companyDao.createWithId(company);
+    }
 }

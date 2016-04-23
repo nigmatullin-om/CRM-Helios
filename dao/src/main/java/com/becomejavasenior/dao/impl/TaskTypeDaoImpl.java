@@ -18,6 +18,7 @@ public class TaskTypeDaoImpl extends CommonDao implements TaskTypeDao {
     private static String GET_TASK_TYPE_BY_ID= "SELECT id, type_name FROM task_type WHERE id = ?";
     private static String INSERT_TASK_TYPE = "INSERT INTO task_type(id, type_name) VALUES (DEFAULT, ?)";
     private static String FINDL_ALL = "SELECT id, type_name FROM task_type";
+    private static String FIND_ALL_TASKS = "SELECT id, type_name FROM task_type";
 
     public TaskTypeDaoImpl(DataSource dataSource) {
         super(dataSource);

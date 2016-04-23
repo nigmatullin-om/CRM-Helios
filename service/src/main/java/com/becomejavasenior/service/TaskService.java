@@ -45,6 +45,8 @@ public interface TaskService {
 
     void updateTaskTime(Task task, LocalDateTime newDate) throws DatabaseException;
 
+    int createWithId(Task task) throws DatabaseException;
+
     int getMaxId() throws  DatabaseException;
 
 }

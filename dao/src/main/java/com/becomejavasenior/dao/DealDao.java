@@ -21,6 +21,7 @@ public interface DealDao {
     List<Deal> getDealsForContactById(Contact contact) throws DatabaseException;
     List<Deal> getDealsForCompanyById(Company company) throws DatabaseException;
     Deal getDealForTask(Task task) throws DatabaseException;
+    int createWithId(Deal deal) throws DatabaseException;
     int createDealForContact(int contactId, Deal deal) throws DatabaseException;
 
 }

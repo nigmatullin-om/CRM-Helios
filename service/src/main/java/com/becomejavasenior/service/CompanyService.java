@@ -23,4 +23,6 @@ public interface CompanyService {
 
     int getCount() throws DatabaseException;
 
+    int createWithId(Company company) throws DatabaseException;
+
 }

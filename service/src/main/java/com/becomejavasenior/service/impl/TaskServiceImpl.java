@@ -264,4 +264,9 @@ public class TaskServiceImpl implements TaskService {
         return taskDao.getMaxId();
     }
 
+
+    @Override
+    public int createWithId(Task task) throws DatabaseException{
+        return taskDao.createWithId(task);
+    }
 }
