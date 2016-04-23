@@ -38,9 +38,13 @@ public interface TaskService {
 
     List<Task> getRunningTasks(List<Task> notDoneTasks);
 
+
     void moveOnToday(int taskId) throws DatabaseException;
 
     void moveOnTomorrow(int taskId) throws DatabaseException;
 
     void updateTaskTime(Task task, LocalDateTime newDate) throws DatabaseException;
+
+    int getMaxId() throws  DatabaseException;
+
 }

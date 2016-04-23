@@ -10,10 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.lang.reflect.Type;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +34,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     private static final String GET_COMPANY_FOR_TASK = "SELECT company.id, company.name, company.web, company.email,company. adress, company.phone," +
             " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
+    private static final String GET_MAX_ID = "SELECT  max(id) FROM company";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -46,15 +45,41 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
             preparedStatement.setString(1, company.getName());
-            preparedStatement.setInt(2, company.getResponsibleUser().getId());
+            if( company.getResponsibleUser()!=null){
+                preparedStatement.setInt(2, company.getResponsibleUser().getId());
+            }else {
+                preparedStatement.setNull(2, Types.INTEGER);
+            }
             preparedStatement.setString(3, company.getWeb());
             preparedStatement.setString(4, company.getEmail());
             preparedStatement.setString(5, company.getAddress());
             preparedStatement.setString(6, company.getPhone());
-            preparedStatement.setInt(7, company.getPhoneType().ordinal() +1 );
-            preparedStatement.setInt(8, company.getCreatedByUser().getId());
-            preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
-            preparedStatement.setBoolean(10, company.getDeleted());
+            if(company.getPhoneType()!=null){
+                preparedStatement.setInt(7, company.getPhoneType().ordinal());
+            }
+            else{
+                preparedStatement.setNull(7,Types.INTEGER);
+            }
+            if(company.getCreatedByUser()!=null){
+                preparedStatement.setInt(8, company.getCreatedByUser().getId());
+            }
+            else {
+                preparedStatement.setNull(8,Types.INTEGER);
+            }
+            if(company.getCreationDate()!=null){
+                preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getYear(),company.getCreationDate().getMonth(),
+                        company.getCreationDate().getDay()));
+            }
+            else
+            {
+                preparedStatement.setNull(9,Types.DATE);
+            }
+            if(company.getDeleted()!=null){
+                preparedStatement.setBoolean(10, company.getDeleted());
+            }
+            else {
+                preparedStatement.setBoolean(10, false);
+            }
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Creating a company was failed. Error - {}", new Object[]{e.getMessage()});
@@ -105,6 +130,21 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             LOGGER.error("Updating a company was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
+    }
+
+    @Override
+    public int getMaxId() throws DatabaseException {
+        int maxId = 0;
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)){
+            ResultSet resultSet  = preparedStatement.getResultSet();
+            if(resultSet.next()){
+                maxId = resultSet.getInt("max");
+            }
+        }catch (SQLException e) {
+            LOGGER.error(new Object[]{e.getMessage()});
+        }
+        return maxId;
     }
 
     @Override

@@ -1,3 +1,4 @@
+
 .task-card {
     width: 200px;
     border-radius: 10px;
@@ -68,6 +69,19 @@ table.calendar > tbody > tr > td > div.tomorrow-task {
 .form-horizontal .form-group {
     margin-right: 25px;
     margin-left: 25px;
+}
+
+.prompt{
+    line-height: 0.7;
+}
+
+.block{
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.divider-customer{
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .flag {
