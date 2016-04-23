@@ -25,6 +25,7 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
     private static final String UPDATE_ROLE = "UPDATE role SET role_name=? WHERE id=?";
     private static final String DELETE_ROLE = "DELETE FROM role WHERE id=?";
     private static final String FIND_ALL_ROLES = "SELECT id, role_name FROM role";
+    private static final String GET_MAX_ID = "SELECT MAX(id) FROM role";
 
     public RoleDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -76,6 +77,21 @@ public class RoleDaoImpl extends CommonDao implements RoleDao {
             LOGGER.error("Updating a role was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
+    }
+
+    @Override
+    public int getMaxId() throws DatabaseException {
+            int maxId = 0;
+            try(Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)){
+                ResultSet resultSet  = preparedStatement.executeQuery();
+                if(resultSet.next()){
+                    maxId = resultSet.getInt("max");
+                }
+            }catch (SQLException e) {
+                LOGGER.error(new Object[]{e.getMessage()});
+            }
+            return maxId;
     }
 
     @Override

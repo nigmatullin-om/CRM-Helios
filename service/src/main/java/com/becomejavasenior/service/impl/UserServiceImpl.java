@@ -27,8 +27,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByName(String name) throws DatabaseException {
+        return userDao.getUserByName(name);
+    }
+
+    @Override
     public int update(User user) throws DatabaseException {
         return userDao.update(user);
+    }
+
+    @Override
+    public boolean isEmailExist(String email) throws DatabaseException {
+        return userDao.isEmailExist(email);
     }
 
     @Override

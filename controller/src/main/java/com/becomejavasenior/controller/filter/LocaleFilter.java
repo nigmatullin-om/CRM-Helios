@@ -3,7 +3,6 @@ package com.becomejavasenior.controller.filter;
 import com.becomejavasenior.controller.InputDataManager;
 import com.becomejavasenior.controller.LocaleService;
 import com.becomejavasenior.controller.constant.CommonField;
-import com.becomejavasenior.model.PhoneType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -25,7 +25,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(NoteServiceImpl.class)
-public class NoteServiceTest {
+public class NoteserviceTest {
 
 
         private NoteService noteService;

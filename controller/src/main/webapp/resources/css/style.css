@@ -101,3 +101,7 @@ table.calendar > tbody > tr > td > div.tomorrow-task {
     padding-left: 40px;
     padding-right: 40px;
 }
+
+.wrong-pas-text{
+    color: red;
+}
