@@ -26,7 +26,6 @@ public class TagDaoImpl extends CommonDao implements TagDao {
     private static final String FIND_ALL_BY_DEAL_ID = "SELECT * FROM tag JOIN tag_deal ON" +
             " tag.id = tag_deal.tag_id AND deal_id = ?";
     private static final String FIND_BY_NAME = "SELECT  id, name, created_by, date_create FROM tag WHERE name = ?";
-    //private static final String
     private static final String CREATE = "INSERT INTO tag(id, name, created_by, date_create )VALUES (DEFAULT,?,?,?)";
     private static final String CREATE_RELATIVE_WITH_TAG_AD_CONTACT =
             "INSERT INTO tag_contact_company(tag_id, contact_id, company_id) VALUES (?,?,?)";
@@ -34,6 +33,7 @@ public class TagDaoImpl extends CommonDao implements TagDao {
     private static final String GET_MAX_ID = "SELECT max(id) FROM tag";
 
     private static final String CREATE_TAG = "INSERT INTO tag (name, created_by, date_create) VALUES (?, ?, ?)";
+    private static final String DELETE_TAG = "DELETE FROM tag WHERE id=?";
     private static final String GET_TAG_BY_NAME = "SELECT id, name, created_by, date_create FROM tag WHERE name=?";
     private static final String ADD_TAG_TO_DEAL = "INSERT INTO tag_deal (tag_id, deal_id) VALUES (?, ?)";
 
@@ -104,8 +104,15 @@ public class TagDaoImpl extends CommonDao implements TagDao {
     }
 
     @Override
-    public int delete(Tag tag) {
-        return 0;
+    public int delete(Tag tag) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TAG)) {
+            preparedStatement.setInt(1, tag.getId());
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Deleting a tag was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     @Override
@@ -171,8 +178,8 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         return null;
     }
 
-/*    @Override
-    public Tag getTagByName(String name) throws DatabaseException {
+    @Override
+    public Tag findTagByName(String name) throws DatabaseException {
         Tag tag = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_TAG_BY_NAME)){
@@ -190,7 +197,7 @@ public class TagDaoImpl extends CommonDao implements TagDao {
             throw new  DatabaseException(e.getMessage());
         }
         return tag;
-    }*/
+    }
 
     @Override
     public int createWithId(Tag tag) throws DatabaseException {

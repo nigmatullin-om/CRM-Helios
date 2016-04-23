@@ -92,7 +92,7 @@ public class SaveDealController extends HttpServlet {
 
             if (tags.size() > 0){
                 for (Tag tag : tags){
-                    Tag checkTag = tagService.getTagByName(tag.getName());
+                    Tag checkTag = tagService.findTagByName(tag.getName());
                     if (checkTag != null){
                         log.info("tag: " + tag.toString() + " allready exist in DB");
                         tag = checkTag;
@@ -137,9 +137,7 @@ public class SaveDealController extends HttpServlet {
         } catch (DatabaseException e) {
             log.error("error while saving to DB" + e);
         }
-        /*RequestDispatcher requestDispatcher =  getServletContext().getRequestDispatcher("/dashboard");
-        log.info("forwarding to /dashboard");
-        requestDispatcher.forward(req, resp);*/
+        resp.sendRedirect("/dashboard");
     }
 
     private Deal getDeal(HttpServletRequest req){

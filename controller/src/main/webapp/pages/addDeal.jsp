@@ -26,7 +26,6 @@
         $(function(){
             $("#taskTime").clockpicker();
         });
-        /*$(document).ready(onDocumentReady());*/
     </script>
 </head>
 <body>
@@ -117,9 +116,6 @@
                         <button type="button" onclick="return addDealButton()" class="btn control-button col-sm-4">Добавить</button>
                     </div>
 
-                    <%--<div class="form-group" id="contactsList">
-                    </div>--%>
-
                     <div class="form-group">
                         <label class="control-label col-sm-8">Добавить Контакт</label>
                     </div>
@@ -205,6 +201,7 @@
                             <input type="text" class="form-control" name="companyPhone" id="companyPhone">
                         </div>
                     </div>
+
                     <div class="form-group" id="companyEmailBlock">
                         <label class="control-label col-sm-4">Email</label>
                         <div class="col-sm-8">
@@ -308,7 +305,8 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label class="control-label col-sm-4"></label>
-                        <button type="button" class="btn control-button col-sm-4" name="cancel" id="cancel">Отмена</button>
+                        <a href="/dashboard" class="button"> <button type="button" class="btn control-button col-sm-4" name="cancel" id="cancel">Отмена</button> </a>
+
                     </div>
                 </div>
             </div>

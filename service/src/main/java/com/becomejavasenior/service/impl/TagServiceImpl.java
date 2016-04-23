@@ -90,4 +90,9 @@ public class TagServiceImpl implements TagService {
     public int addTagToDeal(Tag tag, Deal deal) throws DatabaseException {
         return tagDao.addTagToDeal(tag.getId(), deal.getId());
     }
+
+    @Override
+    public Tag findTagByName(String name) throws DatabaseException {
+        return tagDao.findTagByName(name);
+    }
 }

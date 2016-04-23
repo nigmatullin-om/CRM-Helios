@@ -31,6 +31,10 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             " phone_type_id, company_id, created_by, date_create, deleted) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+    private static final String CREATE_CONTACT_WITH_ID = "INSERT INTO contact (name, phone, email, skype, position, responsible_id," +
+            " phone_type_id, company_id, created_by, date_create, deleted, date_modify, user_modify_id) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
     private static final String UPDATE_CONTACT = "UPDATE contact SET name=?, phone=?, email=?, skype=?, position=?, responsible_id=?," +
             " phone_type_id=?, company_id=?, created_by=?, date_create=?, deleted=?, date_modify=?, user_modify_id=? WHERE id=?";
 
@@ -67,7 +71,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setString(4, contact.getSkype());
             preparedStatement.setString(5, contact.getPosition());
             preparedStatement.setInt(6, contact.getResponsibleUser().getId());
-            preparedStatement.setInt(7, contact.getPhoneType().ordinal());
+            preparedStatement.setInt(7, contact.getPhoneType().ordinal() + 1);
             preparedStatement.setInt(8, contact.getCompany().getId());
             preparedStatement.setInt(9, contact.getResponsibleUser().getId());
             preparedStatement.setDate(10, new java.sql.Date(contact.getCreationDate().getTime()));
@@ -105,7 +109,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setString(4, contact.getSkype());
             preparedStatement.setString(5, contact.getPosition());
             preparedStatement.setInt(6, contact.getResponsibleUser().getId());
-            preparedStatement.setInt(7, contact.getPhoneType().ordinal());
+            preparedStatement.setInt(7, contact.getPhoneType().ordinal() + 1);
             preparedStatement.setInt(8, contact.getCompany().getId());
             preparedStatement.setInt(9, contact.getResponsibleUser().getId());
             preparedStatement.setDate(10, new java.sql.Date(contact.getCreationDate().getTime()));
@@ -219,7 +223,7 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
     public int createWithId(Contact contact) throws DatabaseException {
         int key;
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CONTACT_WITH_ID, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, contact.getName());
             preparedStatement.setString(2, contact.getPhone());
             preparedStatement.setString(3, contact.getEmail());
@@ -231,6 +235,20 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
             preparedStatement.setInt(9, contact.getResponsibleUser().getId());
             preparedStatement.setDate(10, new java.sql.Date(contact.getCreationDate().getTime()));
             preparedStatement.setBoolean(11, contact.getDeleted());
+
+            if (contact.getModificationDate() == null){
+                preparedStatement.setNull(12, Types.INTEGER);
+            }
+            else {
+                preparedStatement.setDate(12, new java.sql.Date(contact.getModificationDate().getTime()));
+            }
+            if (contact.getModifiedByUser() == null){
+                preparedStatement.setNull(13, Types.INTEGER);
+            }
+            else {
+                preparedStatement.setInt(13, contact.getModifiedByUser().getId());
+            }
+
             int affectedRows = preparedStatement.executeUpdate();
             LOGGER.info("affectedRows = " + affectedRows);
             try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {

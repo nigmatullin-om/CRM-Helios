@@ -21,6 +21,8 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     private static final String READ_NOTE = "SELECT id, text, date_create FROM note WHERE id=?";
     private static final String CREATE_NOTE = "INSERT INTO note (text, created_by, date_create,contact_id,deal_id,company_id) " +
             "VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String CREATE_NOTE_WITH_ID = "INSERT INTO note (text, created_by, date_create) " +
+            "VALUES (?, ?, ?)";
     private static final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
     private static final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
     private static final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
@@ -184,7 +186,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     public int createWithId(Note note) throws DatabaseException {
         int key;
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NOTE, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NOTE_WITH_ID, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, note.getText());
             preparedStatement.setInt(2, note.getCreatedByUser().getId());
             preparedStatement.setDate(3, new java.sql.Date(note.getCreationDate().getTime()));

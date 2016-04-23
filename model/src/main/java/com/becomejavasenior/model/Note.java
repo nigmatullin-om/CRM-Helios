@@ -13,6 +13,7 @@ public class Note implements Serializable {
     private Date creationDate;
     private Company company;
     private Deal deal;
+    private Contact contact;
 
     public void setCompany(Company company) {
         this.company = company;
@@ -25,9 +26,6 @@ public class Note implements Serializable {
     public void setContact(Contact contact) {
         this.contact = contact;
     }
-
-    private Contact contact;
-
 
     public Company getCompany() {
         return company;

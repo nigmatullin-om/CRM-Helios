@@ -47,6 +47,10 @@
             <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/addCompany">Добавить компанию</a></li>
             </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/addDeal">Добавить сделку</a></li>
+            </ul>
+
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
