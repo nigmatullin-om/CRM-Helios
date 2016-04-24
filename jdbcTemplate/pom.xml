@@ -6,10 +6,9 @@
         <artifactId>crm-system</artifactId>
         <groupId>crm</groupId>
         <version>1.0-SNAPSHOT</version>
-
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>jdbcTemplate</artifactId>
     <packaging>jar</packaging>
 
@@ -20,6 +19,5 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 
 </project>
