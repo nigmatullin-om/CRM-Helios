@@ -1,5 +1,6 @@
 package com.becomejavasenior.controller;
 
+import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.CompanyService;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/addDeal")
+@WebServlet("/add/deal")
 public class AddDealController extends HttpServlet {
     private static final Logger log = LogManager.getLogger(AddDealController.class);
     private UserService userService;
@@ -110,8 +111,8 @@ public class AddDealController extends HttpServlet {
         log.info("task types: " + taskTypes);
         servletContext.setAttribute("taskTypes", taskTypes);
 
-        RequestDispatcher requestDispatcher =  getServletContext().getRequestDispatcher("/pages/addDeal.jsp");
-        log.info("forwarding to /addDeal.jsp");
+        RequestDispatcher requestDispatcher =  getServletContext().getRequestDispatcher(Jsp.DEAL_JSP);
+        log.info("forwarding to " + Jsp.DEAL_JSP);
         requestDispatcher.forward(req, resp);
     }
 }

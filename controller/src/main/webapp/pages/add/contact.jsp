@@ -4,28 +4,40 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<t:pageLayout title="Создать контакт">
+
+<c:set var ="userLocale" value="${cookie['localeCookie'].value}"/>
+<c:if test="${userLocale == ''}">
+    <c:set var ="userLocale" value="en_US"/>
+    ${cookie['localeCookie'].value} = "en_US"
+    ${cookie['localeCookie'].path} = "/"
+</c:if>
+<fmt:setLocale value="${userLocale}"/>
+<fmt:setBundle basename="LocaleText"/>
+<fmt:message key= "pageContactAdd" var="pageContactAdd"/>
+
+
+<t:pageLayout title="${pageContactAdd}">
     <jsp:attribute name="bodyLayout">
                 <div class="container">
                     <div class="row">
-                        <form class="form-horizontal"  action="/contact" method="post" id="create-contact"  enctype="multipart/form-data">
+                        <form class="form-horizontal"  action="/add/contact" method="post" id="create-contact"  enctype="multipart/form-data">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name" class="col-md-4 control-label">Имя Фамилия</label>
+                                    <label for="name" class="col-md-4 control-label"><fmt:message key="contactName"/></label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" id="name" name="contact-name">
                                     </div>
                                 </div> <!--name-->
 
                                 <div class="form-group">
-                                    <label for="tags" class="col-md-4 control-label">Теги</label>
+                                    <label for="tags" class="col-md-4 control-label"><fmt:message key="lblTags"/></label>
                                     <div class="col-md-8">
                                         <input type="text" class="form-control" name="tags" id="tags">
                                     </div>
                                 </div><!--tags-->
 
                                 <div class="form-group">
-                                    <label for="responsible" class="col-md-4 control-label">Ответственный</label>
+                                    <label for="responsible" class="col-md-4 control-label"><fmt:message key="lblResponsible"/></label>
                                     <div class="col-md-6 col-md-offset-2">
                                         <select class="form-control" name="responsible" id ="responsible">
                                             <c:forEach items="${users}" var="user">
@@ -36,14 +48,14 @@
                                 </div><!--responsible-->
 
                                 <div class="form-group">
-                                    <label for="position" class="col-md-4 control-label">Должность</label>
+                                    <label for="position" class="col-md-4 control-label"><fmt:message key="lblPosition"/> </label>
                                     <div class="col-md-6 col-md-offset-2">
                                         <input type="text" class="form-control" name="position" id="position">
                                     </div>
                                 </div><!--position-->
 
                                 <div class="form-group">
-                                    <label for="phone-type" class="col-md-4 control-label">Номер телефона</label>
+                                    <label for="phone-type" class="col-md-4 control-label"><fmt:message key="lblPhone"/></label>
                                     <div class="col-md-4">
                                         <select class="form-control" name="phone-type" id = "phone-type">
                                             <option value="1">рабочий телефон</option>
@@ -60,21 +72,21 @@
                                 </div><!--phone-->
 
                                 <div class="form-group">
-                                    <label for="email" class="col-md-4 control-label">Email</label>
+                                    <label for="email" class="col-md-4 control-label"><fmt:message key="lblEmail"/></label>
                                     <div class="col-md-6 col-md-push-2">
                                         <input type="email" class="form-control" name="email" id="email">
                                     </div>
                                 </div><!--Email-->
 
                                 <div class="form-group">
-                                    <label for="skype" class="col-sm-4 control-label">Skype</label>
+                                    <label for="skype" class="col-sm-4 control-label"><fmt:message key="lblSkype"/></label>
                                     <div class="col-md-6 col-md-offset-2">
                                         <input type="text" class="form-control" name="skype" id="skype">
                                     </div>
                                 </div><!--Skype-->
 
                                 <div class="form-group">
-                                    <label for="note" class="col-md-4 control-label">Примечание</label>
+                                    <label for="note" class="col-md-4 control-label"><fmt:message key="lblNote"/></label>
                                     <div class="col-md-8">
                                         <textarea class="form-control" name="note" rows="4" cols="25" id="note"></textarea>
                                     </div>
@@ -87,10 +99,10 @@
                             </div><!--left-->
 
                             <div class="col-md-6">
-                                    <p class="prompt">Запланировать действие</p><hr class="divider-customer">
+                                    <p class="prompt"><fmt:message key="taskAdd"/></p><hr class="divider-customer">
                                     <div class="block">
                                         <div class="form-group">
-                                            <label  for="period" class="col-md-4 control-label">Период:</label>
+                                            <label  for="period" class="col-md-4 control-label"><fmt:message key="lblPeriod"/>:</label>
                                             <div class="col-md-3">
                                                 <select class="form-control" name="task-period" id = "period">
                                                     <option value="1">Сегодня</option>
@@ -107,7 +119,7 @@
                                         </div><!--period-->
 
                                         <div class="form-group">
-                                            <label for="task-responsible" class="col-md-4 control-label">Ответственый</label>
+                                            <label for="task-responsible" class="col-md-4 control-label"><fmt:message key="lblResponsible"/></label>
                                             <div class="col-md-6 col-md-offset-2">
                                                 <select class="form-control" name="task-responsible" id ="task-responsible">
                                                     <c:forEach items="${users}" var="user">
@@ -118,7 +130,7 @@
                                         </div><!--responsible-task-->
 
                                         <div class="form-group">
-                                            <label for="task-type" class="col-md-4 control-label">Тип задачи</label>
+                                            <label for="task-type" class="col-md-4 control-label"><fmt:message key="taskType"/></label>
                                             <div class="col-md-6 col-md-offset-2">
                                                 <select class="form-control" name="task-type" id ="task-type">
                                                     <c:forEach items="${taskTypes}" var="taskType">
@@ -129,24 +141,24 @@
                                         </div><!--task-description-->
 
                                         <div class="form-group">
-                                            <label for="task-description" class="col-md-4 control-label">Текст задачи</label>
+                                            <label for="task-description" class="col-md-4 control-label"><fmt:message key="taskDescription"/></label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="task-description" id = "task-description">
                                             </div>
                                         </div><!--task-description-->
                                     </div>
 
-                                    <p class="prompt">Быстрое добавление сделки</p><hr class="divider-customer">
+                                    <p class="prompt"><fmt:message key="dealAddQuick"/></p><hr class="divider-customer">
                                     <div class="block">
                                         <div class="form-group">
-                                            <label  for="deal-name" class="col-md-4 control-label">Название сделки:</label>
+                                            <label  for="deal-name" class="col-md-4 control-label"><fmt:message key="dealName"/></label>
                                             <div class="col-md-8">
                                                 <input type="text" id="deal-name" name="deal-name" class="form-control">
                                             </div>
                                         </div><!--deal-name-->
 
                                         <div class="form-group">
-                                            <label for="deal-stage" class="col-md-4 control-label">Этап:</label>
+                                            <label for="deal-stage" class="col-md-4 control-label"><fmt:message key="dealStage"/>:</label>
                                             <div class="col-md-6 col-md-offset-2">
                                                 <select class="form-control" name="deal-stage" id = "deal-stage">
                                                     <option value="1">Сегодня</option>
@@ -160,23 +172,23 @@
                                         </div><!--deal-stage-->
 
                                         <div class="form-group">
-                                            <label for="budget" class="col-md-4 control-label">Бюджет</label>
+                                            <label for="budget" class="col-md-4 control-label"><fmt:message key="lblBudget"/></label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control"  name ="budget" id = "budget">
                                             </div>
                                         </div><!--budget-->
                                     </div>
 
-                                    <p class="prompt">Выбрать компанию</p><hr class="divider-customer">
+                                    <p class="prompt"><fmt:message key="companySelect"/></p><hr class="divider-customer">
                                     <div class="row block">
                                         <div class="col-md-4 col-md-offset-1">
                                             <label class="radio">
                                                 <input type="radio" name="radio" id="choose-company" value="choose">
-                                                Выбрать компанию
+                                                <fmt:message key="companySelect"/>
                                             </label>
                                             <label class="radio">
                                                 <input type="radio" name="radio" id="crate-company" value="create" checked>
-                                                Создать компанию
+                                                <fmt:message key="pageCompanyAdd"/>
                                             </label>
                                         </div>
                                         <div class="col-md-6 col-md-offset-1">
@@ -190,35 +202,35 @@
                                     </div>
                                     <div class="block">
                                         <div class="form-group">
-                                            <label for="name-company" class="col-md-4 control-label">Название</label>
+                                            <label for="name-company" class="col-md-4 control-label"><fmt:message key="companyName"/></label>
                                             <div class="col-md-8">
                                                 <input type="text"  name="name-company" class="form-control" id="name-company">
                                             </div>
                                         </div> <!--name-->
 
                                         <div class="form-group">
-                                            <label for="phone-company" class="col-md-4 control-label">Телефон</label>
+                                            <label for="phone-company" class="col-md-4 control-label"><fmt:message key="lblPhone"/></label>
                                             <div class="col-md-6 col-md-offset-2">
                                                 <input type="text" class="form-control" name="phone-company" id="phone-company">
                                             </div>
                                         </div><!--phone-->
 
                                         <div class="form-group">
-                                            <label for="email-company" class="col-md-4 control-label">Email</label>
+                                            <label for="email-company" class="col-md-4 control-label"><fmt:message key="lblEmail"/></label>
                                             <div class="col-md-6 col-md-offset-2">
                                                 <input type="email" name="email-company" class="form-control" id="email-company">
                                             </div>
                                         </div><!--Email-->
 
                                         <div class="form-group">
-                                            <label for="web-company" class="col-md-4 control-label">WEB адрес</label>
+                                            <label for="web-company" class="col-md-4 control-label"><fmt:message key="lblWeb"/></label>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control" name="web-company" id="web-company">
                                             </div>
                                         </div><!--web-->
 
                                         <div class="form-group">
-                                            <label for="note-company" class="col-md-4 control-label">Примечание</label>
+                                            <label for="note-company" class="col-md-4 control-label"><fmt:message key="lblNote"/></label>
                                             <div class="col-md-8">
                                                 <textarea class="form-control" rows="2" cols="25" name="note-company" id="note-company"></textarea>
                                             </div>
@@ -228,7 +240,7 @@
                             </div><!--right-->
 
                             <div class="col-md-offset-4">
-                                <button type="submit" class="btn btn-default">Submit</button>
+                                <button type="submit" class="btn btn-default"><fmt:message key="lblSubmit"/></button>
                             </div>
                         </form>
                     </div>
