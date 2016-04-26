@@ -1,6 +1,7 @@
 package com.becomejavasenior.dao;
 
 public class DatabaseException extends Exception {
+
     public DatabaseException() {
     }
 

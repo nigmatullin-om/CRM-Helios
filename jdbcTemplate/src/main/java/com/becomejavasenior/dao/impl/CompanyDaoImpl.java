@@ -4,11 +4,9 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
-import com.becomejavasenior.model.PhoneType;
 import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -80,7 +78,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     @Override
     public List<Company> findAll() throws DatabaseException {
         List<Company> companies = new ArrayList<>();
-        companies = getJdbcTemplate().query(FIND_ALL_COMPANIES, new CompanyRowMapper());
+        companies = getJdbcTemplate().query(FIND_ALL_COMPANIES, RowMappers.companyRowMapper());
         return companies;
     }
 

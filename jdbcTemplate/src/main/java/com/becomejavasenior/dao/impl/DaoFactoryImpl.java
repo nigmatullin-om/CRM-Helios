@@ -16,7 +16,7 @@ public class DaoFactoryImpl implements DaoFactory {
 
     private static final Logger LOGGER = LogManager.getLogger(DaoFactoryImpl.class);
 
-    private static DataSource dataSource;
+    private  DataSource dataSource;
 
     public DaoFactoryImpl() {
     }
@@ -26,7 +26,7 @@ public class DaoFactoryImpl implements DaoFactory {
         try {
             Class.forName(props.getProperty("driverClassName"));
         } catch (ClassNotFoundException e) {
-            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
+            LOGGER.error("Getting a driver was failed. Error - {}", e.getMessage());
         }
         ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(props.getProperty("url"), props);
         PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
@@ -41,7 +41,7 @@ public class DaoFactoryImpl implements DaoFactory {
         try(InputStream fis = getClass().getClassLoader().getResourceAsStream("db_config.properties")) {
             props.load(fis);
         } catch (IOException e) {
-            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
+            LOGGER.error("Getting a driver was failed. Error - {}", e.getMessage());
         }
         return props;
     }
@@ -78,6 +78,11 @@ public class DaoFactoryImpl implements DaoFactory {
         return new TagDaoImpl(getDataSource());
     }*/
 
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     public TaskDao getTaskDao() {
         return new TaskDaoImpl(getDataSource());
     }
@@ -92,10 +97,11 @@ public class DaoFactoryImpl implements DaoFactory {
 
     public CurrenciesDao getCurrenciesDao(){return  new CurrenciesDaoImpl(getDataSource());}*/
 
-    private DataSource getDataSource() {
+    public DataSource getDataSource() {
         if (dataSource == null) {
             dataSource = initDataSource();
         }
         return dataSource;
     }
+
 }
