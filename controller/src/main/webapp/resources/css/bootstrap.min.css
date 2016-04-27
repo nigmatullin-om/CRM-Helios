@@ -5793,7 +5793,7 @@ button.list-group-item-danger.active:hover {
     border-bottom-color: #ddd
 }
 .panel-primary {
-    border-color: #337ab7
+    border-color: #337ab7;
 }
 .panel-primary>.panel-heading {
     color: #fff;

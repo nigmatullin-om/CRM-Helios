@@ -5,14 +5,12 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.NoteDao;
 import com.becomejavasenior.model.Note;
+import com.becomejavasenior.model.Period;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +19,17 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     private static final Logger LOGGER = LogManager.getLogger(NoteDaoImpl.class);
 
     private static final String READ_NOTE = "SELECT id, text, date_create FROM note WHERE id=?";
-    private static final String CREATE_NOTE = "INSERT INTO note (text, created_by, date_create) " +
+    private static final String CREATE_NOTE = "INSERT INTO note (text, created_by, date_create,contact_id,deal_id,company_id) " +
+            "VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String CREATE_NOTE_WITH_ID = "INSERT INTO note (text, created_by, date_create) " +
             "VALUES (?, ?, ?)";
     private static final String UPDATE_NOTE = "UPDATE note SET text=?, created_by=?, date_create=? WHERE id=?";
     private static final String DELETE_NOTE = "DELETE FROM note WHERE id=?";
     private static final String FIND_ALL_NOTES = "SELECT id, text, date_create FROM note";
     private static final String FIND_ALL_NOTES_BY_DEAL_ID = "SELECT * FROM note WHERE deal_id = ?";
+    private static final String ADD_NOTE_TO_DEAL = "UPDATE note SET deal_id=? WHERE id=? ";
     private static final String FIND_NOTES_BY_COMPANY_ID = "SELECT * FROM note WHERE company_id = ?";
+    private static final String GET_MAX_ID = "SELECT MAX(id) FROM note";
 
     public NoteDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -38,8 +40,32 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NOTE)) {
             preparedStatement.setString(1, note.getText());
-            preparedStatement.setInt(2, note.getCreatedByUser().getId());
-            preparedStatement.setDate(3, new java.sql.Date(note.getCreationDate().getTime()));
+            if(note.getCreatedByUser()!=null){
+                preparedStatement.setInt(2, note.getCreatedByUser().getId());
+            }
+            else{
+                preparedStatement.setNull(2, Types.NULL);
+            }
+            preparedStatement.setDate(3, new java.sql.Date(note.getCreationDate().getYear(),note.getCreationDate().getMonth(),
+                    note.getCreationDate().getDay()) );
+
+            if(note.getContact()!=null){
+                preparedStatement.setInt(4, note.getContact().getId());
+            }else{
+                preparedStatement.setNull(4,  Types.NULL);
+            }
+
+            if(note.getDeal()!=null){
+                preparedStatement.setInt(5, note.getDeal().getId());
+            }else{
+                preparedStatement.setNull(5,  Types.NULL);
+            }
+
+            if(note.getCompany()!=null){
+                preparedStatement.setInt(6,note.getCompany().getId());
+            }else{
+                preparedStatement.setNull(6, Types.NULL);
+            }
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Creating a note was failed. Error - {}", new Object[]{e.getMessage()});
@@ -99,6 +125,21 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     }
 
     @Override
+    public int getMaxId() throws DatabaseException {
+        int maxId = 0;
+        try(Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)){
+            ResultSet resultSet  = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                maxId = resultSet.getInt("max");
+            }
+        }catch (SQLException e) {
+            LOGGER.error(new Object[]{e.getMessage()});
+        }
+        return maxId;
+    }
+
+    @Override
     public List<Note> findAll() throws DatabaseException {
         List<Note> notes = new ArrayList<>();
         try (Connection connection = getConnection();
@@ -142,6 +183,32 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     }
 
     @Override
+    public int createWithId(Note note) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_NOTE_WITH_ID, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, note.getText());
+            preparedStatement.setInt(2, note.getCreatedByUser().getId());
+            preparedStatement.setDate(3, new java.sql.Date(note.getCreationDate().getTime()));
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new note id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the note entity!");
+                    throw new DatabaseException("Couldn't create the note entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the note entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
+    @Override
     public List<Note> findAllByCompanyId(int id) throws DatabaseException {
         List<Note> notes = new ArrayList<>();
         DaoFactoryImpl daoFactory = new DaoFactoryImpl();
@@ -170,4 +237,19 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     }
 
 
+    @Override
+    public int addNoteToDeal(int noteId, int dealId) throws DatabaseException {
+        int affectedRows;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(ADD_NOTE_TO_DEAL)) {
+            preparedStatement.setInt(1, dealId);
+            preparedStatement.setInt(2, noteId);
+            affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the note entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return affectedRows;
+    }
 }

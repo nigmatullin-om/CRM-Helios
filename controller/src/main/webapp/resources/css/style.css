@@ -1,3 +1,4 @@
+
 .task-card {
     width: 200px;
     border-radius: 10px;
@@ -63,4 +64,40 @@ table.calendar > tbody > tr > td > div.today-task {
 
 table.calendar > tbody > tr > td > div.tomorrow-task {
     background-color: #d8ffb2
+}
+
+.form-horizontal .form-group {
+    margin-right: 25px;
+    margin-left: 25px;
+}
+
+.prompt{
+    line-height: 0.7;
+}
+
+.block{
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.divider-customer{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.flag {
+    width: 32px;
+    height: 32px;
+    background: url(/resources/images/flags.png) no-repeat;
+}
+
+.flag.flag-ru {
+    background-position: -32px 0;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.flag.flag-us {
+    background-position: 0 -32px;
+    padding-left: 40px;
+    padding-right: 40px;
 }

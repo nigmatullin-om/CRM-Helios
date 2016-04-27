@@ -86,4 +86,9 @@ public class CompanyServiceImpl implements CompanyService {
     public List<Integer> byStage(String[] byStages) throws DatabaseException {
         return companyDao.byStage(byStages);
     }
+
+    @Override
+    public int createWithId(Company company) throws DatabaseException {
+        return companyDao.createWithId(company);
+    }
 }

@@ -8,5 +8,5 @@ public enum Period implements Serializable {
     TOMORROW,
     NEXT_WEEK,
     NEXT_MONTH,
-    NEXT_YEAR
+    NEXT_YEAR;
 }

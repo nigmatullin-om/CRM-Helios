@@ -11,10 +11,12 @@ public interface CompanyDao {
     int create(Company company) throws DatabaseException;
     Company getCompanyById(int id) throws DatabaseException;
     int update(Company company) throws DatabaseException;
+    int getMaxId()throws  DatabaseException;
     int delete(Company company) throws DatabaseException;
     List<Company> findAll() throws DatabaseException;
     int getCount() throws DatabaseException;
     Company getCompanyForTask(Task task) throws DatabaseException;
+    int createWithId(Company company) throws DatabaseException;
     List<Integer> withoutTasks() throws DatabaseException;
     List<Integer> withOutdatedTasks() throws DatabaseException;
     List<Integer> markedDelete() throws DatabaseException;

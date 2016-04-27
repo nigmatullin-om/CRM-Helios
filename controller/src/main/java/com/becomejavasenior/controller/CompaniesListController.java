@@ -28,9 +28,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@WebServlet("/companiesList")
+@WebServlet("/CompaniesList")
 public class CompaniesListController extends HttpServlet {
-    private static final String COMPANIES_LIST = "/pages/companiesList.jsp";
+    private static final String COMPANIES_LIST = "/pages/CompaniesList.jsp";
 
     private static final String CONTACTS = "contacts";
     private static final String COMPANIES = "companies";

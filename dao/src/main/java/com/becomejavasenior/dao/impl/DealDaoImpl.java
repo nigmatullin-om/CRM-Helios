@@ -8,6 +8,7 @@ import com.becomejavasenior.model.*;
 import com.becomejavasenior.model.Deal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.ConfigurationException;
 
 
 import javax.sql.DataSource;
@@ -23,15 +24,18 @@ public class DealDaoImpl extends CommonDao implements DealDao {
 
     private static final String READ_DEAL = "SELECT id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted FROM deal WHERE id=?";
 
-    private static final String CREATE_DEAL = "INSERT INTO deal (id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
-            "VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String CREATE_DEAL = "INSERT INTO deal (name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
+    private static final String CREATE_RELATION_BETWEEN_CONTACT_AND_DEAL = "INSERT INTO deal_contact(deal_id, contact_id) " +
+            "VALUES(?, ?)";
 
     private static final String UPDATE_DEAL = "UPDATE deal SET name=?, budget=?, responsible_id=?, stage_id=?," +
             "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
 
     private static final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
+    private static final String GET_MAX_ID = "SELECT MAX(id) FROM deal";
     private static final String FIND_ALL_DEALS = "SELECT id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted FROM deal";
     private static final String COUNT_DEALS_WITH_TASKS = "SELECT count(*) FROM deal d WHERE d.id IN (SELECT t.id FROM task t)";
     private static final String COUNT_DEALS_WITHOUT_TASKS = "SELECT count(*) FROM deal d WHERE d.id NOT IN (SELECT t.id FROM task t)";
@@ -55,30 +59,52 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     @Override
     public int create(Deal deal) throws DatabaseException {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL)) {
             preparedStatement.setInt(1, deal.getId());
             preparedStatement.setString(2, deal.getName());
             preparedStatement.setBigDecimal(3, deal.getBudget());
-            preparedStatement.setInt(4, deal.getResponsibleUser().getId());
-            preparedStatement.setInt(5, deal.getDealStage().ordinal());
-            preparedStatement.setInt(6, deal.getCompany().getId());
-            preparedStatement.setInt(7, deal.getCreatedByUser().getId());
-            preparedStatement.setDate(8, new java.sql.Date(deal.getCreationDate().getTime()));
-            preparedStatement.setBoolean(9, deal.getDeleted());
-            preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            int last_inserted_id = 0;
-            if (rs.next()){
-                last_inserted_id = rs.getInt(1);
+            if(deal.getResponsibleUser()!=null){
+                preparedStatement.setInt(4, deal.getResponsibleUser().getId());
             }
-
-            return last_inserted_id;
+            else{
+                preparedStatement.setNull(4, Types.INTEGER);
+            }
+            if(deal.getDealStage()!=null) {
+                preparedStatement.setInt(5, deal.getDealStage().ordinal());
+            }
+            else{
+                preparedStatement.setNull(5,Types.INTEGER);
+            }
+            if (deal.getCompany()!=null){
+                preparedStatement.setInt(6, deal.getCompany().getId());
+            }
+            else{
+                preparedStatement.setNull(6,Types.INTEGER);
+            }
+            if(deal.getCreatedByUser()!=null){
+                preparedStatement.setInt(7, deal.getCreatedByUser().getId());
+            }
+            else {
+                preparedStatement.setNull(7,Types.INTEGER);
+            }
+            if(deal.getCreationDate()!=null){
+                preparedStatement.setDate(8, new java.sql.Date(deal.getCreationDate().getTime()));
+            }
+            else {
+                preparedStatement.setNull(8,Types.DATE);
+            }
+            if (deal.getDeleted()!=null){
+                preparedStatement.setBoolean(9, deal.getDeleted());
+            }
+            else {
+                preparedStatement.setBoolean(9,false);
+            }
+            return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Creating a deal was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
     }
-
 
     @Override
     public Deal getDealById(int id) throws DatabaseException {
@@ -117,6 +143,34 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             LOGGER.error("Updating a deal was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
+    }
+
+    @Override
+    public int updateDealContact(Deal deal) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_RELATION_BETWEEN_CONTACT_AND_DEAL)) {
+            preparedStatement.setInt(1, deal.getId());
+            preparedStatement.setInt(2, deal.getContacts().get(0).getId());
+            return preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Creating a deal was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    @Override
+    public int getMaxId() throws DatabaseException {
+        int maxId = 0;
+        try(Connection connection = getConnection();
+         PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)){
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                maxId = resultSet.getInt("max");
+            }
+        } catch (SQLException e) {
+            LOGGER.error(new Object[]{e.getMessage()});
+        }
+        return maxId;
     }
 
     @Override
@@ -261,10 +315,16 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         deal.setId(resultSet.getInt("id"));
         deal.setName(resultSet.getString("name"));
         deal.setBudget(resultSet.getBigDecimal("budget"));
-        deal.setResponsibleUser(daoFactory.getUserDao().getUserById(resultSet.getInt("responsible_id")));
+        if (resultSet.getInt("responsible_id")!=0) {
+            deal.setResponsibleUser(daoFactory.getUserDao().getUserById(resultSet.getInt("responsible_id")));
+        }
         deal.setDealStage(DealStage.getDealStageById(resultSet.getInt("stage_id")));
-        deal.setCompany(daoFactory.getCompanyDao().getCompanyById(resultSet.getInt("company_id")));
-        deal.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+        if(resultSet.getInt("company_id")!=0){
+            deal.setCompany(daoFactory.getCompanyDao().getCompanyById(resultSet.getInt("company_id")));
+        }
+        if(resultSet.getInt("created_by")!=0){
+            deal.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+        }
         deal.setCreationDate(resultSet.getDate("date_create"));
         deal.setDeleted(resultSet.getBoolean("deleted"));
 
@@ -283,4 +343,35 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         return deal;
     }
 
+    @Override
+    public int createWithId(Deal deal) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_DEAL, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, deal.getName());
+            preparedStatement.setBigDecimal(2, deal.getBudget());
+            preparedStatement.setInt(3, deal.getResponsibleUser().getId());
+            preparedStatement.setInt(4, deal.getDealStage().ordinal());
+            preparedStatement.setInt(5, deal.getCompany().getId());
+            preparedStatement.setInt(6, deal.getCreatedByUser().getId());
+            preparedStatement.setDate(7, new java.sql.Date(deal.getCreationDate().getTime()));
+            preparedStatement.setBoolean(8, deal.getDeleted());
+            int affectedRows = preparedStatement.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new deal id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the deal entity!");
+                    throw new DatabaseException("Couldn't create the deal entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the deal entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
+    }
 }

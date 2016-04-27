@@ -1,5 +1,19 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@tag description="Page Template" pageEncoding="UTF-8"%>
+
+<c:set var ="userLocale" value="${cookie['localeCookie'].value}"/>
+<c:if test="${userLocale == ''}">
+    <c:set var ="userLocale" value="en_US"/>
+    ${cookie['localeCookie'].value} = "en_US"
+    ${cookie['localeCookie'].path} = "/"
+</c:if>
+<fmt:setLocale value="${userLocale}"/>
+<fmt:setBundle basename="LocaleText"/>
+<fmt:message key= "pageMain" var="pageMain"/>
 
 <%@attribute name="title"%>
 <%@attribute name="bodyLayout" fragment="true" %>
@@ -33,16 +47,25 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/">Главная</a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/"><fmt:message key= "pageMain"/></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/dashboard">Рабочий стол</a></li>
+                <li><a href="${pageContext.request.contextPath}/dashboard"><fmt:message key= "pageDashboard"/></a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/tasks">Задачи</a></li>
+                <li><a href="${pageContext.request.contextPath}/view/tasks"><fmt:message key= "pageTasks"/></a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/add/company"><fmt:message key= "pageCompanyAdd"/></a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/add/deal"><fmt:message key="pageDealAdd"/> </a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/add/contact"><fmt:message key="pageContactAdd"/> </a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -50,11 +73,22 @@
 
 <div class="container">
 
+    <header>
+    </header>
+
     <jsp:invoke fragment="bodyLayout"/>
     <hr>
 
     <footer>
-        <p>© 2016 CRM-HELIOS.</p>
+        <div class="row">
+            <div class="col-md-3 col-sm-3">
+                <p>© 2016 CRM-HELIOS.</p>
+            </div>
+            <div class="col-md-9 col-sm-9" align="right">
+                <input type="button" value="Рус" class="btn btn-default flag flag-ru" onclick="SetCookie('localeCookie','ru_RU')"/>
+                <input type="button" value="Eng" class="btn btn-default flag flag-us" onclick="SetCookie('localeCookie','en_US')"/>
+            </div>
+        </div>
     </footer>
 </div>
 

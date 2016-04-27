@@ -2,6 +2,7 @@ package com.becomejavasenior.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +29,16 @@ public class Contact implements Serializable{
     private List<Tag> tags;
     private List<Task> tasks;
 
+    public Contact(){
+        setCreationDate(new Date());
+        setDeleted(false);
+    }
+
     public List<Task> getTasks() {
-        return tasks;
+        if(tasks!=null){
+            return tasks;
+        }
+        return new ArrayList<Task>();
     }
 
     public void setTasks(List<Task> tasks) {

@@ -34,10 +34,12 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             "description, finish_date, responsible_id, period, task_type_id FROM task WHERE company_id=? AND deleted=FALSE";
     private static String GET_ALL_TASKS = "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
             "description, finish_date, responsible_id, period, task_type_id FROM task WHERE deleted=FALSE";
-
     private static String GET_ALL_TASKS_BETWEEN_DAYS= "SELECT id, name, company_id, contact_id, created_by, date_create, deal_id, " +
             "description, finish_date, responsible_id, period, task_type_id FROM task " +
             "WHERE deleted=FALSE and finish_date >= ? and finish_date <= ?";
+
+    private static String GET_MAX_ID = "SELECT MAX(id) FROM task";
+
 
 
     private DaoFactory daoFactory;
@@ -130,6 +132,21 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     }
 
     @Override
+    public int getMaxId() throws DatabaseException {
+        int maxId = 0;
+        try(Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)){
+            ResultSet resultSet  = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                maxId = resultSet.getInt("max");
+            }
+        }catch (SQLException e) {
+            LOGGER.error(new Object[]{e.getMessage()});
+        }
+        return maxId;
+    }
+
+    @Override
     public int create(Task task) throws DatabaseException {
 
         try (Connection connection = getConnection();
@@ -154,12 +171,20 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             } else {
                 ps.setNull(4, java.sql.Types.INTEGER);
             }
-
-            ps.setInt(5, task.getCreatedByUser().getId());
+            if(task.getCreatedByUser()!=null){
+                ps.setInt(5, task.getCreatedByUser().getId());
+            }else{
+                ps.setNull(5, Types.INTEGER);
+            }
 
             ps.setString(6, task.getName());
 
-            ps.setTimestamp(7, new Timestamp(task.getFinishDate().getTime()));
+            if(task.getFinishDate()!=null){
+                ps.setDate(7,new java.sql.Date(task.getFinishDate().getYear(), task.getFinishDate().getMonth(),
+                        task.getFinishDate().getDate()));
+            }else {
+                ps.setNull(7,Types.DATE);
+            }
 
             ps.setString(8, task.getDescription());
             ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
@@ -284,5 +309,74 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         task.setTaskType(task_type);
 
         return task;
+    }
+
+    @Override
+    public int createWithId(Task task) throws DatabaseException {
+        int key;
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(INSERT_TASK, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, task.getResponsibleUser().getId());
+
+            if (task.getContact() != null) {
+                ps.setInt(2, task.getContact().getId());
+            } else {
+                ps.setNull(2, java.sql.Types.INTEGER);
+            }
+
+            if (task.getDeal() != null) {
+                ps.setInt(3, task.getDeal().getId());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+
+            if (task.getCompany() != null) {
+                ps.setInt(4, task.getCompany().getId());
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+
+            ps.setInt(5, task.getCreatedByUser().getId());
+
+            ps.setString(6, task.getName());
+
+            if (task.getFinishDate() == null){
+                ps.setNull(7, Types.TIMESTAMP);
+            }
+            else {
+                ps.setTimestamp(7, new Timestamp(task.getFinishDate().getTime()));
+            }
+
+
+            ps.setString(8, task.getDescription());
+            ps.setTimestamp(9, new Timestamp(new java.util.Date().getTime()));
+
+            if (task.getPeriod() == null){
+                ps.setNull(10, Types.INTEGER);
+            }
+            else {
+                ps.setInt(10, task.getPeriod().ordinal());
+            }
+
+            ps.setInt(11, task.getTaskType().getId());
+
+            int affectedRows = ps.executeUpdate();
+            LOGGER.info("affectedRows = " + affectedRows);
+            try (ResultSet resultSet = ps.getGeneratedKeys();) {
+                if (resultSet.next()){
+                    key = resultSet.getInt(1);
+                    LOGGER.info("new task id = " + key);
+                }
+                else {
+                    LOGGER.error("Couldn't create the task entity!");
+                    throw new DatabaseException("Couldn't create the task entity!");
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Couldn't create the task entity because of some SQL exception!");
+            throw new  DatabaseException(e.getMessage());
+        }
+        return key;
     }
 }

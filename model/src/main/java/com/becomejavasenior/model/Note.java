@@ -11,6 +11,33 @@ public class Note implements Serializable {
     private String text;
     private User createdByUser;
     private Date creationDate;
+    private Company company;
+    private Deal deal;
+    private Contact contact;
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public void setDeal(Deal deal) {
+        this.deal = deal;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public Deal getDeal() {
+        return deal;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
 
     public int getId() {
         return id;
