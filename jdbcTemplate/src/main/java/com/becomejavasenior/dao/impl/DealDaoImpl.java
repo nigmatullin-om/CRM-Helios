@@ -18,71 +18,71 @@ public class DealDaoImpl extends CommonDao implements DealDao {
 
     @Override
     public int create(Deal deal) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public Deal getDealById(int id) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int update(Deal deal) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int updateDealContact(Deal deal) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int getMaxId() throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int delete(Deal deal) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Deal> findAll() throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int countDealsWithTasks() throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int countDealsWithoutTasks() throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Deal> getDealsForContactById(Contact contact) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Deal> getDealsForCompanyById(Company company) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public Deal getDealForTask(Task task) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int createWithId(Deal deal) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int createDealForContact(int contactId, Deal deal) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 }

@@ -17,61 +17,61 @@ public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     @Override
     public int create(Contact contact) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public Contact getContactById(int id) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int update(Contact contact) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int delete(Contact contact) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Contact> findAll() throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int getCount() throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Contact> findAllByDealId(int id) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public Contact getContactForTask(Task task) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int createWithId(Contact contact) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int addContactToDeal(int contactId, int dealId) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Contact> findAllByCompanyId(int id) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int createContactForDeal(int dealId, Contact contact) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 }

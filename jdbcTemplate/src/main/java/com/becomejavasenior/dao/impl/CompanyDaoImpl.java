@@ -42,60 +42,57 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     private static final String GET_MAX_ID = "SELECT  max(id) FROM company";
 
-    private JdbcTemplate jdbcTemplate;
-
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
-        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     public int create(Company company) throws DatabaseException {
-        jdbcTemplate.update(CREATE_COMPANY, new CompanyCreatePreparedStatementSetter(company));
+        getJdbcTemplate().update(CREATE_COMPANY, new CompanyCreatePreparedStatementSetter(company));
         return 1;
     }
 
     @Override
     public Company getCompanyById(int id) throws DatabaseException {
-        Company company = (Company)jdbcTemplate.queryForObject(READ_COMPANY, new Object[]{id}, new CompanyRowMapper());
+        Company company = getJdbcTemplate().queryForObject(READ_COMPANY, new Object[]{id}, new CompanyRowMapper());
         return company;
     }
 
     @Override
     public int update(Company company) throws DatabaseException {
-        jdbcTemplate.update(UPDATE_COMPANY, new CompanyUpdatePreparedStatementSetter(company));
+        getJdbcTemplate().update(UPDATE_COMPANY, new CompanyUpdatePreparedStatementSetter(company));
         return 1;
     }
 
     @Override
     public int getMaxId() throws DatabaseException {
-        int maxId = jdbcTemplate.queryForObject(GET_MAX_ID, Integer.class);
+        int maxId = getJdbcTemplate().queryForObject(GET_MAX_ID, Integer.class);
         return maxId;
     }
 
     @Override
     public int delete(Company company) throws DatabaseException {
-        jdbcTemplate.update(DELETE_COMPANY, new Object[]{company.getId()});
+        getJdbcTemplate().update(DELETE_COMPANY, new Object[]{company.getId()});
         return 1;
     }
 
     @Override
     public List<Company> findAll() throws DatabaseException {
         List<Company> companies = new ArrayList<>();
-        companies = jdbcTemplate.query(FIND_ALL_COMPANIES, new CompanyRowMapper());
+        companies = getJdbcTemplate().query(FIND_ALL_COMPANIES, new CompanyRowMapper());
         return companies;
     }
 
     @Override
     public int getCount() throws DatabaseException {
-        int count = jdbcTemplate.queryForObject(GET_ALL_COMPANIES_COUNT, Integer.class);
+        int count = getJdbcTemplate().queryForObject(GET_ALL_COMPANIES_COUNT, Integer.class);
         return count;
     }
 
     @Override
     public Company getCompanyForTask(Task task) throws DatabaseException {
-        Company company = (Company)jdbcTemplate.queryForObject(GET_COMPANY_FOR_TASK, new Object[]{task.getId()}, new CompanyRowMapper());
+        Company company = (Company)getJdbcTemplate().queryForObject(GET_COMPANY_FOR_TASK, new Object[]{task.getId()}, new CompanyRowMapper());
         return company;
     }
 
@@ -103,7 +100,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     public int createWithId(Company company) throws DatabaseException {
         int key;
         KeyHolder holder = new GeneratedKeyHolder();
-        jdbcTemplate.update(new CompanyCreatePreparedStatementCreator(company), holder);
+        getJdbcTemplate().update(new CompanyCreatePreparedStatementCreator(company), holder);
         return key = Integer.parseInt(holder.getKeys().get("id" ).toString());
     }
 }

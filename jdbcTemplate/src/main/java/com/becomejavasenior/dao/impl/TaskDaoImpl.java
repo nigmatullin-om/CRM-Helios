@@ -16,56 +16,56 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
 
     @Override
     public int create(Task task) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public Task getTaskById(int id) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int update(Task task) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int delete(Task task) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int getMaxId() throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Task> findAll() throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Task> getAllTasksForContactById(int contactId) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Task> getAllTasksForCompanyById(int companyId) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Task> getAllTasksForDealById(int dealId) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public int createWithId(Task task) throws DatabaseException {
-        return 0;
+        throw new DatabaseException("method not supported yet!");
     }
 
     @Override
     public List<Task> getTasksBetweenDays(LocalDate startDay, LocalDate finishDay) throws DatabaseException {
-        return null;
+        throw new DatabaseException("method not supported yet!");
     }
 }
