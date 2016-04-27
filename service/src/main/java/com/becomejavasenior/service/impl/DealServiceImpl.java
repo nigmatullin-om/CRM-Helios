@@ -1,27 +1,47 @@
 package com.becomejavasenior.service.impl;
 
 
+import com.becomejavasenior.dao.CompanyDao;
+import com.becomejavasenior.dao.ContactDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.DealDao;
+import com.becomejavasenior.dao.impl.CompanyDaoImpl;
+import com.becomejavasenior.dao.impl.ContactDaoImpl;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
+import com.becomejavasenior.model.Company;
+import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.DealStage;
 import com.becomejavasenior.service.DealService;
 
 import java.util.*;
 
-/**
- * Created by aivlev on 3/23/16.
- */
 public class DealServiceImpl implements DealService {
 
     private static final String SUCCESS_DEALS = "successDeals";
     private static final String FAILED_DEALS = "failedDeals";
 
     private DealDao dealDao;
+    private CompanyDao companyDao;
+    private ContactDao contactDao;
 
     public DealServiceImpl() {
-        this.dealDao = new DaoFactoryImpl().getDealDao();
+        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+        setDealDao(daoFactory.getDealDao());
+        setCompanyDao(daoFactory.getCompanyDao());
+        setContactDao(daoFactory.getContactDao());
+    }
+
+    public void setDealDao(DealDao dealDao) {
+        this.dealDao = dealDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
+    }
+
+    public void setContactDao(ContactDao contactDao) {
+        this.contactDao = contactDao;
     }
 
     @Override
@@ -32,6 +52,55 @@ public class DealServiceImpl implements DealService {
     @Override
     public Deal getDealById(int id) throws DatabaseException {
         return dealDao.getDealById(id);
+    }
+
+    @Override
+    public Deal getDealWithContactsAndCompany(int id) throws DatabaseException {
+        Deal dealFromDB = dealDao.getDealById(id);
+
+        Company companyForDeal = companyDao.getCompanyForDeal(dealFromDB);
+        dealFromDB.setCompany(companyForDeal);
+
+        List<Contact> allContactsByCompanyId = contactDao.findAllByCompanyId(dealFromDB.getId());
+        dealFromDB.setContacts(allContactsByCompanyId);
+
+        return dealFromDB;
+    }
+
+    @Override
+    public List<Deal> getDealListWithCompanyAndContacts() throws DatabaseException {
+        List<Deal> allDeals = findAll();
+        List<Deal> dealsWithContactAndCompany = new ArrayList<>();
+
+        for(Deal deal : allDeals)
+        {
+            dealsWithContactAndCompany.add(getDealWithContactsAndCompany(deal.getId()));
+        }
+
+        return dealsWithContactAndCompany;
+    }
+
+    @Override
+    public Map<String, List<Deal>> getDealsByStage() throws DatabaseException {
+        List<Deal> dealListWithCompanyAndContacts = getDealListWithCompanyAndContacts();
+
+        Map<String, List<Deal>> dealsByStage = new LinkedHashMap<>();
+        for(Deal deal : dealListWithCompanyAndContacts)
+        {
+            String dealStage = deal.getDealStage().name();
+            if(dealsByStage.containsKey(dealStage))
+            {
+                dealsByStage.get(dealStage).add(deal);
+            }
+            else
+            {
+                List<Deal> deals = new ArrayList<>();
+                deals.add(deal);
+                dealsByStage.put(dealStage, deals);
+            }
+
+        }
+        return dealsByStage;
     }
 
     @Override
@@ -77,8 +146,6 @@ public class DealServiceImpl implements DealService {
     public int countDealsWithoutTasks() throws DatabaseException {
         return dealDao.countDealsWithoutTasks();
     }
-
-    @Override
     public int createWithId(Deal deal) throws DatabaseException {
         return dealDao.createWithId(deal);
     }

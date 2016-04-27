@@ -4,6 +4,7 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.PhoneType;
 import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +29,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     private static final String CREATE_COMPANY_WITH_ID = "INSERT INTO company (name,  responsible_id, web, email, adress, phone, phone_type_id," +
             "created_by, date_create, deleted, date_modify, user_modify_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_COMPANY = "UPDATE company SET name=?, resposible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
+    private static final String UPDATE_COMPANY = "UPDATE company SET name=?, responsible_id=?, web=?, email=?, adress=?, phone=?, phone_type_id=?," +
             "created_by=?, date_create=?, deleted=?, date_modify=?, user_modify_id=? WHERE id=?";
 
     private static final String DELETE_COMPANY = "DELETE FROM company WHERE id=?";
@@ -39,6 +40,10 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
     private static final String GET_MAX_ID = "SELECT  max(id) FROM company";
+
+    private static final String GET_COMPANY_FOR_DEAL = "SELECT company.id, company.name, company.web, company.email,company.adress, company.phone," +
+            " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
+            "FROM company INNER JOIN deal ON company.id = deal.company_id WHERE deal.id = ?";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -208,10 +213,19 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     @Override
     public Company getCompanyForTask(Task task) throws DatabaseException {
+        return getCompanyForEntity(task.getId(), GET_COMPANY_FOR_TASK);
+    }
+
+    @Override
+    public Company getCompanyForDeal(Deal deal) throws DatabaseException {
+        return getCompanyForEntity(deal.getId(), GET_COMPANY_FOR_DEAL);
+    }
+
+    private Company getCompanyForEntity(int id, String query) throws DatabaseException {
         Company company;
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_COMPANY_FOR_TASK)) {
-            preparedStatement.setInt(1, task.getId());
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     company = getCompanyForResultSet(resultSet);

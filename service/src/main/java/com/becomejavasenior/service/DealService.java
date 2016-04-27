@@ -2,6 +2,7 @@ package com.becomejavasenior.service;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Deal;
+import com.becomejavasenior.model.DealStage;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,12 @@ public interface DealService {
     int create(Deal deal) throws DatabaseException;
 
     Deal getDealById(int id) throws DatabaseException;
+
+    Deal getDealWithContactsAndCompany(int id) throws DatabaseException;
+
+    List<Deal> getDealListWithCompanyAndContacts() throws DatabaseException;
+
+    Map<String, List<Deal>> getDealsByStage() throws DatabaseException;
 
     int update(Deal deal) throws DatabaseException;
 

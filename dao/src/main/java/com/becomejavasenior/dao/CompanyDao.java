@@ -2,6 +2,7 @@ package com.becomejavasenior.dao;
 
 
 import com.becomejavasenior.model.Company;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface CompanyDao {
     int getCount() throws DatabaseException;
     Company getCompanyForTask(Task task) throws DatabaseException;
     int createWithId(Company company) throws DatabaseException;
+    Company getCompanyForDeal(Deal deal) throws DatabaseException;
+
 }

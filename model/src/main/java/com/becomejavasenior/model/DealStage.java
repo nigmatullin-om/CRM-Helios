@@ -11,11 +11,6 @@ public enum DealStage implements Serializable {
     FAILED_AND_CLOSED;
 
     public static DealStage getDealStageById(int id){
-        for(DealStage dealStage : DealStage.values()){
-            if(dealStage.ordinal() == id){
-                return dealStage;
-            }
-        }
-        return null;
+        return DealStage.values()[id - 1];
     }
 }

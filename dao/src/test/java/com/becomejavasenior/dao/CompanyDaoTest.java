@@ -1,9 +1,11 @@
 package com.becomejavasenior.dao;
 
 import com.becomejavasenior.dao.impl.CompanyDaoImpl;
+import com.becomejavasenior.dao.impl.DealDaoImpl;
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -21,8 +23,12 @@ public class CompanyDaoTest extends AbstractTestDao {
     public static final String COMPANY_TEST_DATA_XML = "companyTestData.xml";
     public static final int NO_COMPANY_FOR_TASK1 = 1;
     public static final int COMPANY4_FOR_TASK4 = 4;
+
+    public static final int NO_COMPANY_FOR_DEAL4 = 4;
+    public static final int COMPANY1_FOR_DEAL1 = 1;
     private CompanyDao companyDao = new CompanyDaoImpl(getDataSource());
     private TaskDao taskDao = new TaskDaoImpl(getDataSource());
+    private DealDao dealDao = new DealDaoImpl(getDataSource());
 
     @Test
     public void testGetCompanyForTaskReturnNull() throws DatabaseException {
@@ -35,6 +41,13 @@ public class CompanyDaoTest extends AbstractTestDao {
     public void testGetCompanyForTaskReturnCompany() throws DatabaseException {
         Task task4 = taskDao.getTaskById(COMPANY4_FOR_TASK4);
         Company company = companyDao.getCompanyForTask(task4);
+        assertThat(company, Matchers.notNullValue());
+    }
+
+    @Test
+    public void testGetCompanyForDealReturnCompany() throws DatabaseException {
+        Deal deal1 = dealDao.getDealById(COMPANY1_FOR_DEAL1);
+        Company company = companyDao.getCompanyForDeal(deal1);
         assertThat(company, Matchers.notNullValue());
     }
 
