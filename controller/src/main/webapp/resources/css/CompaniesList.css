@@ -16,3 +16,26 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
     text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.25);
 }
+
+.thickLine {
+    width: 90%;
+    color: darkgrey;
+    height: 2px;
+    background-color:darkgrey;
+}
+
+.thinLine {
+    color: darkgrey;
+    height: 1px;
+    background-color:darkgrey;
+}
+
+.submitButton {
+    float:left;
+    padding: 0 0 0 25px;
+}
+
+.resetButton {
+    float:right;
+    padding: 0 35px 0;;
+}

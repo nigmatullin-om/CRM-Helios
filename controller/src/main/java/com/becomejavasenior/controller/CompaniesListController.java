@@ -45,9 +45,6 @@ public class CompaniesListController extends HttpServlet {
     private TagDao tagDao;
     private UserDao userDao;
 
-    private List<Contact> contacts;
-    private List<Company> companies;
-
     private RequestDispatcher rd;
 
     private static final Logger LOGGER = LogManager.getLogger(CompaniesListController.class);
@@ -58,6 +55,8 @@ public class CompaniesListController extends HttpServlet {
         List<Tag> tags = null;
         List<User> users = null;
         List<String> stages = null;
+        List<Contact> contacts = null;
+        List<Company> companies = null;
 
         try {
             contacts = contactService.findAll();
@@ -101,6 +100,8 @@ public class CompaniesListController extends HttpServlet {
         String byUser = request.getParameter("byUser");
         String byTask = request.getParameter("byTask");
         String byTag = request.getParameter("byTag");
+
+        List<Company> companies = null;
 
         CompanyFilter companyFilter = new CompanyFilter();
 

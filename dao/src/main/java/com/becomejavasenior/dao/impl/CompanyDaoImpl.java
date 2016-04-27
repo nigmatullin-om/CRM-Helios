@@ -33,20 +33,20 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
     private static final String GET_COMPANY_FOR_TASK = "SELECT company.id, company.name, company.web, company.email,company. adress, company.phone," +
             " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
-            "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
-    private static final String GET_ID_COMPANIES_FOR_USERNAME = "SELECT company.id FROM company INNER JOIN person ON person.id = company.responsible_id WHERE person.name = ?";
-    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task)";
-    private static final String GET_ID_COMPANIES_WITHOUT_DEALS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM deal)";
-    private static final String GET_ID_COMPANIES_WITH_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal)";
-    private static final String GET_ID_COMPANIES_WITH_OUTDATED_TASKS = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND done=FALSE AND finish_date < now()";
+            "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ? AND company.deleted = false";
+    private static final String GET_ID_COMPANIES_FOR_USERNAME = "SELECT company.id FROM company INNER JOIN person ON person.id = company.responsible_id WHERE person.name = ? AND company.deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_DEALS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM deal) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITH_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITH_OUTDATED_TASKS = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND done=FALSE AND finish_date < now() AND company.deleted = false";
     private static final String GET_ID_DELETED_COMPANIES = "SELECT id FROM company WHERE deleted=TRUE";
-    private static final String GET_ID_COMPANIES_CREATED_BY_PERIOD = "SELECT id FROM company WHERE date_create > ?";
-    private static final String GET_ID_COMPANIES_MODIFIED_BY_PERIOD = "SELECT id FROM company WHERE date_modify > ?";
-    private static final String GET_ID_COMPANIES_FOR_TASK_BY_PERIOD = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND finish_date > now() AND finish_date < ?";
+    private static final String GET_ID_COMPANIES_CREATED_BY_PERIOD = "SELECT id FROM company WHERE date_create > ? AND deleted = false";
+    private static final String GET_ID_COMPANIES_MODIFIED_BY_PERIOD = "SELECT id FROM company WHERE date_modify > ? AND deleted = false";
+    private static final String GET_ID_COMPANIES_FOR_TASK_BY_PERIOD = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND finish_date > now() AND finish_date < ? AND company.deleted = false";
     private static final String GET_ID_COMPANIES_FOR_TAGNAME = "SELECT company.id FROM company JOIN tag_contact_company ON company.id = tag_contact_company.company_id " +
-            "JOIN tag ON tag.id = tag_contact_company.tag_id WHERE tag.name = ?";
+            "JOIN tag ON tag.id = tag_contact_company.tag_id WHERE tag.name = ? AND company.deleted = false";
     private static final String GET_ID_COMPANIES_FOR_STAGENAME = "SELECT company.id FROM company JOIN deal ON company.id = deal.company_id " +
-            "JOIN stage ON stage.id = deal.stage_id WHERE stage.name = ?";
+            "JOIN stage ON stage.id = deal.stage_id WHERE stage.name = ? AND company.deleted = false";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -318,15 +318,3 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
 
 
 }
-
-    /*id serial NOT NULL,
-    name character varying(255) NOT NULL,
-    responsible_id integer,
-    web character varying(255),
-    email character varying(255) NOT NULL,
-    adress character varying(255),
-    phone character varying(45) NOT NULL,
-    phone_type_id integer NOT NULL,
-    created_by integer NOT NULL,
-    date_create timestamp without time zone NOT NULL,
-    deleted boolean NOT NULL DEFAULT false,*/

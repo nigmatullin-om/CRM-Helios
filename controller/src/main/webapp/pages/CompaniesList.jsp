@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -13,9 +14,11 @@
     <script> <%@include file='/resources/js/companiesList.js' %> </script>
 </head>
 <body>
+<t:pageLayout title="listCompanies">
+    <jsp:attribute name="bodyLayout">
 <div class="container">
     <h2 align="center">Компании</h2>
-    <hr style="width: 90%; color: darkgrey; height: 2px; background-color:darkgrey;" />
+    <hr class="thickLine"/>
 
     <div class="row">
         <div class="col-md-4" style="border-right:darkgrey solid 1px;">
@@ -38,7 +41,7 @@
                 </form>
             </form>
 
-            <hr style="color: darkgrey; height: 1px; background-color:darkgrey;" />
+            <hr class="thinLine"/>
             <strong>Когда:</strong>
             <form id="select-period">
                 <select id="period-dropdown" class="form-control">
@@ -62,7 +65,7 @@
                     </div>
                 </form>
             </form>
-            <hr style="color: darkgrey; height: 1px; background-color:darkgrey;" />
+            <hr class="thinLine"/>
 
             <form id="checkbox-stage">
                 <strong>Этапы:</strong>
@@ -75,7 +78,7 @@
                 </div>
             </form>
 
-            <hr style="color: darkgrey; height: 1px; background-color:darkgrey;" />
+            <hr class="thinLine"/>
             <form id="select-managers">
                 <strong>Менеджеры:</strong>
                 <select id="managers-dropdown" class="form-control">
@@ -86,7 +89,7 @@
                 </select>
             </form>
 
-            <hr style="color: darkgrey; height: 1px; background-color:darkgrey;" />
+            <hr class="thinLine"/>
             <form id="select-task">
                 <strong>Задачи:</strong>
                 <select id="tasks-dropdown" class="form-control">
@@ -101,7 +104,7 @@
                 </select>
             </form>
 
-            <hr style="color: darkgrey; height: 1px; background-color:darkgrey;" />
+            <hr class="thinLine"/>
             <form id="select-tags">
                 <strong>Теги:</strong>
                 <select id="tags-dropdown" class="form-control">
@@ -112,8 +115,8 @@
                 </select><br>
             </form>
 
-            <div style="float:left; padding: 0 0 0 25px;"><input type="button" value="Применить" id="submit"></div>
-            <div style="float:right; padding: 0 35px 0;"><input type="button" value="Очистить" id="reset"></div>
+            <div class="submitButton"><input type="button" value="Применить" id="submit"></div>
+            <div class="resetButton"><input type="button" value="Очистить" id="reset"></div>
 
         </div>
 
@@ -155,6 +158,8 @@
         </div>
     </div>
 </div>
+        </jsp:attribute>
+</t:pageLayout>
 </body>
 </html>
 
