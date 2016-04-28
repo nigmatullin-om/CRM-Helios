@@ -1,13 +1,8 @@
 package com.becomejavasenior.dao.integration;
 
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TaskDao;
-import com.becomejavasenior.dao.TaskTypeDao;
-import com.becomejavasenior.dao.UserDao;
-import com.becomejavasenior.dao.impl.TaskDaoImpl;
-import com.becomejavasenior.dao.impl.TaskTypeDaoImpl;
-import com.becomejavasenior.dao.impl.UserDaoImpl;
 import com.becomejavasenior.model.Task;
+import com.becomejavasenior.model.TaskType;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
@@ -31,9 +26,6 @@ public class TaskDaoTest extends AbstractTestDao {
     public static final int TEST_COMPANY_ID = 1;
     public static final int TEST_DEAL_ID = 1;
     public static final String TASK_TEST_DATA_XML = "taskTestData.xml";
-    TaskDao taskDao = new TaskDaoImpl(getDataSource());
-    UserDao userDao = new UserDaoImpl(getDataSource());
-    TaskTypeDao taskTypeDao = new TaskTypeDaoImpl(getDataSource());
 
     @Test
     public void testReadTask() throws DatabaseException {
@@ -46,7 +38,9 @@ public class TaskDaoTest extends AbstractTestDao {
         Task task = taskDao.getTaskById(TEST_TASK_ID);
         task.setResponsibleUser(userDao.getResponsibleUserForTask(task));
         task.setCreatedByUser(userDao.createdByUserForTask(task));
-        task.setTaskType(taskTypeDao.getTaskTypeForTask(task));
+        TaskType taskTypeById = taskTypeDao.getTaskTypeById(task.getId());
+        task.setTaskType(taskTypeById);
+
         int newTaskId = taskDao.create(task);
         Task newTask = taskDao.getTaskById(newTaskId);
         assertThat(task.getName(), equalTo(newTask.getName()));
@@ -66,9 +60,12 @@ public class TaskDaoTest extends AbstractTestDao {
         Task task = taskDao.getTaskById(TEST_TASK_ID);
         task.setResponsibleUser(userDao.getResponsibleUserForTask(task));
         task.setCreatedByUser(userDao.createdByUserForTask(task));
-        task.setTaskType(taskTypeDao.getTaskTypeForTask(task));
         String newName = "new name";
         task.setName(newName);
+
+        TaskType taskTypeById = taskTypeDao.getTaskTypeById(task.getId());
+        task.setTaskType(taskTypeById);
+
         taskDao.update(task);
 
         Task updatedTask = taskDao.getTaskById(1);
@@ -103,7 +100,7 @@ public class TaskDaoTest extends AbstractTestDao {
         int allTaskCount = 31;
         assertThat(allTasksForDealBy1, hasSize(allTaskCount));
     }
-
+    
     @Test
     public void testGetTasksBetweenDays() throws DatabaseException {
         LocalDate startDay = LocalDate.of(2016, 4, 12);

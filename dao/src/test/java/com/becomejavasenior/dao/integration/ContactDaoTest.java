@@ -1,10 +1,6 @@
 package com.becomejavasenior.dao.integration;
 
-import com.becomejavasenior.dao.ContactDao;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TaskDao;
-import com.becomejavasenior.dao.impl.ContactDaoImpl;
-import com.becomejavasenior.dao.impl.TaskDaoImpl;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Task;
 import org.dbunit.dataset.DataSetException;
@@ -26,8 +22,6 @@ public class ContactDaoTest extends AbstractTestDao {
     public static final String CONTACT_TEST_DATA_XML = "contactTestData.xml";
     public static final int NO_CONTACT_FOR_TASK1 = 1;
     public static final int CONTACT4_FOR_TASK4 = 4;
-    private ContactDao contactDao = new ContactDaoImpl(getDataSource());
-    private TaskDao taskDao = new TaskDaoImpl(getDataSource());
 
     @Test
     public void testGetContactForTaskReturnNull() throws DatabaseException {

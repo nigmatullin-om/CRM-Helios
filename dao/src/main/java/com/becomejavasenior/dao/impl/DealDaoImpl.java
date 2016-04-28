@@ -295,7 +295,6 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     }
 
     private Deal getDealByResultSet(ResultSet resultSet) throws DatabaseException, SQLException {
-
         Deal deal = new Deal();
         deal.setId(resultSet.getInt("id"));
         deal.setName(resultSet.getString("name"));

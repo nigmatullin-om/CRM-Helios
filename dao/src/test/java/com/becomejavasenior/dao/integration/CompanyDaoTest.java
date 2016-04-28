@@ -1,12 +1,7 @@
 package com.becomejavasenior.dao.integration;
 
-import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.DealDao;
-import com.becomejavasenior.dao.TaskDao;
-import com.becomejavasenior.dao.impl.CompanyDaoImpl;
-import com.becomejavasenior.dao.impl.DealDaoImpl;
-import com.becomejavasenior.dao.impl.TaskDaoImpl;
+
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
@@ -29,9 +24,6 @@ public class CompanyDaoTest extends AbstractTestDao {
 
     public static final int NO_COMPANY_FOR_DEAL4 = 4;
     public static final int COMPANY1_FOR_DEAL1 = 1;
-    private CompanyDao companyDao = new CompanyDaoImpl(getDataSource());
-    private TaskDao taskDao = new TaskDaoImpl(getDataSource());
-    private DealDao dealDao = new DealDaoImpl(getDataSource());
 
     @Test
     public void testGetCompanyForTaskReturnNull() throws DatabaseException {

@@ -1,10 +1,6 @@
 package com.becomejavasenior.dao.integration;
 
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TaskDao;
-import com.becomejavasenior.dao.UserDao;
-import com.becomejavasenior.dao.impl.TaskDaoImpl;
-import com.becomejavasenior.dao.impl.UserDaoImpl;
 import com.becomejavasenior.model.Task;
 import com.becomejavasenior.model.User;
 import org.dbunit.dataset.DataSetException;
@@ -26,8 +22,6 @@ public class UserDaoTest extends AbstractTestDao {
     public static final String TEST_DATA_XML = "userTestData.xml";
     public static final int TASK4 = 4;
     public static final int CONTACT4_FOR_TASK4 = 4;
-    private UserDao userDao = new UserDaoImpl(getDataSource());
-    private TaskDao taskDao = new TaskDaoImpl(getDataSource());
 
     @Test
     public void testGetResponsibleUserForTask() throws DatabaseException {

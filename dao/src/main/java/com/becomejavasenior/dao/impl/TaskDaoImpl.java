@@ -39,7 +39,6 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
 
     private static String GET_MAX_ID = "SELECT MAX(id) FROM task";
 
-
     public TaskDaoImpl(DataSource dataSource) {
         super(dataSource);
     }

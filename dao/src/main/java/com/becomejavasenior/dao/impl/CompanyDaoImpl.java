@@ -303,15 +303,3 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         return key;
     }
 }
-
-    /*id serial NOT NULL,
-    name character varying(255) NOT NULL,
-    responsible_id integer,
-    web character varying(255),
-    email character varying(255) NOT NULL,
-    adress character varying(255),
-    phone character varying(45) NOT NULL,
-    phone_type_id integer NOT NULL,
-    created_by integer NOT NULL,
-    date_create timestamp without time zone NOT NULL,
-    deleted boolean NOT NULL DEFAULT false,*/

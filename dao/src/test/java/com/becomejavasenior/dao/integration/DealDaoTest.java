@@ -1,7 +1,6 @@
 package com.becomejavasenior.dao.integration;
 
 import com.becomejavasenior.dao.*;
-import com.becomejavasenior.dao.impl.*;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
@@ -32,11 +31,6 @@ public class DealDaoTest extends AbstractTestDao {
     public static final int CONTACT1_ID = 1;
     public static final int COUNT_DEALS_FOR_CONTACT1 = 3;
     public static final int DEAL_COUNT = 5;
-    private DealDao dealDao = new DealDaoImpl(getDataSource());
-    private TaskDao taskDao = new TaskDaoImpl(getDataSource());
-    private CompanyDao companyDao = new CompanyDaoImpl(getDataSource());
-    private ContactDao contactDao = new ContactDaoImpl(getDataSource());
-    private UserDao userDao = new UserDaoImpl(getDataSource());
 
     @Test
     public void testReadDeal() throws DatabaseException {
@@ -64,10 +58,13 @@ public class DealDaoTest extends AbstractTestDao {
         Deal deal = dealDao.getDealById(DEAL1_ID);
         String newName = "NewName";
         deal.setName(newName);
-        deal.setResponsibleUser(userDao.getUserById(1));
-        deal.setCompany(companyDao.getCompanyById(COMPANY1_ID));
-        deal.setCreatedByUser(userDao.getUserById(1));
+
+        deal.setResponsibleUser(userDao.getUserById(deal.getId()));
+        deal.setCompany(companyDao.getCompanyForDeal(deal));
+        deal.setCreatedByUser(userDao.getUserById(deal.getId()));
+
         dealDao.update(deal);
+
         Deal updatedDeal = dealDao.getDealById(DEAL1_ID);
 
         assertThat(newName, equalTo(updatedDeal.getName()));

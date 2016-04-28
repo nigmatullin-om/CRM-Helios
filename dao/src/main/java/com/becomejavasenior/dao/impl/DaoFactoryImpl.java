@@ -1,50 +1,17 @@
 package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.*;
-import org.apache.commons.dbcp2.*;
-import org.apache.commons.pool2.ObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+
 
 public class DaoFactoryImpl implements DaoFactory {
 
     private static final Logger LOGGER = LogManager.getLogger(DaoFactoryImpl.class);
 
-    private static DataSource dataSource;
-
-    public DaoFactoryImpl() {
-    }
-
-    private DataSource initDataSource(){
-        Properties props = getProperties();
-        try {
-            Class.forName(props.getProperty("driverClassName"));
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
-        }
-        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(props.getProperty("url"), props);
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-        ObjectPool<PoolableConnection> connectionPool =  new GenericObjectPool<>(poolableConnectionFactory);
-        poolableConnectionFactory.setPool(connectionPool);
-        PoolingDataSource<PoolableConnection> dataSource = new PoolingDataSource<>(connectionPool);
-        return dataSource;
-    }
-
-    private Properties getProperties(){
-        Properties props = new Properties();
-        try(InputStream fis = getClass().getClassLoader().getResourceAsStream("db_config.properties")) {
-            props.load(fis);
-        } catch (IOException e) {
-            LOGGER.error("Getting a driver was failed. Error - {}", new Object[]{e.getMessage()});
-        }
-        return props;
-    }
+    private DataSource dataSource;
 
     public CompanyDao getCompanyDao() {
         return new CompanyDaoImpl(getDataSource());
@@ -92,10 +59,11 @@ public class DaoFactoryImpl implements DaoFactory {
 
     public CurrenciesDao getCurrenciesDao(){return  new CurrenciesDaoImpl(getDataSource());}
 
-    private DataSource getDataSource() {
-        if (dataSource == null) {
-            dataSource = initDataSource();
-        }
+    public DataSource getDataSource() {
         return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }
