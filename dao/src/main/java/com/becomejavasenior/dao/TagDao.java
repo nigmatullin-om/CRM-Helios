@@ -21,4 +21,5 @@ public interface TagDao {
     int createWithId(Tag tag)throws DatabaseException;
     int addTagToDeal (int tagId, int dealId) throws DatabaseException;;
     Tag findTagByName(String name) throws DatabaseException;
+    List<Tag> findAllByAllContacts() throws DatabaseException;
 }
