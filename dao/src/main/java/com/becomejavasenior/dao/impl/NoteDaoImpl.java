@@ -5,7 +5,6 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.NoteDao;
 import com.becomejavasenior.model.Note;
-import com.becomejavasenior.model.Period;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,5 +1,6 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.unit;
 
+import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Deal;
@@ -7,14 +8,10 @@ import com.becomejavasenior.model.DealStage;
 import com.becomejavasenior.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 public class DealDaoImplTest {
     private static final Logger log = LogManager.getLogger(DealDaoImplTest.class);

@@ -1,10 +1,13 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.integration;
 
+import com.becomejavasenior.dao.CompanyDao;
+import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.DealDao;
+import com.becomejavasenior.dao.TaskDao;
 import com.becomejavasenior.dao.impl.CompanyDaoImpl;
 import com.becomejavasenior.dao.impl.DealDaoImpl;
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
 import com.becomejavasenior.model.Company;
-import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
 import org.dbunit.dataset.DataSetException;

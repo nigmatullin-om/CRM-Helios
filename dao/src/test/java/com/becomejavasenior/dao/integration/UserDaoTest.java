@@ -1,16 +1,16 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.integration;
 
-import com.becomejavasenior.dao.impl.ContactDaoImpl;
+import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.TaskDao;
+import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
 import com.becomejavasenior.dao.impl.UserDaoImpl;
-import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Task;
 import com.becomejavasenior.model.User;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.InputStream;

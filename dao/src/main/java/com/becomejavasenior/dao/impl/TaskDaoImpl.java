@@ -1,7 +1,6 @@
 package com.becomejavasenior.dao.impl;
 
 import com.becomejavasenior.dao.CommonDao;
-import com.becomejavasenior.dao.DaoFactory;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.TaskDao;
 import com.becomejavasenior.model.*;
@@ -41,12 +40,8 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
     private static String GET_MAX_ID = "SELECT MAX(id) FROM task";
 
 
-
-    private DaoFactory daoFactory;
-
     public TaskDaoImpl(DataSource dataSource) {
         super(dataSource);
-        daoFactory = new DaoFactoryImpl();
     }
 
     public Task getTaskById(int id) throws DatabaseException {
@@ -303,10 +298,6 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         int periodOrdinal = resultSet.getInt("period");
         Period period = Period.values()[periodOrdinal];
         task.setPeriod(period);
-
-        int taskTypeId = resultSet.getInt("task_type_id");
-        TaskType task_type = daoFactory.getTaskTypeDao().getTaskTypeById(taskTypeId);
-        task.setTaskType(task_type);
 
         return task;
     }

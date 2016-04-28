@@ -3,6 +3,7 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.TaskTypeDao;
+import com.becomejavasenior.model.Task;
 import com.becomejavasenior.model.TaskType;
 import org.apache.logging.log4j.LogManager;
 
@@ -18,7 +19,7 @@ public class TaskTypeDaoImpl extends CommonDao implements TaskTypeDao {
     private static String GET_TASK_TYPE_BY_ID= "SELECT id, type_name FROM task_type WHERE id = ?";
     private static String INSERT_TASK_TYPE = "INSERT INTO task_type(id, type_name) VALUES (DEFAULT, ?)";
     private static String FINDL_ALL = "SELECT id, type_name FROM task_type";
-    private static String FIND_ALL_TASKS = "SELECT id, type_name FROM task_type";
+    private static String GET_TASK_TYPE_FOR_TASK= "SELECT task_type.id, task_type.type_name FROM task_type INNER JOIN task ON task.task_type_id=task_type.id WHERE task.id = ?";
 
     public TaskTypeDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -54,7 +55,7 @@ public class TaskTypeDaoImpl extends CommonDao implements TaskTypeDao {
             taskType.setId(resultSet.getInt("id"));
 
         } catch (SQLException e) {
-            LOGGER.error("Getting a task was failed. Error - {}", e.getMessage());
+            LOGGER.error("Getting a task type was failed. Error - {}", e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
         return taskType;
@@ -73,9 +74,31 @@ public class TaskTypeDaoImpl extends CommonDao implements TaskTypeDao {
                 taskTypes.add(taskType);
             }
         } catch (SQLException e) {
-            LOGGER.error("Getting a task was failed. Error - {}", e.getMessage());
+            LOGGER.error("Getting a task type was failed. Error - {}", e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
         return taskTypes;
+    }
+
+    @Override
+    public TaskType getTaskTypeForTask(Task taskById) throws DatabaseException {
+        TaskType taskType = new TaskType();
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_TASK_TYPE_FOR_TASK)) {
+
+            preparedStatement.setInt(1, taskById.getId());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+
+            taskType.setTypeName(resultSet.getString("type_name"));
+            taskType.setId(resultSet.getInt("id"));
+
+        } catch (SQLException e) {
+            LOGGER.error("Getting a task type was failed. Error - {}", e.getMessage());
+            throw new DatabaseException(e.getMessage());
+        }
+        return taskType;
     }
 }

@@ -1,4 +1,4 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.integration;
 
 import org.apache.commons.dbcp2.*;
 import org.apache.commons.pool2.ObjectPool;

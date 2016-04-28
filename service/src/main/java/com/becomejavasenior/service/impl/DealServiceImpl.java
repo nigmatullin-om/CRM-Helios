@@ -1,10 +1,7 @@
 package com.becomejavasenior.service.impl;
 
 
-import com.becomejavasenior.dao.CompanyDao;
-import com.becomejavasenior.dao.ContactDao;
-import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.DealDao;
+import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.CompanyDaoImpl;
 import com.becomejavasenior.dao.impl.ContactDaoImpl;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
@@ -22,14 +19,22 @@ public class DealServiceImpl implements DealService {
     private static final String FAILED_DEALS = "failedDeals";
 
     private DealDao dealDao;
+    private UserDao userDao;
     private CompanyDao companyDao;
+    private NoteDao noteDao;
+    private FileDao fileDao;
+    private TagDao tagDao;
     private ContactDao contactDao;
 
     public DealServiceImpl() {
         DaoFactoryImpl daoFactory = new DaoFactoryImpl();
-        setDealDao(daoFactory.getDealDao());
-        setCompanyDao(daoFactory.getCompanyDao());
-        setContactDao(daoFactory.getContactDao());
+        this.dealDao = daoFactory.getDealDao();
+        this.userDao = daoFactory.getUserDao();
+        this.companyDao = daoFactory.getCompanyDao();
+        this.noteDao = daoFactory.getNoteDao();
+        this.fileDao = daoFactory.getFileDao();
+        this.tagDao = daoFactory.getTagDao();
+        this.contactDao = daoFactory.getContactDao();
     }
 
     public void setDealDao(DealDao dealDao) {
@@ -115,7 +120,12 @@ public class DealServiceImpl implements DealService {
 
     @Override
     public List<Deal> findAll() throws DatabaseException {
-        return dealDao.findAll();
+        List<Deal> allDeal = dealDao.findAll();
+        for (Deal deal: allDeal)
+        {
+            fillDealFields(deal);
+        }
+        return allDeal;
     }
 
     public Map<String, List<Deal>> filterSuccessAndFailedDeals(List<Deal> deals) {
@@ -163,6 +173,16 @@ public class DealServiceImpl implements DealService {
     @Override
     public int getMaxId() throws DatabaseException {
         return dealDao.getMaxId();
+    }
+
+    private void fillDealFields(Deal deal) throws DatabaseException {
+        deal.setTags(tagDao.findAllByDealId(deal.getId()));
+        deal.setContacts(contactDao.findAllByDealId(deal.getId()));
+        deal.setFiles(fileDao.findAllByDealId(deal.getId()));
+        deal.setNotes(noteDao.findAllByDealId(deal.getId()));
+        deal.setCreatedByUser(userDao.getCreatedByUserForDeal(deal));
+        deal.setCompany(companyDao.getCompanyForDeal(deal));
+        deal.setResponsibleUser(userDao.getResponsibleUserForDeal(deal));
     }
 
 }

@@ -1,6 +1,11 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.integration;
 
+import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.TaskDao;
+import com.becomejavasenior.dao.TaskTypeDao;
+import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
+import com.becomejavasenior.dao.impl.TaskTypeDaoImpl;
 import com.becomejavasenior.dao.impl.UserDaoImpl;
 import com.becomejavasenior.model.Task;
 import org.dbunit.dataset.DataSetException;
@@ -28,6 +33,7 @@ public class TaskDaoTest extends AbstractTestDao {
     public static final String TASK_TEST_DATA_XML = "taskTestData.xml";
     TaskDao taskDao = new TaskDaoImpl(getDataSource());
     UserDao userDao = new UserDaoImpl(getDataSource());
+    TaskTypeDao taskTypeDao = new TaskTypeDaoImpl(getDataSource());
 
     @Test
     public void testReadTask() throws DatabaseException {
@@ -40,6 +46,7 @@ public class TaskDaoTest extends AbstractTestDao {
         Task task = taskDao.getTaskById(TEST_TASK_ID);
         task.setResponsibleUser(userDao.getResponsibleUserForTask(task));
         task.setCreatedByUser(userDao.createdByUserForTask(task));
+        task.setTaskType(taskTypeDao.getTaskTypeForTask(task));
         int newTaskId = taskDao.create(task);
         Task newTask = taskDao.getTaskById(newTaskId);
         assertThat(task.getName(), equalTo(newTask.getName()));
@@ -59,6 +66,7 @@ public class TaskDaoTest extends AbstractTestDao {
         Task task = taskDao.getTaskById(TEST_TASK_ID);
         task.setResponsibleUser(userDao.getResponsibleUserForTask(task));
         task.setCreatedByUser(userDao.createdByUserForTask(task));
+        task.setTaskType(taskTypeDao.getTaskTypeForTask(task));
         String newName = "new name";
         task.setName(newName);
         taskDao.update(task);
@@ -95,7 +103,7 @@ public class TaskDaoTest extends AbstractTestDao {
         int allTaskCount = 31;
         assertThat(allTasksForDealBy1, hasSize(allTaskCount));
     }
-    
+
     @Test
     public void testGetTasksBetweenDays() throws DatabaseException {
         LocalDate startDay = LocalDate.of(2016, 4, 12);

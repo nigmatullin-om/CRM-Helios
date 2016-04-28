@@ -1,16 +1,13 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.unit;
 
+import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 public class TaskDaoImplTest {
     private static final Logger log = LogManager.getLogger(TaskDaoImplTest.class);

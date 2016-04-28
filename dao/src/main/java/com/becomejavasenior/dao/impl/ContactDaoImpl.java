@@ -16,11 +16,6 @@ import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ContactDaoImpl extends CommonDao implements ContactDao {
 
     private static final Logger LOGGER = LogManager.getLogger(ContactDaoImpl.class);

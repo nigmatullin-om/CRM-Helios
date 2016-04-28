@@ -1,5 +1,8 @@
-package com.becomejavasenior.dao;
+package com.becomejavasenior.dao.integration;
 
+import com.becomejavasenior.dao.ContactDao;
+import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.TaskDao;
 import com.becomejavasenior.dao.impl.ContactDaoImpl;
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
 import com.becomejavasenior.model.Contact;
