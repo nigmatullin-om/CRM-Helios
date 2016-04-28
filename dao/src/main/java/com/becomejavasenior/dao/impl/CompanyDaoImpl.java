@@ -4,6 +4,7 @@ import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
+import com.becomejavasenior.model.DealStage;
 import com.becomejavasenior.model.PhoneType;
 import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
@@ -40,9 +41,11 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
     private static final String GET_MAX_ID = "SELECT  max(id) FROM company";
     private static final String GET_ID_COMPANIES_FOR_USERNAME = "SELECT company.id FROM company INNER JOIN person ON person.id = company.responsible_id WHERE person.name = ? AND company.deleted = false";
-    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task WHERE company.id IS NOT NULL) AND deleted = false";
     private static final String GET_ID_COMPANIES_WITHOUT_DEALS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM deal) AND deleted = false";
-    private static final String GET_ID_COMPANIES_WITH_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal JOIN stage ON stage.id = deal.stage_id" +
+                                                                      " WHERE stage.name = '" + DealStage.getDealStageById(4) + "' AND stage.name = '" + DealStage.getDealStageById(5) + "')" +
+                                                                      " OR id NOT IN (SELECT company_id FROM deal) AND deleted = false";
     private static final String GET_ID_COMPANIES_WITH_OUTDATED_TASKS = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND done=FALSE AND finish_date < now() AND company.deleted = false";
     private static final String GET_ID_DELETED_COMPANIES = "SELECT id FROM company WHERE deleted=TRUE";
     private static final String GET_ID_COMPANIES_CREATED_BY_PERIOD = "SELECT id FROM company WHERE date_create > ? AND deleted = false";
@@ -52,6 +55,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             "JOIN tag ON tag.id = tag_contact_company.tag_id WHERE tag.name = ? AND company.deleted = false";
     private static final String GET_ID_COMPANIES_FOR_STAGENAME = "SELECT company.id FROM company JOIN deal ON company.id = deal.company_id " +
             "JOIN stage ON stage.id = deal.stage_id WHERE stage.name = ? AND company.deleted = false";
+    private static final String GET_ID_MODIFIED_COMPANIES = "SELECT company.id FROM company WHERE date_modify IS NOT NULL AND user_modify_id IS NOT NULL AND company.deleted = false";
 
     public CompanyDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -321,6 +325,11 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     }
 
     @Override
+    public List<Integer> modified() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_MODIFIED_COMPANIES);
+    }
+
+    @Override
     public List<Integer> withoutTasks() throws DatabaseException {
         return filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_TASKS);
     }
@@ -404,7 +413,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         for(String stage: byStages) {
             switch (stage) {
                 case "without deals": listIdCompanies.addAll(filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_DEALS)); break;
-                case "without open deals": listIdCompanies.addAll(filterWithoutParameters(GET_ID_COMPANIES_WITH_OPEN_DEALS)); break;
+                case "without open deals": listIdCompanies.addAll(filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_OPEN_DEALS)); break;
                 default: listIdCompanies.addAll(filterByName(stage, GET_ID_COMPANIES_FOR_STAGENAME));
             }
         }

@@ -42,6 +42,7 @@ public class CompanyFilter {
             case "month" : byPeriodListId = companyDao.byPeriod(convertToTimestampforPeriod(byPeriod, chosenDate), createdOrModified); break;
             case "3 months" : byPeriodListId = companyDao.byPeriod(convertToTimestampforPeriod(byPeriod, chosenDate), createdOrModified); break;
             case "calendar" : byPeriodListId = companyDao.byPeriod(convertToTimestampforPeriod(byPeriod, chosenDate), createdOrModified); break;
+            case "allTime" : if (createdOrModified.equals("modified")) { byPeriodListId = companyDao.modified(); break; }
             default: byPeriodListId = companiesId;
         }
 

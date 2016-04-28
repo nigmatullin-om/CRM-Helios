@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -14,7 +15,8 @@
     <script> <%@include file='/resources/js/companiesList.js' %> </script>
 </head>
 <body>
-<t:pageLayout title="listCompanies">
+<fmt:message key= "pageCompaniesList" var="pageCompaniesList"/>
+<t:pageLayout title="${pageCompaniesList}">
     <jsp:attribute name="bodyLayout">
 <div class="container">
     <h2 align="center">Компании</h2>

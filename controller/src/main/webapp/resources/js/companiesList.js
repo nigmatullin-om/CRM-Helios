@@ -1,6 +1,6 @@
 $(document).ready(function () {
     var byTaskType='all';
-    var byPeriod='';
+    var byPeriod='allTime';
     var chosenDate='';
     var createdOrModified='created';
     var byStages=[];
@@ -67,7 +67,7 @@ $(document).ready(function () {
         $('#select-tags')[0].reset();
 
         byTaskType='all';
-        byPeriod='';
+        byPeriod='allTime';
         chosenDate='';
         createdOrModified='created';
         byStages=[];
@@ -77,7 +77,7 @@ $(document).ready(function () {
     });
 
     $("#submit").click(function(){
-        $.post("http://localhost:8080/crm-helios/companiesList",
+        $.post("http://localhost:8080/crm-helios/view/CompaniesList",
             {
                 byTaskType: byTaskType,
                 byPeriod: byPeriod,

@@ -25,4 +25,5 @@ public interface CompanyDao {
     List<Integer> byUser(String userName) throws DatabaseException;
     List<Integer> byTag(String tagName) throws DatabaseException;
     List<Integer> byStage(String[] byStages) throws DatabaseException;
+    List<Integer> modified() throws DatabaseException;
 }

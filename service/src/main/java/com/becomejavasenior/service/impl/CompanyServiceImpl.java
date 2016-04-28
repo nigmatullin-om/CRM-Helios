@@ -88,6 +88,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public List<Integer> modified() throws DatabaseException {
+        return companyDao.modified();
+    }
+
+    @Override
     public int createWithId(Company company) throws DatabaseException {
         return companyDao.createWithId(company);
     }

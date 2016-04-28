@@ -40,4 +40,6 @@ public interface CompanyService {
 
     List<Integer> byStage(String[] byStages) throws DatabaseException;
 
+    List<Integer> modified() throws DatabaseException;
+
 }
