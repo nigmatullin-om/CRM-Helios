@@ -11,6 +11,14 @@ import com.becomejavasenior.service.FileService;
 public class FileServiceImpl implements FileService {
     private FileDao fileDao;
 
+    public FileDao getFileDao() {
+        return fileDao;
+    }
+
+    public void setFileDao(FileDao fileDao) {
+        this.fileDao = fileDao;
+    }
+
     public FileServiceImpl() {
         fileDao = new DaoFactoryImpl().getFileDao();
     }

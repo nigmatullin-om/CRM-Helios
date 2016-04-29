@@ -20,8 +20,12 @@ public class ContactServiceImpl implements ContactService {
 
     private ContactDao contactDao;
 
-    public ContactServiceImpl() {
-        this.contactDao = new DaoFactoryImpl().getContactDao();
+    public ContactDao getContactDao() {
+        return contactDao;
+    }
+
+    public void setContactDao(ContactDao contactDao) {
+        this.contactDao = contactDao;
     }
 
     @Override

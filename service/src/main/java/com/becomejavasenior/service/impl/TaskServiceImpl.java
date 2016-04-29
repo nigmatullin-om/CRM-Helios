@@ -28,16 +28,53 @@ public class TaskServiceImpl implements TaskService {
     private UserDao userDao;
     private TaskTypeDao taskTypeDao;
 
-    public TaskServiceImpl() {
-        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
-        this.taskDao = daoFactory.getTaskDao();
-        this.contactDao = daoFactory.getContactDao();
-        this.companyDao = daoFactory.getCompanyDao();
-        this.dealDao = daoFactory.getDealDao();
-        this.userDao = daoFactory.getUserDao();
-        this.taskTypeDao = daoFactory.getTaskTypeDao();
+    public TaskDao getTaskDao() {
+        return taskDao;
     }
 
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
+    }
+
+    public ContactDao getContactDao() {
+        return contactDao;
+    }
+
+    public void setContactDao(ContactDao contactDao) {
+        this.contactDao = contactDao;
+    }
+
+    public CompanyDao getCompanyDao() {
+        return companyDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
+    }
+
+    public DealDao getDealDao() {
+        return dealDao;
+    }
+
+    public void setDealDao(DealDao dealDao) {
+        this.dealDao = dealDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public TaskTypeDao getTaskTypeDao() {
+        return taskTypeDao;
+    }
+
+    public void setTaskTypeDao(TaskTypeDao taskTypeDao) {
+        this.taskTypeDao = taskTypeDao;
+    }
 
     @Override
     public int create(Task task) throws DatabaseException {

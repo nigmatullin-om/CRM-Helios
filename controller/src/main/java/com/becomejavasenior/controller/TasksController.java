@@ -5,6 +5,8 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Task;
 import com.becomejavasenior.service.TaskService;
 import com.becomejavasenior.service.impl.TaskServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -55,7 +57,9 @@ public class TasksController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.taskService = new TaskServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        taskService = (TaskService) ctx.getBean("taskService");
     }
 
 

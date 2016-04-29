@@ -1,6 +1,7 @@
 package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.NoteDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.dao.impl.NoteDaoImpl;
 import com.becomejavasenior.model.Note;
@@ -11,10 +12,16 @@ import java.util.List;
 
 
 public class NoteServiceImpl implements NoteService {
-    NoteDaoImpl noteDao;
-    public NoteServiceImpl(){
-        noteDao = (NoteDaoImpl) new DaoFactoryImpl().getNoteDao();
+    private NoteDao noteDao;
+
+    public NoteDao getNoteDao() {
+        return noteDao;
     }
+
+    public void setNoteDao(NoteDao noteDao) {
+        this.noteDao = noteDao;
+    }
+
     @Override
     public int create(Note note) throws DatabaseException {
         return noteDao.create(note);

@@ -12,8 +12,12 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
-    public UserServiceImpl() {
-        this.userDao = new DaoFactoryImpl().getUserDao();
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @Override

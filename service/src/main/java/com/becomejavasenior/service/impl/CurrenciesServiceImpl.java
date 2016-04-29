@@ -12,8 +12,14 @@ import java.util.List;
  * Created by vanya on 05.04.2016.
  */
 public class CurrenciesServiceImpl implements CurrenciesService {
-    CurrenciesDao currenciesDao = null;
-    public CurrenciesServiceImpl() { this.currenciesDao =  new  DaoFactoryImpl().getCurrenciesDao();
+    private CurrenciesDao currenciesDao;
+
+    public CurrenciesDao getCurrenciesDao() {
+        return currenciesDao;
+    }
+
+    public void setCurrenciesDao(CurrenciesDao currenciesDao) {
+        this.currenciesDao = currenciesDao;
     }
 
     @Override

@@ -26,15 +26,48 @@ public class DealServiceImpl implements DealService {
     private TagDao tagDao;
     private ContactDao contactDao;
 
-    public DealServiceImpl() {
-        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
-        this.dealDao = daoFactory.getDealDao();
-        this.userDao = daoFactory.getUserDao();
-        this.companyDao = daoFactory.getCompanyDao();
-        this.noteDao = daoFactory.getNoteDao();
-        this.fileDao = daoFactory.getFileDao();
-        this.tagDao = daoFactory.getTagDao();
-        this.contactDao = daoFactory.getContactDao();
+    public DealDao getDealDao() {
+        return dealDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public CompanyDao getCompanyDao() {
+        return companyDao;
+    }
+
+    public NoteDao getNoteDao() {
+        return noteDao;
+    }
+
+    public void setNoteDao(NoteDao noteDao) {
+        this.noteDao = noteDao;
+    }
+
+    public FileDao getFileDao() {
+        return fileDao;
+    }
+
+    public void setFileDao(FileDao fileDao) {
+        this.fileDao = fileDao;
+    }
+
+    public TagDao getTagDao() {
+        return tagDao;
+    }
+
+    public void setTagDao(TagDao tagDao) {
+        this.tagDao = tagDao;
+    }
+
+    public ContactDao getContactDao() {
+        return contactDao;
     }
 
     public void setDealDao(DealDao dealDao) {

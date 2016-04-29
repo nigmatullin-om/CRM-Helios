@@ -14,10 +14,14 @@ import com.becomejavasenior.model.Deal;
 import java.util.List;
 
 public class TagServiceImpl implements TagService {
-    TagDaoImpl  tagDao;
+    private TagDaoImpl  tagDao;
 
-    public TagServiceImpl() {
-        this.tagDao = (TagDaoImpl) new DaoFactoryImpl().getTagDao();
+    public TagDaoImpl getTagDao() {
+        return tagDao;
+    }
+
+    public void setTagDao(TagDaoImpl tagDao) {
+        this.tagDao = tagDao;
     }
 
     @Override

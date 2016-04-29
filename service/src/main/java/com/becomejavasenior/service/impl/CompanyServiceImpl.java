@@ -15,8 +15,12 @@ public class CompanyServiceImpl implements CompanyService {
 
     private CompanyDao companyDao;
 
-    public CompanyServiceImpl() {
-        this.companyDao = new DaoFactoryImpl().getCompanyDao();
+    public CompanyDao getCompanyDao() {
+        return companyDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
     }
 
     @Override

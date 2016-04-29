@@ -12,6 +12,14 @@ import java.util.List;
 public class TaskTypeServiceImpl implements TaskTypeService {
     private TaskTypeDao taskTypeDao;
 
+    public TaskTypeDao getTaskTypeDao() {
+        return taskTypeDao;
+    }
+
+    public void setTaskTypeDao(TaskTypeDao taskTypeDao) {
+        this.taskTypeDao = taskTypeDao;
+    }
+
     public TaskTypeServiceImpl() {
         this.taskTypeDao = new DaoFactoryImpl().getTaskTypeDao();
     }
