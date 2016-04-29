@@ -57,6 +57,10 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
 
             task = getTaskFromResultSet(resultSet);
 
+            if (task == null) {
+                throw new DatabaseException("no result for id=" + id);
+            }
+
         } catch (SQLException e) {
             LOGGER.error("Getting a task was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
@@ -278,26 +282,30 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
         return tasks;
     }
     private Task getTaskFromResultSet(ResultSet resultSet) throws SQLException, DatabaseException {
-        Task task = new Task();
 
-        int taskId = resultSet.getInt("id");
-        task.setId(taskId);
+        Task task = null;
 
-        String taskName = resultSet.getString("name");
-        task.setName(taskName);
+        if(resultSet.getRow() != 0) {
+            task = new Task();
+            int taskId = resultSet.getInt("id");
+            task.setId(taskId);
 
-        Timestamp dateCreate = resultSet.getTimestamp("date_create");
-        task.setCreationDate(dateCreate);
+            String taskName = resultSet.getString("name");
+            task.setName(taskName);
 
-        String description = resultSet.getString("description");
-        task.setDescription(description);
+            Timestamp dateCreate = resultSet.getTimestamp("date_create");
+            task.setCreationDate(dateCreate);
 
-        Timestamp finishDate = resultSet.getTimestamp("finish_date");
-        task.setFinishDate(finishDate);
+            String description = resultSet.getString("description");
+            task.setDescription(description);
 
-        int periodOrdinal = resultSet.getInt("period");
-        Period period = Period.values()[periodOrdinal];
-        task.setPeriod(period);
+            Timestamp finishDate = resultSet.getTimestamp("finish_date");
+            task.setFinishDate(finishDate);
+
+            int periodOrdinal = resultSet.getInt("period");
+            Period period = Period.values()[periodOrdinal];
+            task.setPeriod(period);
+        }
 
         return task;
     }

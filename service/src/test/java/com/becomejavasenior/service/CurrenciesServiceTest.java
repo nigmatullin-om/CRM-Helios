@@ -1,6 +1,5 @@
 package com.becomejavasenior.service;
 
-import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.dao.impl.CurrenciesDaoImpl;
 import com.becomejavasenior.model.Currencies;

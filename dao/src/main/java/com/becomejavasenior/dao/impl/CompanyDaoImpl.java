@@ -42,7 +42,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
     private static final String GET_MAX_ID = "SELECT  max(id) FROM company";
     private static final String GET_ID_COMPANIES_FOR_USERNAME = "SELECT company.id FROM company INNER JOIN person ON person.id = company.responsible_id WHERE person.name = ? AND company.deleted = false";
-    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task WHERE company.id IS NOT NULL) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task where company_id IS NOT NULL ) AND deleted = false";
     private static final String GET_ID_COMPANIES_WITHOUT_DEALS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM deal) AND deleted = false";
     private static final String GET_ID_COMPANIES_WITHOUT_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal JOIN stage ON stage.id = deal.stage_id" +
                                                                       " WHERE stage.name = '" + DealStage.getDealStageById(4) + "' AND stage.name = '" + DealStage.getDealStageById(5) + "')" +

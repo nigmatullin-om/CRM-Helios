@@ -57,7 +57,7 @@ public class TaskDaoTest extends AbstractTestDao {
     public void testDeleteTask() throws DatabaseException {
         Task task = taskDao.getTaskById(TEST_TASK_ID);
         taskDao.delete(task);
-        Task deletedTask = taskDao.getTaskById(1);
+        Task deletedTask = taskDao.getTaskById(TEST_TASK_ID);
     }
 
 

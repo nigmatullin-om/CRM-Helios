@@ -96,7 +96,7 @@ public class TaskTypeDaoImpl extends CommonDao implements TaskTypeDao {
             taskType.setId(resultSet.getInt("id"));
 
         } catch (SQLException e) {
-            LOGGER.error("Getting a task type was failed. Error - {}", e.getMessage());
+            LOGGER.error("Getting a task type was failed. Error - {}", e);
             throw new DatabaseException(e.getMessage());
         }
         return taskType;

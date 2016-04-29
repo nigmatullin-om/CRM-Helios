@@ -2,8 +2,6 @@ package com.becomejavasenior.service.impl;
 
 
 import com.becomejavasenior.dao.*;
-import com.becomejavasenior.dao.impl.CompanyDaoImpl;
-import com.becomejavasenior.dao.impl.ContactDaoImpl;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
