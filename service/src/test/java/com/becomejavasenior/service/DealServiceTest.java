@@ -216,8 +216,8 @@ public class DealServiceTest {
 
         Map<String, List<Deal>> dealsByStage = dealService.getDealsByStage();
 
-        assertEquals(dealsByStage.get(agreement).get(0), dealAgreement);
-        assertEquals(dealsByStage.get(deciding).get(0), dealDeciding);
+        assertEquals(dealsByStage.get(agreement.name()).get(0), dealAgreement);
+        assertEquals(dealsByStage.get(deciding.name()).get(0), dealDeciding);
     }
 
 }

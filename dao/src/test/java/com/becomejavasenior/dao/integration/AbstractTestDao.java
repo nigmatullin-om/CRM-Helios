@@ -30,11 +30,13 @@ public abstract class AbstractTestDao {
     private static final String TESTDB_CONFIG_PROPERTIES = "testdb_config.properties";
     private IDatabaseTester databaseTester;
     private  Properties props = getProperties();
+    private IDatabaseConnection connection;
+    private DataSource dataSource;
 
 
     @Before
     public void init() throws Exception {
-        IDatabaseConnection connection = new DatabaseConnection(getDataSource().getConnection(),  props.getProperty("currentSchema"));
+        connection = new DatabaseConnection(getDataSource().getConnection(),  props.getProperty("currentSchema"));
         DatabaseConfig config = connection.getConfig();
         config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
         databaseTester = new DefaultDatabaseTester(connection);
@@ -43,22 +45,30 @@ public abstract class AbstractTestDao {
         databaseTester.setDataSet( dataSet );
         databaseTester.onSetup();
         fixIndexes();
+        databaseTester.onTearDown();
+        databaseTester.getConnection().close();
+        connection.close();
     }
 
     @After
     public void clean() throws Exception {
       //  databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
-        databaseTester.onTearDown();
+        dataSource.getConnection().close();
+
     }
 
 
     protected DataSource getDataSource() {
-        String connectUri = props.getProperty("url") + "?currentSchema=" + props.getProperty("currentSchema");
-        ConnectionFactory connectionFactory =  new DriverManagerConnectionFactory(connectUri, props);
-        PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
-        ObjectPool<PoolableConnection> connectionPool =  new GenericObjectPool<>(poolableConnectionFactory);
-        poolableConnectionFactory.setPool(connectionPool);
-        return new PoolingDataSource<>(connectionPool);
+
+        if(dataSource == null) {
+            String connectUri = props.getProperty("url") + "?currentSchema=" + props.getProperty("currentSchema");
+            ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectUri, props);
+            PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, null);
+            ObjectPool<PoolableConnection> connectionPool = new GenericObjectPool<>(poolableConnectionFactory);
+            poolableConnectionFactory.setPool(connectionPool);
+            dataSource = new PoolingDataSource<>(connectionPool);
+        }
+        return dataSource;
     }
 
     private Properties getProperties(){
@@ -92,6 +102,7 @@ public abstract class AbstractTestDao {
                 "SELECT setval('task_type_id_seq', (SELECT MAX(id) from task_type));\n" +
                 "SELECT setval('task_id_seq', (SELECT MAX(id) from task));\n";
         connection.prepareStatement(query).execute();
+        connection.close();
     }
 
     abstract protected IDataSet getSpecificDataSet() throws DataSetException;
