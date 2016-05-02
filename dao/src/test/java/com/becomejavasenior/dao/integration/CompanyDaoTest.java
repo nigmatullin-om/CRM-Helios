@@ -1,15 +1,14 @@
 package com.becomejavasenior.dao.integration;
 
-import com.becomejavasenior.dao.CompanyDao;
-import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.DealDao;
-import com.becomejavasenior.dao.TaskDao;
+import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.CompanyDaoImpl;
 import com.becomejavasenior.dao.impl.DealDaoImpl;
 import com.becomejavasenior.dao.impl.TaskDaoImpl;
+import com.becomejavasenior.dao.impl.UserDaoImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
+import com.becomejavasenior.model.User;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
@@ -21,6 +20,7 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,9 +41,12 @@ public class CompanyDaoTest extends AbstractTestDao {
     public static final String MODIFIED = "modified";
     public static final String TAG = "# Firs";
     public static final String[] STAGENAME_FOR_COMPANIES = new String[]{"approval of the contract"};
+    public static final int COMPANY4 = 5;
+    public static final int USER5 = 5;
     private CompanyDao companyDao = new CompanyDaoImpl(getDataSource());
     private TaskDao taskDao = new TaskDaoImpl(getDataSource());
     private DealDao dealDao = new DealDaoImpl(getDataSource());
+    private UserDao userDao = new UserDaoImpl(getDataSource());
 
     @Test
     public void testGetCompanyForTaskReturnNull() throws DatabaseException {
@@ -167,5 +170,18 @@ public class CompanyDaoTest extends AbstractTestDao {
         ArrayList<Integer> companies_id_expected = new ArrayList<>();
         List<Integer> companies_id = companyDao.modified();
         Assert.assertEquals(companies_id_expected, companies_id);
+    }
+
+    @Test
+    public void testCreateWithId () throws DatabaseException {
+        Company company = companyDao.getCompanyById(COMPANY4);
+        User user = userDao.getUserById(USER5);
+        company.setResponsibleUser(user);
+        company.setCreatedByUser(user);
+        company.setModifiedByUser(user);
+        company.setModificationDate(new Date());
+        company.setCreationDate(new Date());
+        int id = companyDao.createWithId(company);
+        assertThat(id, Matchers.greaterThan(0));
     }
 }
