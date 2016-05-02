@@ -3,17 +3,13 @@
 
     <deal id="5" name="delivery purses" budget="15000.00" responsible_id="2" stage_id="4" company_id="2" created_by="2"
           date_create="2016-10-03 16:00:00.0" deleted="false"/>
-    <deal id="6" name="delivery purses" budget="15000.00" responsible_id="2" stage_id="4" company_id="1" created_by="2"
-          date_create="2016-10-03 16:00:00.0" deleted="false"/>
-    <deal id="7" name="delivery purses" budget="15000.00" responsible_id="2" stage_id="4" company_id="1" created_by="2"
-          date_create="2016-10-03 16:00:00.0" deleted="false"/>
 
-    <deal_contact deal_id="6" contact_id="1"/>
-    <deal_contact deal_id="7" contact_id="1"/>
+    <contact id="5" name="Taras Stepanenko" phone="+3804825353956" email="step@ukr.net" skype="step89"
+             position="marketing" responsible_id="2" phone_type_id="2" company_id="2" created_by="2"
+             date_create="2016-11-03 13:52:21.0" deleted="false"/>
 
-    <task id="4" name="write test for DAO" finish_date="2016-12-03 18:00:00.0" responsible_id="2"
-          description="I should write test for each DAO method" period="1" deal_id="5"  company_id="[null]"
-          contact_id="[null]" task_type_id = "1" created_by="1" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
+    <deal id="100" name="delivery purses" budget="15000.00" responsible_id="2" stage_id="4" company_id="2" created_by="2"
+          date_create="2016-10-03 16:00:00.0" deleted="false"/>
 
     <company id="5" name="Stick" responsible_id="2" web="palki.com.ua" email="info@palki.com.ua"
              adress="Ukraine, Odessa, Deribasovskaya 15" phone="380 482 343 830" phone_type_id="2" created_by="2"
@@ -22,4 +18,7 @@
     <person id="5" name="Andrey Yarmolenko" password="yar" email="yar@ukr.net" phone_mobile="+380963451234"
             phone_work="+380440912938" lang_id="1" role_id="1" note="strengths: communication with the customer"
             date_create="2016-09-03 09:15:12.0" deleted="false"/>
+
+    <note id="5" TEXT="test note" contact_id="5" deal_id="100" company_id="5" created_by="5"
+            date_create="2016-09-03 09:15:12.0" />
 </dataset>
