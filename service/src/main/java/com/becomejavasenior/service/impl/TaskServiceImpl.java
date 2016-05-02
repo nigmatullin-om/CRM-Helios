@@ -38,6 +38,29 @@ public class TaskServiceImpl implements TaskService {
         this.taskTypeDao = daoFactory.getTaskTypeDao();
     }
 
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
+    }
+
+    public void setContactDao(ContactDao contactDao) {
+        this.contactDao = contactDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
+    }
+
+    public void setDealDao(DealDao dealDao) {
+        this.dealDao = dealDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public void setTaskTypeDao(TaskTypeDao taskTypeDao) {
+        this.taskTypeDao = taskTypeDao;
+    }
 
     @Override
     public int create(Task task) throws DatabaseException {

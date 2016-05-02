@@ -39,8 +39,24 @@ public class DealServiceImpl implements DealService {
         this.dealDao = dealDao;
     }
 
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
     public void setCompanyDao(CompanyDao companyDao) {
         this.companyDao = companyDao;
+    }
+
+    public void setNoteDao(NoteDao noteDao) {
+        this.noteDao = noteDao;
+    }
+
+    public void setFileDao(FileDao fileDao) {
+        this.fileDao = fileDao;
+    }
+
+    public void setTagDao(TagDao tagDao) {
+        this.tagDao = tagDao;
     }
 
     public void setContactDao(ContactDao contactDao) {
