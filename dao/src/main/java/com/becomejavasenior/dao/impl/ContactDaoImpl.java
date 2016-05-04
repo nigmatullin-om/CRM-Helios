@@ -7,6 +7,7 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.PhoneType;
 
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,11 +16,6 @@ import java.util.List;
 import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ContactDaoImpl extends CommonDao implements ContactDao {
 

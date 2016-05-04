@@ -6,11 +6,9 @@ import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.service.CompanyService;
 
+import java.sql.Timestamp;
 import java.util.List;
 
-/**
- * Created by aivlev on 3/23/16.
- */
 public class CompanyServiceImpl implements CompanyService {
 
     private CompanyDao companyDao;
@@ -47,6 +45,51 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public int getCount() throws DatabaseException {
         return companyDao.getCount();
+    }
+
+    @Override
+    public List<Integer> withoutTasks() throws DatabaseException {
+        return companyDao.withoutTasks();
+    }
+
+    @Override
+    public List<Integer> withOutdatedTasks() throws DatabaseException {
+        return companyDao.withOutdatedTasks();
+    }
+
+    @Override
+    public List<Integer> markedDelete() throws DatabaseException {
+        return companyDao.markedDelete();
+    }
+
+    @Override
+    public List<Integer> byPeriod(Timestamp period, String createdOrModified) throws DatabaseException {
+        return companyDao.byPeriod(period, createdOrModified);
+    }
+
+    @Override
+    public List<Integer> byTask(Timestamp byTask) throws DatabaseException {
+        return companyDao.byTask(byTask);
+    }
+
+    @Override
+    public List<Integer> byUser(String userName) throws DatabaseException {
+        return companyDao.byUser(userName);
+    }
+
+    @Override
+    public List<Integer> byTag(String tagName) throws DatabaseException {
+        return companyDao.byTag(tagName);
+    }
+
+    @Override
+    public List<Integer> byStage(String[] byStages) throws DatabaseException {
+        return companyDao.byStage(byStages);
+    }
+
+    @Override
+    public List<Integer> modified() throws DatabaseException {
+        return companyDao.modified();
     }
 
     @Override

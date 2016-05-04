@@ -96,6 +96,8 @@
           description="to make the contract and send it to the client" deal_id="1" period="2" task_type_id = "2"
           created_by="2" date_create="2016-03-11 17:00:00.0" done="false" deleted="false"/>
 
-
+    <person id="5" name="Andrey Yarmolenko" password="yar" email="yar@ukr.net" phone_mobile="+380963451234"
+            phone_work="+380440912938" lang_id="1" role_id="1" note="strengths: communication with the customer"
+            date_create="2016-09-03 09:15:12.0" deleted="false"/>
 
 </dataset>

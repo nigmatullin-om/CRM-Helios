@@ -59,12 +59,20 @@
                 <li><a href="${pageContext.request.contextPath}/view/tasks"><fmt:message key= "pageTasks"/></a></li>
             </ul>
             <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/view/deals"><fmt:message key= "pageDeals"/></a></li>
+            </ul>
+            <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/add/company"><fmt:message key= "pageCompanyAdd"/></a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/addDeal">Добавить сделку</a></li>
+                <li><a href="${pageContext.request.contextPath}/add/deal"><fmt:message key="pageDealAdd"/> </a></li>
             </ul>
-
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/add/contact"><fmt:message key="pageContactAdd"/> </a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/view/CompaniesList"><fmt:message key="pageCompaniesList"/> </a></li>
+            </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>

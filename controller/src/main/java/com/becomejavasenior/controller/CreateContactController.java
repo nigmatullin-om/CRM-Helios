@@ -1,5 +1,6 @@
 package com.becomejavasenior.controller;
 
+import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.TagDao;
 import com.becomejavasenior.model.*;
@@ -25,12 +26,12 @@ import java.util.regex.Pattern;
 
 
 
-@WebServlet("/contact")
+@WebServlet("/add/contact")
 @MultipartConfig
 public class CreateContactController extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(CreateContactController.class);
 
-    private static final String CONTACT_JSP = "/pages/createContact.jsp";
+
     private static final String USERS = "users";
     private static final String COMPANIES = "companies";
     private static final String TASK_TYPES = "taskTypes";
@@ -74,7 +75,7 @@ public class CreateContactController extends HttpServlet {
         request.setAttribute(USERS, users);
         request.setAttribute(COMPANIES, companies);
         request.setAttribute(TASK_TYPES, taskTypes);
-        RequestDispatcher rd = getServletContext().getRequestDispatcher(CONTACT_JSP);
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.CONTACT_JSP);
         rd.forward(request, response);
     }
 

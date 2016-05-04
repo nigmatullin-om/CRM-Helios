@@ -1,9 +1,8 @@
 package com.becomejavasenior.service;
 
-import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TaskDao;
+import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.model.Task;
+import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.impl.TaskServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -24,13 +24,13 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-/**
- * Created by aivlev on 3/26/16.
- */
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(TaskServiceImpl.class)
+@PowerMockIgnore("javax.management.*")
 public class TaskServiceTest {
 
     private static final String NOT_FINISHED_DATE_VALUE = "2020-01-01 00:00:00";
@@ -39,13 +39,43 @@ public class TaskServiceTest {
     private static final String DONE_TASKS = "doneTasks";
     private static final String NOT_DONE_TASKS = "notDoneTasks";
 
-    private TaskService taskService;
+    private TaskServiceImpl taskService;
 
     @Mock
     private TaskDao taskDao;
 
     @Mock
+    private ContactDao contactDao;
+
+    @Mock
+    private CompanyDao companyDao;
+
+    @Mock
+    private DealDao dealDao;
+
+    @Mock
+    private UserDao userDao;
+
+    @Mock
+    private TaskTypeDao taskTypeDao;
+
+    @Mock
     private Task task;
+
+    @Mock
+    private Contact contact;
+
+    @Mock
+    private Company company;
+
+    @Mock
+    private Deal deal;
+
+    @Mock
+    private User user;
+
+    @Mock
+    private TaskType taskType;
 
     @Mock
     DaoFactoryImpl daoFactory;
@@ -53,8 +83,19 @@ public class TaskServiceTest {
     @Before
     public void setUp() throws Exception {
         whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-        when(daoFactory.getTaskDao()).thenReturn(taskDao);
         taskService = new TaskServiceImpl();
+        taskService.setCompanyDao(companyDao);
+        taskService.setContactDao(contactDao);
+        taskService.setDealDao(dealDao);
+        taskService.setUserDao(userDao);
+        taskService.setTaskDao(taskDao);
+        taskService.setTaskTypeDao(taskTypeDao);
+        when(contactDao.getContactForTask(any())).thenReturn(contact);
+        when(companyDao.getCompanyForTask(any())).thenReturn(company);
+        when(dealDao.getDealForTask(any())).thenReturn(deal);
+        when(userDao.getResponsibleUserForTask(any())).thenReturn(user);
+        when(userDao.createdByUserForTask(any())).thenReturn(user);
+        when(taskTypeDao.getTaskTypeForTask(any())).thenReturn(taskType);
     }
 
     @Test

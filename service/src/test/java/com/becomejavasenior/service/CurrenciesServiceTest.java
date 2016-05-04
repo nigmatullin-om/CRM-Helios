@@ -1,6 +1,5 @@
 package com.becomejavasenior.service;
 
-import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.dao.impl.CurrenciesDaoImpl;
 import com.becomejavasenior.model.Currencies;
@@ -11,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -25,6 +25,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CurrenciesServiceImpl.class)
+@PowerMockIgnore("javax.management.*")
 public class CurrenciesServiceTest {
 
     private CurrenciesService currenciesService;

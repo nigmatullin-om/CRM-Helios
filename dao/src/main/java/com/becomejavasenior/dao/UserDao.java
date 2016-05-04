@@ -1,5 +1,6 @@
 package com.becomejavasenior.dao;
 
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
 import com.becomejavasenior.model.User;
 
@@ -15,4 +16,6 @@ public interface UserDao {
     List<User> findAll() throws DatabaseException;
     User getResponsibleUserForTask(Task task) throws DatabaseException;
     User createdByUserForTask(Task task) throws DatabaseException;
+    User getCreatedByUserForDeal(Deal deal) throws DatabaseException;
+    User getResponsibleUserForDeal(Deal deal) throws DatabaseException;
 }

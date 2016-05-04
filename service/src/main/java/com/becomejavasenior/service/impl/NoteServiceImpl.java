@@ -52,7 +52,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<Note> findAllByCompanyId(int id) throws DatabaseException {
-        return findAllByCompanyId(id);
+        return noteDao.findAllByCompanyId(id);
     }
 
     @Override

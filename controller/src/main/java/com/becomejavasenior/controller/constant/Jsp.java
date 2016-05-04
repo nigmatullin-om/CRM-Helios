@@ -8,5 +8,6 @@ public abstract class Jsp {
     public static final String TASK_LIST_WEEK_JSP = "/pages/view/task/tasksCalendarWeek.jsp";
     public static final String TASK_LIST_MONTH_JSP = "/pages/view/task/tasksCalendarMonth.jsp";
     public static final String TASK_LIST = "/pages/view/task/tasksList.jsp";
-
+    public static final String CONTACT_JSP = "/pages/add/contact.jsp";
+    public static final String DEAL_JSP = "/pages/add/deal.jsp";
 }

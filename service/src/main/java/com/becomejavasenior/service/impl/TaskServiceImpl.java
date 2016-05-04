@@ -26,6 +26,7 @@ public class TaskServiceImpl implements TaskService {
     private CompanyDao companyDao;
     private DealDao dealDao;
     private UserDao userDao;
+    private TaskTypeDao taskTypeDao;
 
     public TaskServiceImpl() {
         DaoFactoryImpl daoFactory = new DaoFactoryImpl();
@@ -34,8 +35,32 @@ public class TaskServiceImpl implements TaskService {
         this.companyDao = daoFactory.getCompanyDao();
         this.dealDao = daoFactory.getDealDao();
         this.userDao = daoFactory.getUserDao();
+        this.taskTypeDao = daoFactory.getTaskTypeDao();
     }
 
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
+    }
+
+    public void setContactDao(ContactDao contactDao) {
+        this.contactDao = contactDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
+    }
+
+    public void setDealDao(DealDao dealDao) {
+        this.dealDao = dealDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public void setTaskTypeDao(TaskTypeDao taskTypeDao) {
+        this.taskTypeDao = taskTypeDao;
+    }
 
     @Override
     public int create(Task task) throws DatabaseException {
@@ -45,22 +70,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task getTaskById(int id) throws DatabaseException {
         Task taskById = taskDao.getTaskById(id);
-        Contact contactForTask = contactDao.getContactForTask(taskById);
-        taskById.setContact(contactForTask);
-
-        Company companyForTask = companyDao.getCompanyForTask(taskById);
-        taskById.setCompany(companyForTask);
-
-        Deal dealForTask = dealDao.getDealForTask(taskById);
-        taskById.setDeal(dealForTask);
-
-        User responsibleUserForTask = userDao.getResponsibleUserForTask(taskById);
-        taskById.setResponsibleUser(responsibleUserForTask);
-
-        User createdByUserForTask = userDao.createdByUserForTask(taskById);
-        taskById.setCreatedByUser(createdByUserForTask);
-
-        return taskById;
+        return fillTaskFields(taskById);
     }
 
     @Override
@@ -197,7 +207,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-
     public void moveOnToday(int taskId) throws DatabaseException {
         Task task = getTaskById(taskId);
         LocalDateTime finishDateTime = LocalDateTime.ofInstant(task.getFinishDate().toInstant(), ZoneId.systemDefault());
@@ -219,6 +228,11 @@ public class TaskServiceImpl implements TaskService {
     public void updateTaskTime(Task task, LocalDateTime newDate) throws DatabaseException {
         task.setFinishDate(Date.from(newDate.atZone(ZoneId.systemDefault()).toInstant()));
         update(task);
+    }
+
+    @Override
+    public int createWithId(Task task) throws DatabaseException {
+        return taskDao.createWithId(task);
     }
 
     private List<LocalTime> timeTimeByHalfHour() {
@@ -254,9 +268,31 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasksWithAllFields = new ArrayList<>();
 
         for (Task task : rawTasks) {
-            tasksWithAllFields.add(getTaskById(task.getId()));
+            tasksWithAllFields.add(fillTaskFields(task));
         }
         return tasksWithAllFields;
+    }
+
+    public Task fillTaskFields(Task task) throws DatabaseException {
+        Contact contactForTask = contactDao.getContactForTask(task);
+        task.setContact(contactForTask);
+
+        Company companyForTask = companyDao.getCompanyForTask(task);
+        task.setCompany(companyForTask);
+
+        Deal dealForTask = dealDao.getDealForTask(task);
+        task.setDeal(dealForTask);
+
+        User responsibleUserForTask = userDao.getResponsibleUserForTask(task);
+        task.setResponsibleUser(responsibleUserForTask);
+
+        User createdByUserForTask = userDao.createdByUserForTask(task);
+        task.setCreatedByUser(createdByUserForTask);
+
+        TaskType taskType = taskTypeDao.getTaskTypeForTask(task);
+        task.setTaskType(taskType);
+
+        return task;
     }
 
 
@@ -264,9 +300,4 @@ public class TaskServiceImpl implements TaskService {
         return taskDao.getMaxId();
     }
 
-
-    @Override
-    public int createWithId(Task task) throws DatabaseException{
-        return taskDao.createWithId(task);
-    }
 }

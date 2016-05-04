@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CurrenciesDaoImpl  extends CommonDao implements CurrenciesDao {
+public class CurrenciesDaoImpl extends CommonDao implements CurrenciesDao {
 
     private static final Logger LOGGER = LogManager.getLogger(CurrenciesDaoImpl.class);
 

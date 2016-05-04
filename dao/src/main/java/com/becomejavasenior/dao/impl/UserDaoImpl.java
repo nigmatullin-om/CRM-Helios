@@ -3,6 +3,7 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.UserDao;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
 import com.becomejavasenior.model.User;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,14 @@ public class UserDaoImpl extends CommonDao implements UserDao {
     private static final String IS_EMAIL_EXIST = "SELECT person.email FROM person";
 
 
+
+    private static final String GET_RESPONSIBLE_USER_FOR_DEAL = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile, " +
+            "person.phone_work, person.note, person.date_create, person.deleted " +
+            "FROM person INNER JOIN deal ON person.id = deal.responsible_id WHERE deal.id = ?";
+
+    private static final String GET_CREATED_BY_USER_FOR_DEAL = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile, " +
+            "person.phone_work, person.note, person.date_create, person.deleted " +
+            "FROM person INNER JOIN deal ON person.id = deal.created_by WHERE deal.id = ?";
 
     public UserDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -203,26 +212,28 @@ public class UserDaoImpl extends CommonDao implements UserDao {
 
     @Override
     public User getResponsibleUserForTask(Task task) throws DatabaseException {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_RESPONSIBLE_USER_FOR_TASK)) {
-            preparedStatement.setInt(1, task.getId());
-            try (ResultSet resultSet = preparedStatement.executeQuery();) {
-                if (resultSet.next()) {
-                    return getUserFromResultSet(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            LOGGER.error("Getting a user was failed. Error - {}", new Object[]{e.getMessage()});
-            throw new DatabaseException(e.getMessage());
-        }
-        return null;
+        return getUserForEntity(task.getId(), GET_RESPONSIBLE_USER_FOR_TASK);
     }
 
     @Override
     public User createdByUserForTask(Task task) throws DatabaseException {
+        return getUserForEntity(task.getId(), GET_CREATED_BY_USER_FOR_TASK);
+    }
+
+    @Override
+    public User getResponsibleUserForDeal(Deal deal) throws DatabaseException {
+        return getUserForEntity(deal.getId(), GET_RESPONSIBLE_USER_FOR_DEAL);
+    }
+
+    @Override
+    public User getCreatedByUserForDeal(Deal deal) throws DatabaseException {
+        return getUserForEntity(deal.getId(), GET_CREATED_BY_USER_FOR_DEAL);
+    }
+
+    private User getUserForEntity(int entityId, String query) throws DatabaseException {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_CREATED_BY_USER_FOR_TASK)) {
-            preparedStatement.setInt(1, task.getId());
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, entityId);
             try (ResultSet resultSet = preparedStatement.executeQuery();) {
                 if (resultSet.next()) {
                     return getUserFromResultSet(resultSet);
