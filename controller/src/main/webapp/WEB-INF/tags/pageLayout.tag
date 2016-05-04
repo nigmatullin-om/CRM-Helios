@@ -56,6 +56,9 @@
                 <li><a href="${pageContext.request.contextPath}/dashboard"><fmt:message key= "pageDashboard"/></a></li>
             </ul>
             <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/view/CompaniesList"><fmt:message key="pageCompaniesList"/> </a></li>
+            </ul>
+            <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/view/tasks"><fmt:message key= "pageTasks"/></a></li>
             </ul>
             <ul class="nav navbar-nav">
@@ -69,9 +72,6 @@
             </ul>
             <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/add/contact"><fmt:message key="pageContactAdd"/> </a></li>
-            </ul>
-            <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/view/CompaniesList"><fmt:message key="pageCompaniesList"/> </a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

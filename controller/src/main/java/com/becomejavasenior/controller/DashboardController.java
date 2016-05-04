@@ -107,7 +107,7 @@ public class DashboardController extends HttpServlet {
         request.setAttribute(RUNNING_TASKS_COUNT, runningTasks.size());
         request.setAttribute(DONE_TASKS_COUNT, doneTasksCount);
         request.setAttribute(NOT_DONE_TASKS_COUNT, notDoneTasksCount);
-        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.DASHBOARD_VIEW);
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.JSP_DASHBOARD);
         rd.forward(request, response);
     }
 

@@ -111,8 +111,8 @@ public class AddDealController extends HttpServlet {
         log.info("task types: " + taskTypes);
         servletContext.setAttribute("taskTypes", taskTypes);
 
-        RequestDispatcher requestDispatcher =  getServletContext().getRequestDispatcher(Jsp.DEAL_JSP);
-        log.info("forwarding to " + Jsp.DEAL_JSP);
+        RequestDispatcher requestDispatcher =  getServletContext().getRequestDispatcher(Jsp.JSP_DEAL_ADD);
+        log.info("forwarding to " + Jsp.JSP_DEAL_ADD);
         requestDispatcher.forward(req, resp);
     }
 }

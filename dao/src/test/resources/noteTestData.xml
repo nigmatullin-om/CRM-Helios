@@ -19,6 +19,10 @@
             phone_work="+380440912938" lang_id="1" role_id="1" note="strengths: communication with the customer"
             date_create="2016-09-03 09:15:12.0" deleted="false"/>
 
-    <note id="5" TEXT="test note" contact_id="5" deal_id="100" company_id="5" created_by="5"
+    <note id="5" TEXT="test note5" contact_id="5" deal_id="[null]" company_id="[null]" created_by="5"
             date_create="2016-09-03 09:15:12.0" />
+    <note id="6" TEXT="test note6" contact_id="[null]" deal_id="100" company_id="[null]" created_by="5"
+            date_create="2016-09-03 09:25:12.0" />
+    <note id="7" TEXT="test note7" contact_id="[null]" deal_id="[null]" company_id="5" created_by="5"
+            date_create="2016-09-03 09:35:12.0" />
 </dataset>

@@ -1,5 +1,6 @@
 package com.becomejavasenior.controller;
 
+import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.service.DealService;
@@ -23,8 +24,6 @@ import java.util.Map;
 
 @WebServlet("/view/deals")
 public class DealListController extends HttpServlet {
-    private static final String DEAL_LIST_JSP = "/pages/deal/dealList.jsp";
-    private static final String DEAL_FUNNEL_JSP = "/pages/deal/dealsFunnel.jsp";
 
     private static final String DEALS = "deals";
     private static final String  DEALS_BY_STAGE = "dealsByStage";
@@ -57,7 +56,7 @@ public class DealListController extends HttpServlet {
                     LOGGER.error(e.getMessage());
                 }
                 request.setAttribute(DEALS_BY_STAGE,  dealsByStage);
-                rd = getServletContext().getRequestDispatcher(DEAL_FUNNEL_JSP);
+                rd = getServletContext().getRequestDispatcher(Jsp.JSP_DEAL_FUNNEL);
                 rd.forward(request, response);
                 break;
             }
@@ -69,7 +68,7 @@ public class DealListController extends HttpServlet {
                     LOGGER.error(e.getMessage());
                 }
                 request.setAttribute(DEALS, deals);
-                rd = getServletContext().getRequestDispatcher(DEAL_LIST_JSP);
+                rd = getServletContext().getRequestDispatcher(Jsp.JSP_DEAL_LIST);
                 rd.forward(request, response);
             }
         }

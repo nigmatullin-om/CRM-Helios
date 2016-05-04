@@ -119,7 +119,7 @@ public class TasksController extends HttpServlet {
         request.setAttribute(NEXT_MONTH, currentTime.plusMonths(1));
         request.setAttribute(PREV_MONTH, currentTime.minusMonths(1));
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_MONTH_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.JSP_TASK_LIST_MONTH);
     }
 
     private String getViewType(HttpServletRequest request) {
@@ -137,7 +137,7 @@ public class TasksController extends HttpServlet {
             e.printStackTrace();
         }
         request.setAttribute(TASKS_LIST, tasks);
-        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST);
+        return getServletContext().getRequestDispatcher(Jsp.JSP_TASK_LIST);
     }
 
     private RequestDispatcher processWeekTasks(HttpServletRequest request) {
@@ -159,7 +159,7 @@ public class TasksController extends HttpServlet {
         request.setAttribute(NEXT_WEEK, currentTime.plusWeeks(1));
         request.setAttribute(PREV_WEEK, currentTime.minusWeeks(1));
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_WEEK_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.JSP_TASK_LIST_WEEK);
     }
 
     private RequestDispatcher processDayTasks(HttpServletRequest request) {
@@ -176,7 +176,7 @@ public class TasksController extends HttpServlet {
         request.setAttribute(NEXT_DAY, currentTime.plusDays(1));
         request.setAttribute(PREV_DAY, currentTime.minusDays(1));
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_DAY_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.JSP_TASK_LIST_DAY);
     }
 
     private RequestDispatcher processTodoLine(HttpServletRequest request) {
@@ -190,7 +190,7 @@ public class TasksController extends HttpServlet {
         }
         request.setAttribute(TODO_TASKS, taskByDay);
         request.setAttribute(VIEW_DATE, currentTime);
-        return getServletContext().getRequestDispatcher(Jsp.TASK_LIST_TODO_JSP);
+        return getServletContext().getRequestDispatcher(Jsp.JSP_TASK_LIST_TODO);
     }
 
     private LocalDate getDateFromRequest(HttpServletRequest request) {

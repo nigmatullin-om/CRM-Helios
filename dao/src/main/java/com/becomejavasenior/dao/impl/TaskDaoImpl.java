@@ -3,6 +3,7 @@ package com.becomejavasenior.dao.impl;
 import com.becomejavasenior.dao.CommonDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.TaskDao;
+import com.becomejavasenior.dao.TaskTypeDao;
 import com.becomejavasenior.model.*;
 import org.apache.logging.log4j.LogManager;
 
@@ -39,6 +40,7 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
 
     private static String GET_MAX_ID = "SELECT MAX(id) FROM task";
 
+    TaskTypeDao taskTypeDao = new TaskTypeDaoImpl(getDataSource());
 
     public TaskDaoImpl(DataSource dataSource) {
         super(dataSource);
@@ -305,6 +307,9 @@ public class TaskDaoImpl extends CommonDao implements TaskDao {
             int periodOrdinal = resultSet.getInt("period");
             Period period = Period.values()[periodOrdinal];
             task.setPeriod(period);
+
+            int taskTypeId = resultSet.getInt("task_type_id");
+            task.setTaskType(taskTypeDao.getTaskTypeById(taskTypeId));
         }
 
         return task;
