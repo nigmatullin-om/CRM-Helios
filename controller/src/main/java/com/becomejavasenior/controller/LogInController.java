@@ -20,7 +20,7 @@ import java.io.IOException;
 public class LogInController extends HttpServlet{
     private static final Logger LOGGER = LogManager.getLogger(LogInController.class);
     private static final String AUTHORIZATION = "/pages/login.jsp";
-    private static final String WRONG_PASS_EMAIL = "Wrong pass/email";
+    private static final String WRONG_DATA= "Wrong pass/email";
     private UserService userService;
     @Override
     public void init()throws ServletException{
@@ -50,7 +50,7 @@ public class LogInController extends HttpServlet{
                 return;
             }
         }else{
-            request.setAttribute("wrong_pass_or_email",WRONG_PASS_EMAIL);
+            request.setAttribute("wrong_pass_or_email",WRONG_DATA);
         }
         doGet(request,response);
     }
