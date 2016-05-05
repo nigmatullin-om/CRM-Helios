@@ -35,6 +35,11 @@ public class UserDaoImpl extends CommonDao implements UserDao {
     private static final String GET_CREATED_BY_USER_FOR_TASK = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile, " +
             "person.phone_work, person.note, person.date_create, person.deleted " +
             "FROM person INNER JOIN task ON person.id = task.created_by WHERE task.id = ?";
+    private static final String GET_USER_BY_NAME = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile," +
+            "person.phone_work, person.note, person.date_create, person.deleted FROM person WHERE person.name = ?";
+    private static final String IS_EMAIL_EXIST = "SELECT person.email FROM person";
+
+
 
     private static final String GET_RESPONSIBLE_USER_FOR_DEAL = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile, " +
             "person.phone_work, person.note, person.date_create, person.deleted " +
@@ -54,20 +59,56 @@ public class UserDaoImpl extends CommonDao implements UserDao {
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setInt(3, user.getPhotoFile().getId());
+            if (user.getPhotoFile()!= null){
+                preparedStatement.setInt(3, user.getPhotoFile().getId());
+            }else {
+                preparedStatement.setNull(3,Types.INTEGER);
+            }
+
             preparedStatement.setString(4, user.getEmail());
             preparedStatement.setString(5, user.getMobilePhone());
             preparedStatement.setString(6, user.getWorkPhone());
-            preparedStatement.setInt(7, user.getLanguage().getId());
+            if(user.getLanguage()!=null){
+                preparedStatement.setInt(7, user.getLanguage().getId());
+            }else {
+                //default English
+                preparedStatement.setInt(7,3);
+            }
             preparedStatement.setInt(8, user.getRole().getId());
             preparedStatement.setString(9, user.getNote());
-            preparedStatement.setTimestamp(10, new Timestamp(user.getCreationDate().getTime()));
-            preparedStatement.setBoolean(11, user.getDeleted());
+            if(user.getCreationDate()!=null){
+                preparedStatement.setTimestamp(10, new Timestamp(user.getCreationDate().getTime()));
+            }else{
+                preparedStatement.setTimestamp(10, new Timestamp(System.currentTimeMillis()));
+            }
+            preparedStatement.setBoolean(11, false);
             return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Creating a user was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean isEmailExist(String email) throws DatabaseException {
+        List<String> emails =  new ArrayList<String>();
+        final boolean[] result = {false};
+        try(Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(IS_EMAIL_EXIST);
+        ResultSet resultSet = preparedStatement.executeQuery();) {
+            while (resultSet.next()){
+                emails.add(resultSet.getString("email"));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting a user was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        emails.forEach((emailName)->{
+            if(emailName.equals(email)){
+                result[0] = true;
+            }
+        });
+        return result[0];
     }
 
     @Override
@@ -89,6 +130,23 @@ public class UserDaoImpl extends CommonDao implements UserDao {
             throw new DatabaseException("no result for id=" + id);
         }
         return user;
+    }
+
+    @Override
+    public User getUserByName(String name) throws DatabaseException {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_NAME)) {
+            preparedStatement.setString(1,name);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                if (resultSet.next()) {
+                    return getUserFromResultSet(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting a user was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return null;
     }
 
     @Override

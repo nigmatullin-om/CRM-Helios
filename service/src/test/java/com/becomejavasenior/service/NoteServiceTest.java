@@ -24,10 +24,12 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(NoteServiceImpl.class)
 @PowerMockIgnore("javax.management.*")
 public class NoteServiceTest {
+
 
 
         private NoteService noteService;
