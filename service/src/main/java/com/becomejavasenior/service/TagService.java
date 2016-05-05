@@ -24,4 +24,5 @@ public interface TagService {
     int  createWithId(Tag tag) throws DatabaseException;
     int  addTagToDeal(Tag tag, Deal deal) throws DatabaseException;
     Tag findTagByName(String name) throws DatabaseException;
+    List<Tag> findAllByAllContacts() throws DatabaseException;
 }

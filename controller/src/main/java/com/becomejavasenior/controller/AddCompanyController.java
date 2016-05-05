@@ -5,10 +5,10 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.CompanyService;
 import com.becomejavasenior.service.UserService;
-import com.becomejavasenior.service.impl.CompanyServiceImpl;
-import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,16 +20,23 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 @WebServlet("/add/company")
 public class AddCompanyController extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger(AddCompanyController.class);
 
-    private CompanyService companyService = new CompanyServiceImpl();
-    private Company company = new Company();
-    private UserService userService = new UserServiceImpl();
+    private CompanyService companyService;
+    private UserService userService;
 
+    @Override
+    public void init() throws ServletException {
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        companyService = ctx.getBean(CompanyService.class);
+        userService = ctx.getBean(UserService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -45,6 +52,7 @@ public class AddCompanyController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        Company company = new Company();
         List<User> users = null;
         try {
             users = userService.findAll();

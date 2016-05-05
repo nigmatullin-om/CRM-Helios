@@ -3,10 +3,12 @@ package com.becomejavasenior.controller;
 import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Deal;
-import com.becomejavasenior.service.DealService;
+import com.becomejavasenior.service.*;
 import com.becomejavasenior.service.impl.DealServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,7 +41,9 @@ public class DealListController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.dealService = new DealServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.dealService = ctx.getBean(DealService.class);
     }
 
     @Override

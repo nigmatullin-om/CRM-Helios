@@ -4,14 +4,13 @@ import com.becomejavasenior.controller.constant.*;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
-import com.becomejavasenior.service.CompanyService;
-import com.becomejavasenior.service.ContactService;
-import com.becomejavasenior.service.DealService;
-import com.becomejavasenior.service.TaskService;
+import com.becomejavasenior.service.*;
 import com.becomejavasenior.service.impl.CompanyServiceImpl;
 import com.becomejavasenior.service.impl.ContactServiceImpl;
 import com.becomejavasenior.service.impl.DealServiceImpl;
 import com.becomejavasenior.service.impl.TaskServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -52,10 +51,12 @@ public class DashboardController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.dealService = new DealServiceImpl();
-        this.contactService = new ContactServiceImpl();
-        this.companyService = new CompanyServiceImpl();
-        this.taskService = new TaskServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.companyService = ctx.getBean(CompanyService.class);
+        this.dealService = ctx.getBean(DealService.class);
+        this.taskService = ctx.getBean(TaskService.class);
+        this.contactService = ctx.getBean(ContactService.class);
     }
 
     @Override

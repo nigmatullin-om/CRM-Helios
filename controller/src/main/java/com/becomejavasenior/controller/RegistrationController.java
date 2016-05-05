@@ -3,12 +3,13 @@ package com.becomejavasenior.controller;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Role;
 import com.becomejavasenior.model.User;
-import com.becomejavasenior.service.RoleService;
-import com.becomejavasenior.service.UserService;
+import com.becomejavasenior.service.*;
 import com.becomejavasenior.service.impl.RoleServiceImpl;
 import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -29,8 +30,11 @@ public class RegistrationController extends HttpServlet {
     private RoleService roleService;
     @Override
     public void init()throws ServletException {
-        userService = new UserServiceImpl();
-        roleService = new RoleServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.userService = ctx.getBean(UserService.class);
+        this.roleService = ctx.getBean(RoleService.class);
+
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

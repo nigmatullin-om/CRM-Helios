@@ -6,9 +6,7 @@ import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.filter.CompanyFilter;
 import com.becomejavasenior.model.*;
-import com.becomejavasenior.service.CompanyService;
-import com.becomejavasenior.service.ContactService;
-import com.becomejavasenior.service.TaskService;
+import com.becomejavasenior.service.*;
 import com.becomejavasenior.service.impl.CompanyServiceImpl;
 import com.becomejavasenior.service.impl.ContactServiceImpl;
 
@@ -26,6 +24,8 @@ import com.becomejavasenior.service.impl.TaskServiceImpl;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 @WebServlet("/view/CompaniesList")
@@ -42,8 +42,8 @@ public class CompaniesListController extends HttpServlet {
     private ContactService contactService;
     private CompanyService companyService;
     private TaskService taskService;
-    private TagDao tagDao;
-    private UserDao userDao;
+    private TagService tagService;
+    private UserService userService;
 
     private RequestDispatcher rd;
 
@@ -61,9 +61,9 @@ public class CompaniesListController extends HttpServlet {
         try {
             contacts = contactService.findAll();
             companies = companyService.findAll();
-            users = userDao.findAll();
+            users = userService.findAll();
             tasks = taskService.findAll();
-            tags = tagDao.findAllByAllContacts();
+            tags = tagService.findAllByAllContacts();
             stages = DealStage.getAllDealNames();
 
         } catch (DatabaseException e) {
@@ -82,11 +82,13 @@ public class CompaniesListController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        contactService = new ContactServiceImpl();
-        companyService = new CompanyServiceImpl();
-        taskService = new TaskServiceImpl();
-        tagDao = new DaoFactoryImpl().getTagDao();
-        userDao = new DaoFactoryImpl().getUserDao();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.userService = ctx.getBean(UserService.class);
+        contactService = ctx.getBean(ContactService.class);
+        companyService =ctx.getBean(CompanyService.class);
+        taskService = ctx.getBean(TaskService.class);
+        tagService = ctx.getBean(TagService.class);
         rd = getServletContext().getRequestDispatcher(COMPANIES_LIST);
     }
 

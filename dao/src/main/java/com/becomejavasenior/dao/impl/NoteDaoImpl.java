@@ -174,7 +174,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     @Override
     public List<Note> findAllByDealId(int id) throws DatabaseException {
         List<Note> notes = new ArrayList<>();
-        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+      //  DaoFactoryImpl daoFactory = new DaoFactoryImpl();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_NOTES_BY_DEAL_ID)) {
             preparedStatement.setInt(1, id);
@@ -184,7 +184,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
                 note.setId(resultSet.getInt("id"));
                 note.setText(resultSet.getString("text"));
                 note.setCreationDate(resultSet.getDate(7));
-                note.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+          //      note.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
                 notes.add(note);
             }
         } catch (SQLException e) {
@@ -242,7 +242,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
     @Override
     public List<Note> findAllByCompanyId(int id) throws DatabaseException {
         List<Note> notes = new ArrayList<>();
-        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+       // DaoFactoryImpl daoFactory = new DaoFactoryImpl();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_NOTES_BY_COMPANY_ID)) {
             preparedStatement.setInt(1, id);
@@ -252,7 +252,7 @@ public class NoteDaoImpl extends CommonDao implements NoteDao {
                 note.setId(resultSet.getInt("id"));
                 note.setText(resultSet.getString("text"));
                 note.setCreationDate(resultSet.getDate(7));
-                note.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+           //     note.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
                 notes.add(note);
             }
         } catch (SQLException e) {

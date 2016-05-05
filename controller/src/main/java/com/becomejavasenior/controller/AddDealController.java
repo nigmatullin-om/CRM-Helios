@@ -2,19 +2,22 @@ package com.becomejavasenior.controller;
 
 import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.model.*;
+import com.becomejavasenior.model.Company;
+import com.becomejavasenior.model.Contact;
+import com.becomejavasenior.model.TaskType;
+import com.becomejavasenior.model.User;
 import com.becomejavasenior.service.CompanyService;
 import com.becomejavasenior.service.ContactService;
 import com.becomejavasenior.service.TaskTypeService;
 import com.becomejavasenior.service.UserService;
-import com.becomejavasenior.service.impl.CompanyServiceImpl;
-import com.becomejavasenior.service.impl.ContactServiceImpl;
-import com.becomejavasenior.service.impl.TaskTypeServiceImpl;
-import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,10 +36,12 @@ public class AddDealController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        this.userService = new UserServiceImpl();
-        this.contactService = new ContactServiceImpl();
-        this.companyService = new CompanyServiceImpl();
-        this.taskTypeService = new TaskTypeServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.userService = ctx.getBean(UserService.class);
+        this.contactService =ctx.getBean(ContactService.class);
+        this.companyService = ctx.getBean(CompanyService.class);
+        this.taskTypeService = ctx.getBean(TaskTypeService.class);
     }
 
     @Override

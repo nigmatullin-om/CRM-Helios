@@ -104,4 +104,9 @@ public class TagServiceImpl implements TagService {
     public Tag findTagByName(String name) throws DatabaseException {
         return tagDao.findTagByName(name);
     }
+
+    @Override
+    public List<Tag> findAllByAllContacts() throws DatabaseException {
+        return tagDao.findAllByAllContacts();
+    }
 }

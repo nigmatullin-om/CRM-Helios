@@ -3,10 +3,12 @@ package com.becomejavasenior.controller;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.User;
-import com.becomejavasenior.service.UserService;
+import com.becomejavasenior.service.*;
 import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,7 +26,9 @@ public class LogInController extends HttpServlet{
     private UserService userService;
     @Override
     public void init()throws ServletException{
-        userService = new UserServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.userService = ctx.getBean(UserService.class);
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

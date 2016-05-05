@@ -135,14 +135,14 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         List<Tag> tags = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL)) {
-            DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Tag tag = new Tag();
                 tag.setId(resultSet.getInt("id"));
                 tag.setName(resultSet.getString("name"));
                 tag.setCreationDate(resultSet.getDate(4));
-                tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
+           //     tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
                 tags.add(tag);
             }
         } catch (SQLException e) {
@@ -158,14 +158,14 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_DEAL_ID)) {
             preparedStatement.setInt(1, id);
-            DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+         //   DaoFactoryImpl daoFactory = new DaoFactoryImpl();
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Tag tag = new Tag();
                 tag.setId(resultSet.getInt(1));
                 tag.setName(resultSet.getString(2));
                 tag.setCreationDate(resultSet.getDate(4));
-                tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
+           //     tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
             }
         } catch (SQLException e) {
             LOGGER.error("Creating tasks was failed. Error - {}", new Object[]{e.getMessage()});
@@ -185,13 +185,13 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_ALL_CONTACTS_ID);
              ResultSet resultSet = preparedStatement.executeQuery()) {
-            DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+         //   DaoFactoryImpl daoFactory = new DaoFactoryImpl();
             while (resultSet.next()) {
                 Tag tag = new Tag();
                 tag.setId(resultSet.getInt("id"));
                 tag.setName(resultSet.getString("name"));
                 int user = resultSet.getInt("id");
-                tag.setCreatedByUser(daoFactory.getUserDao().getUserById(user));
+         //       tag.setCreatedByUser(daoFactory.getUserDao().getUserById(user));
                 tag.setCreationDate(resultSet.getDate("date_create"));
                 tags.add(tag);
             }

@@ -6,6 +6,8 @@ import com.becomejavasenior.service.*;
 import com.becomejavasenior.service.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -48,15 +50,17 @@ public class SaveDealController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        dealService = new DealServiceImpl();
-        contactService = new ContactServiceImpl();
-        companyService = new CompanyServiceImpl();
-        taskService = new TaskServiceImpl();
-        userService = new UserServiceImpl();
-        taskTypeService = new TaskTypeServiceImpl();
-        noteService = new NoteServiceImpl();
-        fileService = new FileServiceImpl();
-        tagService = new TagServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.userService = ctx.getBean(UserService.class);
+        this.companyService = ctx.getBean(CompanyService.class);
+        this.taskTypeService = ctx.getBean(TaskTypeService.class);
+        this.dealService = ctx.getBean(DealService.class);
+        this.noteService = ctx.getBean(NoteService.class);
+        this.tagService = ctx.getBean(TagService.class);
+        this.taskService = ctx.getBean(TaskService.class);
+        this.contactService = ctx.getBean(ContactService.class);
+        this.fileService = ctx.getBean(FileService.class);
     }
 
     @Override

@@ -123,7 +123,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
     @Override
     public List<File> findAllByDealId(int id) throws DatabaseException {
         List<File> files = new ArrayList<>();
-        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+      //  DaoFactoryImpl daoFactory = new DaoFactoryImpl();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_FILES_BY_DEAL_ID)) {
             preparedStatement.setInt(1, id);
@@ -134,7 +134,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
                 file.setPath(resultSet.getString("path"));
                 file.setData(resultSet.getBytes(3));
                 file.setCreationDate(resultSet.getDate(9));
-                file.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+            //    file.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
                 files.add(file);
             }
         } catch (SQLException e) {
@@ -147,7 +147,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
     @Override
     public List<File> findAllByCompanyId(int id) throws DatabaseException {
         List<File> files = new ArrayList<>();
-        DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+       // DaoFactoryImpl daoFactory = new DaoFactoryImpl();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_FILES_BY_COMPANY_ID)) {
             preparedStatement.setInt(1, id);
@@ -158,7 +158,7 @@ public class FileDaoImpl extends CommonDao implements FileDao {
                 file.setPath(resultSet.getString("path"));
                 file.setData(resultSet.getBytes(3));
                 file.setCreationDate(resultSet.getDate(9));
-                file.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
+             //   file.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt("created_by")));
                 files.add(file);
             }
         } catch (SQLException e) {

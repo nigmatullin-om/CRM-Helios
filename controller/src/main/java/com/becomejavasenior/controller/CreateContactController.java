@@ -3,9 +3,12 @@ package com.becomejavasenior.controller;
 import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.*;
+import com.becomejavasenior.service.*;
 import com.becomejavasenior.service.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,26 +37,28 @@ public class CreateContactController extends HttpServlet {
     private static final String COMPANIES = "companies";
     private static final String TASK_TYPES = "taskTypes";
 
-    private UserServiceImpl userService;
-    private CompanyServiceImpl companyService;
-    private TaskTypeServiceImpl taskTypeService;
-    private DealServiceImpl dealService;
-    private NoteServiceImpl noteService;
-    private TagServiceImpl tagService;
-    private TaskServiceImpl taskService;
-    private ContactServiceImpl contactService;
+    private UserService userService;
+    private CompanyService companyService;
+    private TaskTypeService taskTypeService;
+    private DealService dealService;
+    private NoteService noteService;
+    private TagService tagService;
+    private TaskService taskService;
+    private ContactService contactService;
 
     @Override
 
     public void init() throws ServletException {
-        this.userService = new UserServiceImpl();
-        this.companyService = new CompanyServiceImpl();
-        this.taskTypeService = new TaskTypeServiceImpl();
-        this.dealService = new DealServiceImpl();
-        this.noteService = new NoteServiceImpl();
-        this.tagService = new TagServiceImpl();
-        this.taskService = new TaskServiceImpl();
-        this.contactService=new ContactServiceImpl();
+        ApplicationContext ctx = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        this.userService = ctx.getBean(UserService.class);
+        this.companyService = ctx.getBean(CompanyService.class);
+        this.taskTypeService = ctx.getBean(TaskTypeService.class);
+        this.dealService = ctx.getBean(DealService.class);
+        this.noteService = ctx.getBean(NoteService.class);
+        this.tagService = ctx.getBean(TagService.class);
+        this.taskService = ctx.getBean(TaskService.class);
+        this.contactService = ctx.getBean(ContactService.class);
     }
 
     @Override
