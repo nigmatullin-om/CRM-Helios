@@ -2,9 +2,7 @@ package com.becomejavasenior.controller;
 
 import com.becomejavasenior.controller.constant.Jsp;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TagDao;
 import com.becomejavasenior.model.*;
-import com.becomejavasenior.service.TaskTypeService;
 import com.becomejavasenior.service.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,7 +73,7 @@ public class CreateContactController extends HttpServlet {
         request.setAttribute(USERS, users);
         request.setAttribute(COMPANIES, companies);
         request.setAttribute(TASK_TYPES, taskTypes);
-        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.CONTACT_JSP);
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.JSP_CONTACT_ADD);
         rd.forward(request, response);
     }
 

@@ -56,6 +56,9 @@
                 <li><a href="${pageContext.request.contextPath}/dashboard"><fmt:message key= "pageDashboard"/></a></li>
             </ul>
             <ul class="nav navbar-nav">
+                <li><a href="${pageContext.request.contextPath}/view/CompaniesList"><fmt:message key="pageCompaniesList"/> </a></li>
+            </ul>
+            <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/view/tasks"><fmt:message key= "pageTasks"/></a></li>
             </ul>
             <ul class="nav navbar-nav">

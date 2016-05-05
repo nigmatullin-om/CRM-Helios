@@ -2,7 +2,7 @@
 <Configuration status="INFO">
 
     <Properties>
-        <Property name="folder">logs</Property>
+        <Property name="folder">/logs</Property>
     </Properties>
 
     <Appenders>

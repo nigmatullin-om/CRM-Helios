@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 public class ContactServiceTest {
 
@@ -54,7 +52,7 @@ public class ContactServiceTest {
 
     @Test
     public void testGetContactById() throws Exception {
-        PowerMockito.when(contactDao.getContactById(1)).thenReturn(contact);
+        when(contactDao.getContactById(1)).thenReturn(contact);
 
         Contact resultContact = contactService.getContactById(1);
 
@@ -104,7 +102,7 @@ public class ContactServiceTest {
 
     @Test
     public void testGetCount() throws DatabaseException {
-        PowerMockito.when(contactDao.getCount()).thenReturn(CONTACTS_COUNT);
+        when(contactDao.getCount()).thenReturn(CONTACTS_COUNT);
         int result = contactService.getCount();
 
         verify(contactDao).getCount();

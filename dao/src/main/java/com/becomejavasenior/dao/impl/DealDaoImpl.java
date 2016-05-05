@@ -105,7 +105,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             resultSet.next();
             deal = getDealByResultSet(resultSet);
         } catch (SQLException e) {
-            LOGGER.error("Getting a deal was failed. Error - {}", new Object[]{e.getMessage()});
+            LOGGER.error("Getting a deal was failed. Error - {}", e);
             throw new DatabaseException(e.getMessage());
         }
         if (deal == null) {
@@ -295,14 +295,17 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     }
 
     private Deal getDealByResultSet(ResultSet resultSet) throws DatabaseException, SQLException {
-        Deal deal = new Deal();
-        deal.setId(resultSet.getInt("id"));
-        deal.setName(resultSet.getString("name"));
-        deal.setBudget(resultSet.getBigDecimal("budget"));
-        deal.setDealStage(DealStage.getDealStageById(resultSet.getInt("stage_id")));
-        deal.setCreationDate(resultSet.getDate("date_create"));
-        deal.setDeleted(resultSet.getBoolean("deleted"));
 
+        Deal deal = null;
+        if(resultSet.getRow() != 0) {
+            deal = new Deal();
+            deal.setId(resultSet.getInt("id"));
+            deal.setName(resultSet.getString("name"));
+            deal.setBudget(resultSet.getBigDecimal("budget"));
+            deal.setDealStage(DealStage.getDealStageById(resultSet.getInt("stage_id")));
+            deal.setCreationDate(resultSet.getDate("date_create"));
+            deal.setDeleted(resultSet.getBoolean("deleted"));
+        }
         return deal;
     }
 

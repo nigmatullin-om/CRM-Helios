@@ -8,13 +8,9 @@ import com.becomejavasenior.service.impl.TagServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,9 +18,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-
+import static org.mockito.Mockito.when;
 
 public class TagServiceTest {
 
@@ -55,7 +49,7 @@ public class TagServiceTest {
 
     @Test
     public void testGetTagById() throws Exception {
-        PowerMockito.when(tagDao.getTagById(1)).thenReturn(tag);
+       when(tagDao.getTagById(1)).thenReturn(tag);
 
         Tag resultTag = tagService.getTagById(1);
 
@@ -100,7 +94,7 @@ public class TagServiceTest {
 
     @Test
     public void testGetMaxId() throws DatabaseException {
-        PowerMockito.when(tagDao.getMaxId()).thenReturn(1);
+        when(tagDao.getMaxId()).thenReturn(1);
         int result = tagService.getMaxId();
 
         verify(tagDao).getMaxId();

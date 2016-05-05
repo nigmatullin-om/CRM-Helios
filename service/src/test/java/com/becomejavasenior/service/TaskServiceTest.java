@@ -23,7 +23,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 public class TaskServiceTest {
 
     private static final String NOT_FINISHED_DATE_VALUE = "2020-01-01 00:00:00";

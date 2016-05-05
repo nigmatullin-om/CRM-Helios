@@ -2,7 +2,7 @@ package com.becomejavasenior.service;
 
 
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.filter.ContactFilter;
+import com.becomejavasenior.filter.*;
 import com.becomejavasenior.model.*;
 
 import java.util.ArrayList;

@@ -32,6 +32,8 @@ public abstract class AbstractTestDao {
     private static final String DEFAULT_DATA_XML_PATH = "defaultData.xml";
     private IDatabaseTester databaseTester;
 
+    private IDatabaseConnection connection;
+
     @Autowired
     TaskDao taskDao;
 
@@ -53,8 +55,15 @@ public abstract class AbstractTestDao {
     @Autowired
     ContactDao contactDao;
 
+    @Autowired
+    TagDao tagDao;
+
+    @Autowired
+    NoteDao noteDao;
+
     @Value("${currentSchema}")
     public String currentSchema;
+
 
 
     @Before
@@ -68,11 +77,14 @@ public abstract class AbstractTestDao {
         databaseTester.setDataSet(dataSet);
         databaseTester.onSetup();
         fixIndexes();
+        databaseTester.onTearDown();
+        databaseTester.getConnection().close();
+        connection.close();
     }
 
     @After
     public void clean() throws Exception {
-        databaseTester.onTearDown();
+        dataSource.getConnection().close();
     }
 
     public DataSource getDataSource() {
@@ -100,6 +112,7 @@ public abstract class AbstractTestDao {
                 "SELECT setval('task_type_id_seq', (SELECT MAX(id) FROM task_type));\n" +
                 "SELECT setval('task_id_seq', (SELECT MAX(id) FROM task));\n";
         connection.prepareStatement(query).execute();
+        connection.close();
     }
 
     abstract protected IDataSet getSpecificDataSet() throws DataSetException;

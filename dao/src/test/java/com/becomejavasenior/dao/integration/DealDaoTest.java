@@ -1,5 +1,8 @@
 package com.becomejavasenior.dao.integration;
 
+import com.becomejavasenior.dao.impl.*;
+import com.becomejavasenior.model.*;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import com.becomejavasenior.dao.*;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
@@ -13,6 +16,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,6 +35,11 @@ public class DealDaoTest extends AbstractTestDao {
     public static final int CONTACT1_ID = 1;
     public static final int COUNT_DEALS_FOR_CONTACT1 = 3;
     public static final int DEAL_COUNT = 5;
+
+    public static final int USER5 = 5;
+    public static final int DEAL5 = 5;
+    public static final int COMPANY5 = 5;
+
 
     @Test
     public void testReadDeal() throws DatabaseException {
@@ -102,6 +111,19 @@ public class DealDaoTest extends AbstractTestDao {
         Task task4 = taskDao.getTaskById(DEAL4_FOR_TASK4);
         Deal deal = dealDao.getDealForTask(task4);
         assertThat(deal, Matchers.notNullValue());
+    }
+
+    @Test
+    public void testCreateWithId() throws DatabaseException {
+        Company company = companyDao.getCompanyById(COMPANY5);
+        User user = userDao.getUserById(USER5);
+        Deal deal = dealDao.getDealById(DEAL5);
+        deal.setCompany(company);
+        deal.setCreatedByUser(user);
+        deal.setResponsibleUser(user);
+        deal.setCreationDate(new Date());
+        int result  = dealDao.createWithId(deal);
+        assertThat(result, Matchers.greaterThan(0));
     }
 
     @Override

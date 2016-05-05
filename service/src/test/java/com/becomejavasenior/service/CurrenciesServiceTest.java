@@ -1,6 +1,7 @@
 package com.becomejavasenior.service;
 
 import com.becomejavasenior.dao.CurrenciesDao;
+
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Currencies;
 import com.becomejavasenior.service.impl.CurrenciesServiceImpl;
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 
 public class CurrenciesServiceTest {
 

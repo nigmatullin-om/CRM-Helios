@@ -5,6 +5,7 @@ import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Task;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface CompanyDao {
@@ -19,4 +20,13 @@ public interface CompanyDao {
     int createWithId(Company company) throws DatabaseException;
     Company getCompanyForDeal(Deal deal) throws DatabaseException;
 
+    List<Integer> withoutTasks() throws DatabaseException;
+    List<Integer> withOutdatedTasks() throws DatabaseException;
+    List<Integer> markedDelete() throws DatabaseException;
+    List<Integer> byPeriod(Timestamp period, String createdOrModified) throws DatabaseException;
+    List<Integer> byTask(Timestamp byTask) throws DatabaseException;
+    List<Integer> byUser(String userName) throws DatabaseException;
+    List<Integer> byTag(String tagName) throws DatabaseException;
+    List<Integer> byStage(String[] byStages) throws DatabaseException;
+    List<Integer> modified() throws DatabaseException;
 }

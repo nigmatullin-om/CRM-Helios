@@ -139,7 +139,6 @@ public class DealServiceTest {
 
         List<Deal> result = dealService.findAll();
         verify(dealDao).findAll();
-        //     assertEquals(2, result.size());
     }
 
     @Test

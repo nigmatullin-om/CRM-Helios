@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/context.xml"})
+@ContextConfiguration(locations = {"/hsqlTextContext.xml"})
 public class HsqlConnectionTest {
 
 

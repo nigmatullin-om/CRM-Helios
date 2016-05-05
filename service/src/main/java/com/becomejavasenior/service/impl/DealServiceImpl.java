@@ -2,9 +2,6 @@ package com.becomejavasenior.service.impl;
 
 
 import com.becomejavasenior.dao.*;
-import com.becomejavasenior.dao.impl.CompanyDaoImpl;
-import com.becomejavasenior.dao.impl.ContactDaoImpl;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
@@ -50,10 +47,6 @@ public class DealServiceImpl implements DealService {
         return userDao;
     }
 
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
     public CompanyDao getCompanyDao() {
         return companyDao;
     }
@@ -62,24 +55,12 @@ public class DealServiceImpl implements DealService {
         return noteDao;
     }
 
-    public void setNoteDao(NoteDao noteDao) {
-        this.noteDao = noteDao;
-    }
-
     public FileDao getFileDao() {
         return fileDao;
     }
 
-    public void setFileDao(FileDao fileDao) {
-        this.fileDao = fileDao;
-    }
-
     public TagDao getTagDao() {
         return tagDao;
-    }
-
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
     }
 
     public ContactDao getContactDao() {
@@ -90,8 +71,24 @@ public class DealServiceImpl implements DealService {
         this.dealDao = dealDao;
     }
 
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
     public void setCompanyDao(CompanyDao companyDao) {
         this.companyDao = companyDao;
+    }
+
+    public void setNoteDao(NoteDao noteDao) {
+        this.noteDao = noteDao;
+    }
+
+    public void setFileDao(FileDao fileDao) {
+        this.fileDao = fileDao;
+    }
+
+    public void setTagDao(TagDao tagDao) {
+        this.tagDao = tagDao;
     }
 
     public void setContactDao(ContactDao contactDao) {
@@ -126,8 +123,7 @@ public class DealServiceImpl implements DealService {
         List<Deal> allDeals = findAll();
         List<Deal> dealsWithContactAndCompany = new ArrayList<>();
 
-        for(Deal deal : allDeals)
-        {
+        for (Deal deal : allDeals) {
             dealsWithContactAndCompany.add(getDealWithContactsAndCompany(deal.getId()));
         }
 
@@ -139,15 +135,11 @@ public class DealServiceImpl implements DealService {
         List<Deal> dealListWithCompanyAndContacts = getDealListWithCompanyAndContacts();
 
         Map<String, List<Deal>> dealsByStage = new LinkedHashMap<>();
-        for(Deal deal : dealListWithCompanyAndContacts)
-        {
+        for (Deal deal : dealListWithCompanyAndContacts) {
             String dealStage = deal.getDealStage().name();
-            if(dealsByStage.containsKey(dealStage))
-            {
+            if (dealsByStage.containsKey(dealStage)) {
                 dealsByStage.get(dealStage).add(deal);
-            }
-            else
-            {
+            } else {
                 List<Deal> deals = new ArrayList<>();
                 deals.add(deal);
                 dealsByStage.put(dealStage, deals);
@@ -170,8 +162,7 @@ public class DealServiceImpl implements DealService {
     @Override
     public List<Deal> findAll() throws DatabaseException {
         List<Deal> allDeal = dealDao.findAll();
-        for (Deal deal: allDeal)
-        {
+        for (Deal deal : allDeal) {
             fillDealFields(deal);
         }
         return allDeal;
@@ -182,12 +173,12 @@ public class DealServiceImpl implements DealService {
         List<Deal> successDeals = new LinkedList<>();
         List<Deal> failedDeals = new LinkedList<>();
         ListIterator<Deal> listIterator = deals.listIterator();
-        while(listIterator.hasNext()){
+        while (listIterator.hasNext()) {
             Deal tempDeal = listIterator.next();
-            if(tempDeal.getDealStage() == DealStage.SUCCESS){
+            if (tempDeal.getDealStage() == DealStage.SUCCESS) {
                 successDeals.add(tempDeal);
             }
-            if(tempDeal.getDealStage() == DealStage.FAILED_AND_CLOSED){
+            if (tempDeal.getDealStage() == DealStage.FAILED_AND_CLOSED) {
                 failedDeals.add(tempDeal);
             }
         }
@@ -205,6 +196,7 @@ public class DealServiceImpl implements DealService {
     public int countDealsWithoutTasks() throws DatabaseException {
         return dealDao.countDealsWithoutTasks();
     }
+
     public int createWithId(Deal deal) throws DatabaseException {
         return dealDao.createWithId(deal);
     }

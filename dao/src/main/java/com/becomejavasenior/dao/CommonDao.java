@@ -14,4 +14,8 @@ public class CommonDao {
     public CommonDao(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+
+    protected DataSource getDataSource(){
+        return dataSource;
+    }
 }

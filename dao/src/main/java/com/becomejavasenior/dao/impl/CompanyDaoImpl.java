@@ -5,6 +5,7 @@ import com.becomejavasenior.dao.CompanyDao;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Deal;
+import com.becomejavasenior.model.DealStage;
 import com.becomejavasenior.model.PhoneType;
 import com.becomejavasenior.model.Task;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class CompanyDaoImpl extends CommonDao implements CompanyDao {
@@ -38,6 +40,22 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
     private static final String GET_MAX_ID = "SELECT  max(id) FROM company";
+    private static final String GET_ID_COMPANIES_FOR_USERNAME = "SELECT company.id FROM company INNER JOIN person ON person.id = company.responsible_id WHERE person.name = ? AND company.deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task where company_id IS NOT NULL ) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_DEALS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM deal) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal JOIN stage ON stage.id = deal.stage_id" +
+            " WHERE stage.name = '" + DealStage.getDealStageById(4) + "' AND stage.name = '" + DealStage.getDealStageById(5) + "')" +
+            " OR id NOT IN (SELECT company_id FROM deal) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITH_OUTDATED_TASKS = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND done=FALSE AND finish_date < now() AND company.deleted = false";
+    private static final String GET_ID_DELETED_COMPANIES = "SELECT id FROM company WHERE deleted=TRUE";
+    private static final String GET_ID_COMPANIES_CREATED_BY_PERIOD = "SELECT id FROM company WHERE date_create > ? AND deleted = false";
+    private static final String GET_ID_COMPANIES_MODIFIED_BY_PERIOD = "SELECT id FROM company WHERE date_modify > ? AND deleted = false";
+    private static final String GET_ID_COMPANIES_FOR_TASK_BY_PERIOD = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND finish_date > now() AND finish_date < ? AND company.deleted = false";
+    private static final String GET_ID_COMPANIES_FOR_TAGNAME = "SELECT company.id FROM company JOIN tag_contact_company ON company.id = tag_contact_company.company_id " +
+            "JOIN tag ON tag.id = tag_contact_company.tag_id WHERE tag.name = ? AND company.deleted = false";
+    private static final String GET_ID_COMPANIES_FOR_STAGENAME = "SELECT company.id FROM company JOIN deal ON company.id = deal.company_id " +
+            "JOIN stage ON stage.id = deal.stage_id WHERE stage.name = ? AND company.deleted = false";
+    private static final String GET_ID_MODIFIED_COMPANIES = "SELECT company.id FROM company WHERE date_modify IS NOT NULL AND user_modify_id IS NOT NULL AND company.deleted = false";
 
     private static final String GET_COMPANY_FOR_DEAL = "SELECT company.id, company.name, company.web, company.email,company.adress, company.phone," +
             " company.phone_type_id, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
@@ -52,39 +70,34 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_COMPANY)) {
             preparedStatement.setString(1, company.getName());
-            if( company.getResponsibleUser()!=null){
+            if (company.getResponsibleUser() != null) {
                 preparedStatement.setInt(2, company.getResponsibleUser().getId());
-            }else {
+            } else {
                 preparedStatement.setNull(2, Types.INTEGER);
             }
             preparedStatement.setString(3, company.getWeb());
             preparedStatement.setString(4, company.getEmail());
             preparedStatement.setString(5, company.getAddress());
             preparedStatement.setString(6, company.getPhone());
-            if(company.getPhoneType()!=null){
+            if (company.getPhoneType() != null) {
                 preparedStatement.setInt(7, company.getPhoneType().ordinal());
+            } else {
+                preparedStatement.setNull(7, Types.INTEGER);
             }
-            else{
-                preparedStatement.setNull(7,Types.INTEGER);
-            }
-            if(company.getCreatedByUser()!=null){
+            if (company.getCreatedByUser() != null) {
                 preparedStatement.setInt(8, company.getCreatedByUser().getId());
+            } else {
+                preparedStatement.setNull(8, Types.INTEGER);
             }
-            else {
-                preparedStatement.setNull(8,Types.INTEGER);
-            }
-            if(company.getCreationDate()!=null){
-                preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getYear(),company.getCreationDate().getMonth(),
+            if (company.getCreationDate() != null) {
+                preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getYear(), company.getCreationDate().getMonth(),
                         company.getCreationDate().getDay()));
+            } else {
+                preparedStatement.setNull(9, Types.DATE);
             }
-            else
-            {
-                preparedStatement.setNull(9,Types.DATE);
-            }
-            if(company.getDeleted()!=null){
+            if (company.getDeleted() != null) {
                 preparedStatement.setBoolean(10, company.getDeleted());
-            }
-            else {
+            } else {
                 preparedStatement.setBoolean(10, false);
             }
             return preparedStatement.executeUpdate();
@@ -142,13 +155,13 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
     @Override
     public int getMaxId() throws DatabaseException {
         int maxId = 0;
-        try(Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)){
-            ResultSet resultSet  = preparedStatement.getResultSet();
-            if(resultSet.next()){
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_MAX_ID)) {
+            ResultSet resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()) {
                 maxId = resultSet.getInt("max");
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             LOGGER.error(new Object[]{e.getMessage()});
         }
         return maxId;
@@ -227,8 +240,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     company = getCompanyForResultSet(resultSet);
-                }
-                else {
+                } else {
                     return null;
                 }
             }
@@ -271,35 +283,150 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());
 
-            if (company.getModificationDate() == null){
+            if (company.getModificationDate() == null) {
                 preparedStatement.setNull(11, Types.INTEGER);
-            }
-            else {
+            } else {
                 preparedStatement.setDate(11, new java.sql.Date(company.getModificationDate().getTime()));
             }
-            if (company.getModifiedByUser() == null){
+            if (company.getModifiedByUser() == null) {
                 preparedStatement.setNull(12, Types.INTEGER);
-            }
-            else {
+            } else {
                 preparedStatement.setInt(12, company.getModifiedByUser().getId());
             }
 
             int affectedRows = preparedStatement.executeUpdate();
             LOGGER.info("affectedRows = " + affectedRows);
             try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
-                if (resultSet.next()){
+                if (resultSet.next()) {
                     key = resultSet.getInt(1);
                     LOGGER.info("new company id = " + key);
-                }
-                else {
+                } else {
                     LOGGER.error("Couldn't create the company entity!");
                     throw new DatabaseException("Couldn't create the company entity!");
                 }
             }
         } catch (SQLException e) {
             LOGGER.error("Couldn't create the company entity because of some SQL exception!");
-            throw new  DatabaseException(e.getMessage());
+            throw new DatabaseException(e.getMessage());
         }
         return key;
+    }
+
+
+    private List<Integer> filterWithoutParameters(String filterQuery) throws DatabaseException {
+        List<Integer> listIdCompanies = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(filterQuery);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                listIdCompanies.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting id companies was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return listIdCompanies;
+    }
+
+    @Override
+    public List<Integer> modified() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_MODIFIED_COMPANIES);
+    }
+
+    @Override
+    public List<Integer> withoutTasks() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_TASKS);
+    }
+
+    @Override
+    public List<Integer> withOutdatedTasks() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_COMPANIES_WITH_OUTDATED_TASKS);
+    }
+
+    @Override
+    public List<Integer> markedDelete() throws DatabaseException {
+        return filterWithoutParameters(GET_ID_DELETED_COMPANIES);
+    }
+
+    private List<Integer> filterByTimestamp(Timestamp period, String filterQuery) throws DatabaseException {
+        List<Integer> listIdCompanies = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(filterQuery)) {
+            preparedStatement.setTimestamp(1, period);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                listIdCompanies.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting id companies was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return listIdCompanies;
+    }
+
+    @Override
+    public List<Integer> byPeriod(Timestamp period, String createdOrModified) throws DatabaseException {
+        switch (createdOrModified) {
+            case "created":
+                return filterByTimestamp(period, GET_ID_COMPANIES_CREATED_BY_PERIOD);
+            case "modified":
+                return filterByTimestamp(period, GET_ID_COMPANIES_MODIFIED_BY_PERIOD);
+            default:
+                try {
+                    throw new DatabaseException();
+                } catch (DatabaseException e) {
+                    LOGGER.error("The createdOrModified field is incorrect. Error - {}", new Object[]{e.getMessage()});
+                    throw e;
+                }
+        }
+    }
+
+    @Override
+    public List<Integer> byTask(Timestamp byTask) throws DatabaseException {
+        return filterByTimestamp(byTask, GET_ID_COMPANIES_FOR_TASK_BY_PERIOD);
+    }
+
+    private List<Integer> filterByName(String name, String filterQuery) throws DatabaseException {
+        List<Integer> listIdCompanies = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(filterQuery)) {
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                listIdCompanies.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting the id companies was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return listIdCompanies;
+    }
+
+    @Override
+    public List<Integer> byUser(String userName) throws DatabaseException {
+        return filterByName(userName, GET_ID_COMPANIES_FOR_USERNAME);
+    }
+
+    @Override
+    public List<Integer> byTag(String tagName) throws DatabaseException {
+        return filterByName(tagName, GET_ID_COMPANIES_FOR_TAGNAME);
+    }
+
+    @Override
+    public List<Integer> byStage(String[] byStages) throws DatabaseException {
+        HashSet<Integer> listIdCompanies = new HashSet<>();
+        for (String stage : byStages) {
+            switch (stage) {
+                case "without deals":
+                    listIdCompanies.addAll(filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_DEALS));
+                    break;
+                case "without open deals":
+                    listIdCompanies.addAll(filterWithoutParameters(GET_ID_COMPANIES_WITHOUT_OPEN_DEALS));
+                    break;
+                default:
+                    listIdCompanies.addAll(filterByName(stage, GET_ID_COMPANIES_FOR_STAGENAME));
+            }
+        }
+        return new ArrayList<>(listIdCompanies);
     }
 }

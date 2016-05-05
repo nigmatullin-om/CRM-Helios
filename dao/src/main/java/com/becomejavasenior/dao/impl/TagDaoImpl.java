@@ -25,6 +25,8 @@ public class TagDaoImpl extends CommonDao implements TagDao {
 
     private static final String FIND_ALL_BY_DEAL_ID = "SELECT * FROM tag JOIN tag_deal ON" +
             " tag.id = tag_deal.tag_id AND deal_id = ?";
+    private static final String FIND_ALL_BY_ALL_CONTACTS_ID = "SELECT * FROM tag JOIN tag_contact_company ON" +
+            " tag.id = tag_contact_company.tag_id";
     private static final String FIND_BY_NAME = "SELECT  id, name, created_by, date_create FROM tag WHERE name = ?";
     private static final String CREATE = "INSERT INTO tag(id, name, created_by, date_create )VALUES (DEFAULT,?,?,?)";
     private static final String CREATE_RELATIVE_WITH_TAG_AD_CONTACT =
@@ -67,14 +69,13 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         Tag tag = new Tag();
        try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_NAME)) {
-            DaoFactoryImpl daoFactory = new DaoFactoryImpl();
            preparedStatement.setString(1,name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 tag.setId(resultSet.getInt("id"));
                 tag.setName(resultSet.getString("name"));
                 tag.setCreationDate(resultSet.getDate(4));
-                tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
+              //  tag.setCreatedByUser(daoFactory.getUserDao().getUserById(resultSet.getInt(3)));
             }
            return  tag;
         } catch (SQLException e) {
@@ -178,6 +179,28 @@ public class TagDaoImpl extends CommonDao implements TagDao {
         return null;
     }
 
+    @Override
+    public List<Tag> findAllByAllContacts() throws DatabaseException {
+        List<Tag> tags = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_ALL_CONTACTS_ID);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            DaoFactoryImpl daoFactory = new DaoFactoryImpl();
+            while (resultSet.next()) {
+                Tag tag = new Tag();
+                tag.setId(resultSet.getInt("id"));
+                tag.setName(resultSet.getString("name"));
+                int user = resultSet.getInt("id");
+                tag.setCreatedByUser(daoFactory.getUserDao().getUserById(user));
+                tag.setCreationDate(resultSet.getDate("date_create"));
+                tags.add(tag);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Getting tags was failed. Error - {}", new Object[]{e.getMessage()});
+            throw new DatabaseException(e.getMessage());
+        }
+        return tags;
+    }
     @Override
     public Tag findTagByName(String name) throws DatabaseException {
         Tag tag = null;

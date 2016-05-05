@@ -1,10 +1,8 @@
 package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.*;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.TaskService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -46,36 +44,36 @@ public class TaskServiceImpl implements TaskService {
         return taskDao;
     }
 
-    public void setTaskDao(TaskDao taskDao) {
-        this.taskDao = taskDao;
-    }
-
     public ContactDao getContactDao() {
         return contactDao;
-    }
-
-    public void setContactDao(ContactDao contactDao) {
-        this.contactDao = contactDao;
     }
 
     public CompanyDao getCompanyDao() {
         return companyDao;
     }
 
-    public void setCompanyDao(CompanyDao companyDao) {
-        this.companyDao = companyDao;
-    }
-
     public DealDao getDealDao() {
         return dealDao;
     }
 
-    public void setDealDao(DealDao dealDao) {
-        this.dealDao = dealDao;
-    }
-
     public UserDao getUserDao() {
         return userDao;
+    }
+
+    public void setTaskDao(TaskDao taskDao) {
+        this.taskDao = taskDao;
+    }
+
+    public void setContactDao(ContactDao contactDao) {
+        this.contactDao = contactDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
+    }
+
+    public void setDealDao(DealDao dealDao) {
+        this.dealDao = dealDao;
     }
 
     public void setUserDao(UserDao userDao) {
@@ -85,6 +83,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskTypeDao getTaskTypeDao() {
         return taskTypeDao;
     }
+
 
     public void setTaskTypeDao(TaskTypeDao taskTypeDao) {
         this.taskTypeDao = taskTypeDao;

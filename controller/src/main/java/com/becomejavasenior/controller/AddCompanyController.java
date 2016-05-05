@@ -38,7 +38,7 @@ public class AddCompanyController extends HttpServlet {
         req.setAttribute(DealField.STAGES, DealStage.values());
         req.setAttribute(TaskField.PERIODS, Period.values());
 
-        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.ADD_COMPANY_PAGE);
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(Jsp.JSP_COMPANY_ADD);
         rd.forward(req, resp);
     }
 
