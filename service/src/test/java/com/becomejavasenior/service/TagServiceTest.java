@@ -9,7 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -23,10 +25,11 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TagServiceImpl.class)
+
 public class TagServiceTest {
-    private TagService tagService;
+
+    @InjectMocks
+    private TagServiceImpl tagService;
 
     @Mock
     private TagDaoImpl tagDao;
@@ -39,9 +42,7 @@ public class TagServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-        when(daoFactory.getTagDao()).thenReturn(tagDao);
-        tagService = new TagServiceImpl();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test

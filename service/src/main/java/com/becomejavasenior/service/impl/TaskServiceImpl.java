@@ -4,12 +4,15 @@ import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.TaskService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.*;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
-
+@Service
 public class TaskServiceImpl implements TaskService {
 
     private static final String DONE_TASKS = "doneTasks";
@@ -21,11 +24,22 @@ public class TaskServiceImpl implements TaskService {
     public static final int HALF_HOURS_IN_DAY = 48;
     public static final int DAYS_IN_WEEK = 7;
 
+    @Resource
     private TaskDao taskDao;
+
+    @Resource
     private ContactDao contactDao;
+
+    @Resource
     private CompanyDao companyDao;
+
+    @Resource
     private DealDao dealDao;
+
+    @Resource
     private UserDao userDao;
+
+    @Resource
     private TaskTypeDao taskTypeDao;
 
     public TaskDao getTaskDao() {

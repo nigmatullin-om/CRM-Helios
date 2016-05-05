@@ -1,18 +1,15 @@
 package com.becomejavasenior.service;
 
-import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TaskDao;
+import com.becomejavasenior.dao.*;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.model.Task;
+import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.impl.TaskServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoAnnotations;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,13 +21,9 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.when;
 
-/**
- * Created by aivlev on 3/26/16.
- */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TaskServiceImpl.class)
+
 public class TaskServiceTest {
 
     private static final String NOT_FINISHED_DATE_VALUE = "2020-01-01 00:00:00";
@@ -39,27 +32,63 @@ public class TaskServiceTest {
     private static final String DONE_TASKS = "doneTasks";
     private static final String NOT_DONE_TASKS = "notDoneTasks";
 
-    private TaskService taskService;
+    @InjectMocks
+    private TaskServiceImpl taskService;
 
     @Mock
     private TaskDao taskDao;
 
     @Mock
+    private ContactDao contactDao;
+
+    @Mock
+    private CompanyDao companyDao;
+
+    @Mock
+    private DealDao dealDao;
+
+    @Mock
+    private UserDao userDao;
+
+    @Mock
+    private TaskTypeDao taskTypeDao;
+
+    @Mock
     private Task task;
+
+    @Mock
+    private Contact contact;
+
+    @Mock
+    private Company company;
+
+    @Mock
+    private Deal deal;
+
+    @Mock
+    private User user;
+
+    @Mock
+    private TaskType taskType;
 
     @Mock
     DaoFactoryImpl daoFactory;
 
     @Before
     public void setUp() throws Exception {
-        whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-        when(daoFactory.getTaskDao()).thenReturn(taskDao);
-        taskService = new TaskServiceImpl();
+        MockitoAnnotations.initMocks(this);
+
+        when(contactDao.getContactForTask(any())).thenReturn(contact);
+        when(companyDao.getCompanyForTask(any())).thenReturn(company);
+        when(dealDao.getDealForTask(any())).thenReturn(deal);
+        when(userDao.getResponsibleUserForTask(any())).thenReturn(user);
+        when(userDao.createdByUserForTask(any())).thenReturn(user);
+        when(taskTypeDao.getTaskTypeForTask(any())).thenReturn(taskType);
     }
 
     @Test
     public void testCreate() throws Exception {
-        PowerMockito.when(taskDao.create(any(Task.class))).thenReturn(1);
+        when(taskDao.create(any(Task.class))).thenReturn(1);
         taskService.create(task);
 
         verify(taskDao).create(task);
@@ -68,7 +97,7 @@ public class TaskServiceTest {
 
     @Test
     public void testGetTaskById() throws Exception {
-        PowerMockito.when(taskDao.getTaskById(1)).thenReturn(task);
+        when(taskDao.getTaskById(1)).thenReturn(task);
 
         Task resultTask = taskService.getTaskById(1);
 
@@ -79,7 +108,7 @@ public class TaskServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        PowerMockito.when(taskDao.update(any(Task.class))).thenReturn(1);
+        when(taskDao.update(any(Task.class))).thenReturn(1);
         taskService.update(task);
 
         verify(taskDao).update(task);
@@ -88,7 +117,7 @@ public class TaskServiceTest {
 
     @Test
     public void testDelete() throws Exception {
-        PowerMockito.when(taskDao.delete(any(Task.class))).thenReturn(1);
+        when(taskDao.delete(any(Task.class))).thenReturn(1);
         taskService.delete(task);
 
         verify(taskDao).delete(task);

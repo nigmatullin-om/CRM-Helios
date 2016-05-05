@@ -8,11 +8,10 @@ import com.becomejavasenior.service.impl.ContactServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,18 +19,15 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.when;
 
-/**
- * Created by aivlev on 3/26/16.
- */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(ContactServiceImpl.class)
+
 public class ContactServiceTest {
 
     private static final int CONTACTS_COUNT = 2;
 
-    private ContactService contactService;
+    @InjectMocks
+    private ContactServiceImpl contactService;
 
     @Mock
     private ContactDao contactDao;
@@ -44,9 +40,7 @@ public class ContactServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-        when(daoFactory.getContactDao()).thenReturn(contactDao);
-        contactService = new ContactServiceImpl();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test

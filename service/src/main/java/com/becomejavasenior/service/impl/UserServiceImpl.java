@@ -5,11 +5,15 @@ import com.becomejavasenior.dao.UserDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.User;
 import com.becomejavasenior.service.UserService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
-
+@Service
 public class UserServiceImpl implements UserService {
+
+    @Resource
     private UserDao userDao;
 
     public UserDao getUserDao() {

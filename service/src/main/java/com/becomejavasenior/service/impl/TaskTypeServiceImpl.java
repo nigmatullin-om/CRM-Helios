@@ -5,11 +5,15 @@ import com.becomejavasenior.dao.TaskTypeDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.TaskType;
 import com.becomejavasenior.service.TaskTypeService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-
+@Service
 public class TaskTypeServiceImpl implements TaskTypeService {
+
+    @Resource
     private TaskTypeDao taskTypeDao;
 
     public TaskTypeDao getTaskTypeDao() {

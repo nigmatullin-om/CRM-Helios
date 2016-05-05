@@ -8,11 +8,9 @@ import com.becomejavasenior.service.impl.NoteServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoAnnotations;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,15 +18,13 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(NoteServiceImpl.class)
+
 public class NoteServiceTest {
 
-
-        private NoteService noteService;
+        @InjectMocks
+        private NoteServiceImpl noteService;
 
         @Mock
         private NoteDaoImpl noteDao;
@@ -41,9 +37,7 @@ public class NoteServiceTest {
 
         @Before
         public void setUp() throws Exception {
-            whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-            when(daoFactory.getNoteDao()).thenReturn(noteDao);
-            noteService = new NoteServiceImpl();
+            MockitoAnnotations.initMocks(this);
         }
 
         @Test
@@ -56,7 +50,7 @@ public class NoteServiceTest {
 
         @Test
         public void testGetNoteById() throws Exception {
-            PowerMockito.when(noteDao.getNoteById(1)).thenReturn(note);
+            when(noteDao.getNoteById(1)).thenReturn(note);
 
             Note resultNote = noteService.getNoteById(1);
 
@@ -104,7 +98,7 @@ public class NoteServiceTest {
 
         @Test
         public void testGetMaxId() throws DatabaseException {
-            PowerMockito.when(noteDao.getMaxId()).thenReturn(1);
+            when(noteDao.getMaxId()).thenReturn(1);
             int result = noteService.getMaxId();
 
             verify(noteDao).getMaxId();

@@ -10,20 +10,36 @@ import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.DealStage;
 import com.becomejavasenior.service.DealService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 
+@Service
 public class DealServiceImpl implements DealService {
 
     private static final String SUCCESS_DEALS = "successDeals";
     private static final String FAILED_DEALS = "failedDeals";
 
+    @Resource
     private DealDao dealDao;
+
+    @Resource
     private UserDao userDao;
+
+    @Resource
     private CompanyDao companyDao;
+
+    @Resource
     private NoteDao noteDao;
+
+    @Resource
     private FileDao fileDao;
+
+    @Resource
     private TagDao tagDao;
+
+    @Resource
     private ContactDao contactDao;
 
     public DealDao getDealDao() {

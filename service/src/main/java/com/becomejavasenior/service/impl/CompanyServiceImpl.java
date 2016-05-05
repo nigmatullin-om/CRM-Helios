@@ -5,14 +5,15 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.service.CompanyService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * Created by aivlev on 3/23/16.
- */
+@Service
 public class CompanyServiceImpl implements CompanyService {
 
+    @Resource
     private CompanyDao companyDao;
 
     public CompanyDao getCompanyDao() {

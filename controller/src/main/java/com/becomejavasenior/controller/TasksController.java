@@ -59,7 +59,7 @@ public class TasksController extends HttpServlet {
     public void init() throws ServletException {
         ApplicationContext ctx = WebApplicationContextUtils
                 .getRequiredWebApplicationContext(getServletContext());
-        taskService = (TaskService) ctx.getBean("taskService");
+        taskService = ctx.getBean(TaskService.class);
     }
 
 

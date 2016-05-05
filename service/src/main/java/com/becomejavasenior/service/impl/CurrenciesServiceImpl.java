@@ -5,13 +5,15 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Currencies;
 import com.becomejavasenior.service.CurrenciesService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-/**
- * Created by vanya on 05.04.2016.
- */
+@Service
 public class CurrenciesServiceImpl implements CurrenciesService {
+
+    @Resource
     private CurrenciesDao currenciesDao;
 
     public CurrenciesDao getCurrenciesDao() {

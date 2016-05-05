@@ -7,11 +7,15 @@ import com.becomejavasenior.dao.impl.NoteDaoImpl;
 import com.becomejavasenior.model.Note;
 import com.becomejavasenior.service.NoteService;
 import com.becomejavasenior.model.Deal;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-
+@Service
 public class NoteServiceImpl implements NoteService {
+
+    @Resource
     private NoteDao noteDao;
 
     public NoteDao getNoteDao() {

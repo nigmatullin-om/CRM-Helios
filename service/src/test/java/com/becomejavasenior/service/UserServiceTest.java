@@ -8,7 +8,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -22,12 +24,12 @@ import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UserServiceImpl.class)
+
 public class UserServiceTest {
 
 
-    private UserService userService;
+    @InjectMocks
+    private UserServiceImpl userService;
 
     @Mock
     private UserDao userDao;
@@ -40,9 +42,7 @@ public class UserServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-        when(daoFactory.getUserDao()).thenReturn(userDao);
-        userService = new UserServiceImpl();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test

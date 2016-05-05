@@ -8,16 +8,16 @@ import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.service.ContactService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by aivlev on 3/23/16.
- * Modified by Timue Aminev, tim8917@gmail.com
- */
+@Service
 public class ContactServiceImpl implements ContactService {
 
+    @Resource
     private ContactDao contactDao;
 
     public ContactDao getContactDao() {

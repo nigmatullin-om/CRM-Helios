@@ -9,10 +9,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,18 +22,15 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.when;
 
-/**
- * Created by aivlev on 3/26/16.
- */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CompanyServiceImpl.class)
+
 public class CompanyServiceTest {
 
     private static final int COMPANIES_COUNT = 2;
 
-    private CompanyService companyService;
+    @InjectMocks
+    private CompanyServiceImpl companyService;
 
     @Mock
     private CompanyDao companyDao;
@@ -44,9 +43,7 @@ public class CompanyServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-        when(daoFactory.getCompanyDao()).thenReturn(companyDao);
-        companyService = new CompanyServiceImpl();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test

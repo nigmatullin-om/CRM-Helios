@@ -1,18 +1,16 @@
 package com.becomejavasenior.service;
 
-import com.becomejavasenior.dao.DatabaseException;
+import com.becomejavasenior.dao.CurrenciesDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.dao.impl.CurrenciesDaoImpl;
 import com.becomejavasenior.model.Currencies;
 import com.becomejavasenior.service.impl.CurrenciesServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,17 +18,16 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(CurrenciesServiceImpl.class)
+
 public class CurrenciesServiceTest {
 
-    private CurrenciesService currenciesService;
+    @InjectMocks
+    private CurrenciesServiceImpl currenciesService;
 
     @Mock
-    private CurrenciesDaoImpl currenciesDao;
+    private CurrenciesDao currenciesDao;
 
     @Mock
     private Currencies currencies;
@@ -40,9 +37,7 @@ public class CurrenciesServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        whenNew(DaoFactoryImpl.class).withNoArguments().thenReturn(daoFactory);
-        when(daoFactory.getCurrenciesDao()).thenReturn(currenciesDao);
-        currenciesService = new CurrenciesServiceImpl();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test

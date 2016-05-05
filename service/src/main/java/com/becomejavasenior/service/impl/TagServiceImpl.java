@@ -10,10 +10,15 @@ import com.becomejavasenior.model.Contact;
 import com.becomejavasenior.model.Tag;
 import com.becomejavasenior.service.TagService;
 import com.becomejavasenior.model.Deal;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
+@Service
 public class TagServiceImpl implements TagService {
+
+    @Resource
     private TagDaoImpl  tagDao;
 
     public TagDaoImpl getTagDao() {
