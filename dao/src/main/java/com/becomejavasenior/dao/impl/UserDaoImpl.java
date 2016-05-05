@@ -37,7 +37,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
             "FROM person INNER JOIN task ON person.id = task.created_by WHERE task.id = ?";
     private static final String GET_USER_BY_NAME = "SELECT person.id, person.name, person.password, person.email, person.phone_mobile," +
             "person.phone_work, person.note, person.date_create, person.deleted FROM person WHERE person.name = ?";
-    private static final String IS_EMAIL_EXIST = "SELECT person.email FROM person";
+    private static final String IS_EMAIL_EXIST = "SELECT person.email FROM person WHERE person.email = ?";
 
 
 
@@ -94,21 +94,19 @@ public class UserDaoImpl extends CommonDao implements UserDao {
         List<String> emails =  new ArrayList<String>();
         final boolean[] result = {false};
         try(Connection connection = getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(IS_EMAIL_EXIST);
-        ResultSet resultSet = preparedStatement.executeQuery();) {
-            while (resultSet.next()){
-                emails.add(resultSet.getString("email"));
+        PreparedStatement preparedStatement = connection.prepareStatement(IS_EMAIL_EXIST)){
+            preparedStatement.setString(1,email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                if( resultSet.getString("email")!=null){
+                  return true;
+                }
             }
         } catch (SQLException e) {
             LOGGER.error("Getting a user was failed. Error - {}", new Object[]{e.getMessage()});
             throw new DatabaseException(e.getMessage());
         }
-        emails.forEach((emailName)->{
-            if(emailName.equals(email)){
-                result[0] = true;
-            }
-        });
-        return result[0];
+        return false;
     }
 
     @Override
