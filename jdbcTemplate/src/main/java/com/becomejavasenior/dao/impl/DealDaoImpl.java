@@ -33,7 +33,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     private static final String UPDATE_DEAL = "UPDATE deal SET name=?, budget=?, responsible_id=?, stage_id=?," +
             "company_id=?, created_by=?, date_create=?, deleted=? WHERE id=?";
 
-    private static final String DELETE_DEAL = "DELETE FROM deal WHERE id=?";
+    private static final String DELETE_DEAL = "UPDATE deal SET deleted=TRUE WHERE id=?";
     private static final String GET_MAX_ID = "SELECT MAX(id) FROM deal";
     private static final String FIND_ALL_DEALS = "SELECT id, name, budget, responsible_id, stage_id, company_id, created_by, date_create, deleted FROM deal";
     private static final String COUNT_DEALS_WITH_TASKS = "SELECT count(*) FROM deal d WHERE d.id IN (SELECT t.id FROM task t)";
@@ -82,7 +82,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     @Override
     public Deal getDealById(int id) throws DatabaseException {
         try {
-            return getJdbcTemplate().queryForObject(READ_DEAL, new Object[]{id}, RowMappers.dealRowMapper());
+            return getJdbcTemplate().queryForObject(READ_DEAL, new Object[]{id}, DealRowMapper.dealRowMapper());
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage());
         }
@@ -135,7 +135,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     @Override
     public List<Deal> findAll() throws DatabaseException {
         try {
-            return getJdbcTemplate().query(FIND_ALL_DEALS, RowMappers.dealRowMapper());
+            return getJdbcTemplate().query(FIND_ALL_DEALS, DealRowMapper.dealRowMapper());
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage());
         }
@@ -162,7 +162,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     @Override
     public List<Deal> getDealsForContactById(Contact contact) throws DatabaseException {
         try {
-            return getJdbcTemplate().query(FIND_ALL_DEAL_FOR_CONTACT, new Object[]{contact}, RowMappers.dealRowMapper());
+            return getJdbcTemplate().query(FIND_ALL_DEAL_FOR_CONTACT, new Object[]{contact.getId()}, DealRowMapper.dealRowMapper());
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage());
         }
@@ -171,7 +171,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     @Override
     public List<Deal> getDealsForCompanyById(Company company) throws DatabaseException {
         try {
-            return getJdbcTemplate().query(FIND_DEAL_FOR_COMPANY, new Object[]{company}, RowMappers.dealRowMapper());
+            return getJdbcTemplate().query(FIND_DEAL_FOR_COMPANY, new Object[]{company.getId()}, DealRowMapper.dealRowMapper());
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage());
         }
@@ -180,7 +180,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
     @Override
     public Deal getDealForTask(Task task) throws DatabaseException {
         try {
-            return getJdbcTemplate().queryForObject(GET_DEAL_FOR_TASK, new Object[]{task}, RowMappers.dealRowMapper());
+            return getJdbcTemplate().queryForObject(GET_DEAL_FOR_TASK, new Object[]{task.getId()}, DealRowMapper.dealRowMapper());
         } catch (Exception e) {
             throw new DatabaseException(e.getMessage());
         }
