@@ -73,11 +73,11 @@ public class SaveDealController extends HttpServlet {
 
         try {
             if (company.getId() == 0){
-                company.setId(companyService.createWithId(company));
+                company.setId(companyService.create(company));
                 log.info("company was saved with id = " + company.getId());
             }
             deal.setCompany(company);
-            int dealId = dealService.createWithId(deal);
+            int dealId = dealService.create(deal);
             deal.setId(dealId);
             log.info("deal id = " + dealId);
 
@@ -116,7 +116,7 @@ public class SaveDealController extends HttpServlet {
 
             if (contact != null){
                 contact.setCompany(company);
-                contact.setId(contactService.createWithId(contact));
+                contact.setId(contactService.create(contact));
                 log.info("new contact id = " + contact.getId());
                 contactService.addContactToDeal(contact, deal);
             }

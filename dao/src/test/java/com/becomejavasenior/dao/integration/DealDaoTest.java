@@ -126,7 +126,7 @@ public class DealDaoTest extends AbstractTestDao {
         deal.setCreatedByUser(user);
         deal.setResponsibleUser(user);
         deal.setCreationDate(new Date());
-        int result  = dealDao.createWithId(deal);
+        int result  = dealDao.create(deal);
         assertThat(result, Matchers.greaterThan(0));
     }
 

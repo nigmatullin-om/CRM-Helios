@@ -68,9 +68,4 @@ public class ContactServiceImpl implements ContactService {
     public int addContactToDeal(Contact contact, Deal deal) throws DatabaseException {
         return contactDao.addContactToDeal(contact.getId(), deal.getId());
     }
-
-    @Override
-    public int createWithId(Contact contact) throws DatabaseException {
-        return contactDao.createWithId(contact);
-    }
 }

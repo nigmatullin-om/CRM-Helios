@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
-@WebFilter(urlPatterns = {"/add/*", "/view/*"},
+@WebFilter(urlPatterns = {"/add/*"},
         dispatcherTypes = DispatcherType.REQUEST)
 public class FormsFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger(FormsFilter.class);
@@ -27,7 +27,7 @@ public class FormsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("POST")) {
+        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("GET")) {
             List<User> users = null;
             try {
                 users = new UserServiceImpl().findAll();

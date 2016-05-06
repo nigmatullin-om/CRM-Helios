@@ -22,8 +22,6 @@ public interface CompanyService {
 
     int getCount() throws DatabaseException;
 
-    int createWithId(Company company) throws DatabaseException;
-
     List<Integer> withoutTasks() throws DatabaseException;
 
     List<Integer> withOutdatedTasks() throws DatabaseException;
