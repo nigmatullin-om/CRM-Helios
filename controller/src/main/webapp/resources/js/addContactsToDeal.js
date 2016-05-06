@@ -1,5 +1,4 @@
 function addDealButton(){
-    /*alert("add contact  button!");*/
     contactId = document.getElementById("contact").value;
     if (contactId == "-1"){
         alert("Контакт не выбран!");
@@ -13,7 +12,6 @@ function addDealButton(){
         }
     }
     console.log("contact id: " + contactId);
-    /*alert("contact with id: " + contactId);*/
     contactName = document.getElementById('contact').options[document.getElementById('contact').selectedIndex].text;
     console.log("contact name:" + contactName );
 
