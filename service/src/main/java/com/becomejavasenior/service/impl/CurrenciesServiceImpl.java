@@ -2,7 +2,6 @@ package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.CurrenciesDao;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Currencies;
 import com.becomejavasenior.service.CurrenciesService;
 import org.springframework.stereotype.Service;
@@ -15,14 +14,6 @@ public class CurrenciesServiceImpl implements CurrenciesService {
 
     @Resource
     private CurrenciesDao currenciesDao;
-
-    public CurrenciesDao getCurrenciesDao() {
-        return currenciesDao;
-    }
-
-    public void setCurrenciesDao(CurrenciesDao currenciesDao) {
-        this.currenciesDao = currenciesDao;
-    }
 
     @Override
     public int create(Currencies currencies) throws DatabaseException {

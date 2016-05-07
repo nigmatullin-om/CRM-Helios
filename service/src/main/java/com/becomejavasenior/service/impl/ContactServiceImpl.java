@@ -2,7 +2,6 @@ package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.ContactDao;
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.filter.ContactFilter;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
@@ -19,14 +18,6 @@ public class ContactServiceImpl implements ContactService {
 
     @Resource
     private ContactDao contactDao;
-
-    public ContactDao getContactDao() {
-        return contactDao;
-    }
-
-    public void setContactDao(ContactDao contactDao) {
-        this.contactDao = contactDao;
-    }
 
     @Override
     public int create(Contact contact) throws DatabaseException {

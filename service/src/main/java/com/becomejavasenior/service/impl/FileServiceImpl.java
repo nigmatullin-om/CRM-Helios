@@ -2,7 +2,6 @@ package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.FileDao;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.File;
 import com.becomejavasenior.service.FileService;
@@ -15,18 +14,6 @@ public class FileServiceImpl implements FileService {
 
     @Resource
     private FileDao fileDao;
-
-    public FileDao getFileDao() {
-        return fileDao;
-    }
-
-    public void setFileDao(FileDao fileDao) {
-        this.fileDao = fileDao;
-    }
-
-    public FileServiceImpl() {
-        fileDao = new DaoFactoryImpl().getFileDao();
-    }
 
     @Override
     public int createWithId(File file) throws DatabaseException {

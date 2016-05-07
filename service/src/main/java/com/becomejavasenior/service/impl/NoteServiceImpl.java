@@ -2,11 +2,9 @@ package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.NoteDao;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
-import com.becomejavasenior.dao.impl.NoteDaoImpl;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Note;
 import com.becomejavasenior.service.NoteService;
-import com.becomejavasenior.model.Deal;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,14 +15,6 @@ public class NoteServiceImpl implements NoteService {
 
     @Resource
     private NoteDao noteDao;
-
-    public NoteDao getNoteDao() {
-        return noteDao;
-    }
-
-    public void setNoteDao(NoteDao noteDao) {
-        this.noteDao = noteDao;
-    }
 
     @Override
     public int create(Note note) throws DatabaseException {

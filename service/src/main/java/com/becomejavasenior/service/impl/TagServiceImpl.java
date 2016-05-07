@@ -2,14 +2,12 @@ package com.becomejavasenior.service.impl;
 
 
 import com.becomejavasenior.dao.DatabaseException;
-import com.becomejavasenior.dao.TagDao;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.dao.impl.TagDaoImpl;
 import com.becomejavasenior.model.Company;
 import com.becomejavasenior.model.Contact;
+import com.becomejavasenior.model.Deal;
 import com.becomejavasenior.model.Tag;
 import com.becomejavasenior.service.TagService;
-import com.becomejavasenior.model.Deal;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,14 +18,6 @@ public class TagServiceImpl implements TagService {
 
     @Resource
     private TagDaoImpl  tagDao;
-
-    public TagDaoImpl getTagDao() {
-        return tagDao;
-    }
-
-    public void setTagDao(TagDaoImpl tagDao) {
-        this.tagDao = tagDao;
-    }
 
     @Override
     public int create(Tag tag) throws DatabaseException {

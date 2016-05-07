@@ -9,18 +9,19 @@ import javax.annotation.Resource;
 import java.time.*;
 import java.time.temporal.WeekFields;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
 
     private static final String DONE_TASKS = "doneTasks";
     private static final String NOT_DONE_TASKS = "notDoneTasks";
-    public static final String OVERDUE_TASKS = "overdue";
-    public static final String TODAY_TASKS = "today";
-    public static final String TOMORROW_TASKS = "tomorrow";
-    public static final int MINUTES_IN_HALF_HOUR = 30;
-    public static final int HALF_HOURS_IN_DAY = 48;
-    public static final int DAYS_IN_WEEK = 7;
+    private static final String OVERDUE_TASKS = "overdue";
+    private static final String TODAY_TASKS = "today";
+    private static final String TOMORROW_TASKS = "tomorrow";
+    private static final int MINUTES_IN_HALF_HOUR = 30;
+    private static final int HALF_HOURS_IN_DAY = 48;
+    private static final int DAYS_IN_WEEK = 7;
 
     @Resource
     private TaskDao taskDao;
@@ -39,55 +40,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Resource
     private TaskTypeDao taskTypeDao;
-
-    public TaskDao getTaskDao() {
-        return taskDao;
-    }
-
-    public ContactDao getContactDao() {
-        return contactDao;
-    }
-
-    public CompanyDao getCompanyDao() {
-        return companyDao;
-    }
-
-    public DealDao getDealDao() {
-        return dealDao;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public void setTaskDao(TaskDao taskDao) {
-        this.taskDao = taskDao;
-    }
-
-    public void setContactDao(ContactDao contactDao) {
-        this.contactDao = contactDao;
-    }
-
-    public void setCompanyDao(CompanyDao companyDao) {
-        this.companyDao = companyDao;
-    }
-
-    public void setDealDao(DealDao dealDao) {
-        this.dealDao = dealDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public TaskTypeDao getTaskTypeDao() {
-        return taskTypeDao;
-    }
-
-
-    public void setTaskTypeDao(TaskTypeDao taskTypeDao) {
-        this.taskTypeDao = taskTypeDao;
-    }
 
     @Override
     public int create(Task task) throws DatabaseException {
@@ -120,9 +72,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<String, List<Task>> getTodoLineTasks(LocalDate localDate) throws DatabaseException {
         Map<String, List<Task>> todoLineTasks = new LinkedHashMap<>();
-        todoLineTasks.put(OVERDUE_TASKS, new ArrayList<Task>());
-        todoLineTasks.put(TODAY_TASKS, new ArrayList<Task>());
-        todoLineTasks.put(TOMORROW_TASKS, new ArrayList<Task>());
+        todoLineTasks.put(OVERDUE_TASKS, new ArrayList<>());
+        todoLineTasks.put(TODAY_TASKS, new ArrayList<>());
+        todoLineTasks.put(TOMORROW_TASKS, new ArrayList<>());
 
         LocalDate nextDay = localDate.plusDays(2);
 
@@ -135,7 +87,6 @@ public class TaskServiceImpl implements TaskService {
             } else if (taskFinishDate.isAfter(localDate) && taskFinishDate.isBefore(nextDay)) {
                 todoLineTasks.get(TOMORROW_TASKS).add(task);
             }
-
         }
         return todoLineTasks;
     }
@@ -179,7 +130,7 @@ public class TaskServiceImpl implements TaskService {
         Map<LocalTime, Map<DayOfWeek, List<Task>>> tasksByHalfHourForWeek = new LinkedHashMap<>();
 
         for (LocalTime halfHour : timeTimeByHalfHour()) {
-            tasksByHalfHourForWeek.put(halfHour, new LinkedHashMap<DayOfWeek, List<Task>>());
+            tasksByHalfHourForWeek.put(halfHour, new LinkedHashMap<>());
         }
 
         for (LocalTime halfHour : timeTimeByHalfHour()) {
@@ -203,17 +154,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<String, List<Task>> filterTasksByDone(List<Task> tasks) {
         Map<String, List<Task>> mapTasks = new HashMap<>();
-        List<Task> doneTasks = new LinkedList<>();
-        List<Task> notDoneTasks = new LinkedList<>();
-        ListIterator<Task> listIterator = tasks.listIterator();
-        while (listIterator.hasNext()) {
-            Task tempTask = listIterator.next();
-            if (tempTask.isDone()) {
-                doneTasks.add(tempTask);
-            } else {
-                notDoneTasks.add(tempTask);
-            }
-        }
+
+        List<Task> doneTasks = tasks.stream().filter(Task::isDone).collect(Collectors.toCollection(LinkedList::new));
+        List<Task> notDoneTasks = tasks.stream().filter(task -> !task.isDone()).collect(Collectors.toCollection(LinkedList::new));
+
         mapTasks.put(DONE_TASKS, doneTasks);
         mapTasks.put(NOT_DONE_TASKS, notDoneTasks);
         return mapTasks;
@@ -222,15 +166,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getRunningTasks(List<Task> notDoneTasks) {
         long currentTime = System.currentTimeMillis();
-        List<Task> runningTasks = new LinkedList<>();
-        ListIterator<Task> listIterator = notDoneTasks.listIterator();
-        while (listIterator.hasNext()) {
-            Task tempTask = listIterator.next();
-            if (tempTask.getFinishDate().getTime() > currentTime) {
-                runningTasks.add(tempTask);
-            }
-        }
-        return runningTasks;
+        return notDoneTasks.stream().filter(tempTask -> tempTask.getFinishDate().getTime() > currentTime).collect(Collectors.toCollection(LinkedList::new));
     }
 
     @Override
@@ -300,7 +236,7 @@ public class TaskServiceImpl implements TaskService {
         return tasksWithAllFields;
     }
 
-    public Task fillTaskFields(Task task) throws DatabaseException {
+    private Task fillTaskFields(Task task) throws DatabaseException {
         Contact contactForTask = contactDao.getContactForTask(task);
         task.setContact(contactForTask);
 

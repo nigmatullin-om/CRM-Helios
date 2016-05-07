@@ -16,14 +16,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Resource
     private CompanyDao companyDao;
 
-    public CompanyDao getCompanyDao() {
-        return companyDao;
-    }
-
-    public void setCompanyDao(CompanyDao companyDao) {
-        this.companyDao = companyDao;
-    }
-
     @Override
     public int create(Company company) throws DatabaseException {
         return companyDao.create(company);

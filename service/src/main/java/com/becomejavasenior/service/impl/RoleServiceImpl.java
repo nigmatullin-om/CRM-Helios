@@ -3,7 +3,6 @@ package com.becomejavasenior.service.impl;
 
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.dao.RoleDao;
-import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Role;
 import com.becomejavasenior.service.RoleService;
 import org.springframework.stereotype.Service;
