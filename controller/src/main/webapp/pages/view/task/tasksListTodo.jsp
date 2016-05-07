@@ -67,7 +67,7 @@
                                             </c:if>
                                         </li>
                                     </ul>
-                                    <form action="/tasks" method="post">
+                                    <form action="/view/tasks" method="post">
                                         <div class="btn-group">
                                             <input hidden="true" name="taskId" value="${task.getId()}">
                                             <button type="submit" class="btn btn-default" name="changeDate"

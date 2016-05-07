@@ -108,7 +108,7 @@ public class TasksController extends HttpServlet {
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
-        response.sendRedirect("/tasks?view=todo");
+        response.sendRedirect("/view/tasks?view=todo");
     }
 
     private RequestDispatcher processMonthTasks(HttpServletRequest request) {
