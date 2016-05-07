@@ -6,14 +6,17 @@ import com.becomejavasenior.dao.RoleDao;
 import com.becomejavasenior.dao.impl.DaoFactoryImpl;
 import com.becomejavasenior.model.Role;
 import com.becomejavasenior.service.RoleService;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
+@Service
 public class RoleServiceImpl implements RoleService {
+
+    @Resource
     RoleDao roleDao;
-    public RoleServiceImpl(){
-        roleDao =  new DaoFactoryImpl().getRoleDao();
-    }
+
     @Override
     public int create(Role role) throws DatabaseException {
         return roleDao.create(role);
