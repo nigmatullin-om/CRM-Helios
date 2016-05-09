@@ -14,9 +14,10 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
             <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
             <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-            <script src="../../resources/js/clockpicker.js"></script>
+            <script src="/resources/js/clockpicker.js"></script>
             <script src="../../resources/js/addDealForm.js"></script>
             <script src="../../resources/js/addContactsToDeal.js"></script>
+            <script src="../../resources/js/messageResource.min.js"></script>
             <script>
                 $(function() {
                     $("#dealDate").datepicker();
@@ -27,6 +28,7 @@
                 $(function(){
                     $("#taskTime").clockpicker();
                 });
+                $(document).ready(initWarnings());
             </script>
         </head>
         <body>

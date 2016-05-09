@@ -3,7 +3,7 @@
     var dealName = document.getElementById("dealName").value;
      console.log("deal name =" + dealName);
     if(dealName == ""){
-        setDivError("dealNameBlock", "Имя сделки должно быть заполнено!");
+        setDivError("dealNameBlock", dealNameWarning);
         return false;
     }
      else{
@@ -13,7 +13,7 @@
     var dealBudget = document.getElementById("dealBudget").value;
      console.log("budget = " + dealBudget);
      if(dealBudget == ""){
-         setDivError("dealBudgetBlock", "Бюджет сделки не указан");
+         setDivError("dealBudgetBlock", dealBudgetWarning);
          return false;
      }
      else {
@@ -23,7 +23,7 @@
      var dealResponsibleId = document.getElementById("dealResponsible").value;
      console.log("deal responsible id =" + dealResponsibleId);
      if(dealResponsibleId == -1) {
-         setDivError("dealResponsibleBlock", "Ответственный за сделку не выбран!");
+         setDivError("dealResponsibleBlock", dealResponsibleWarning);
          return false;
      }
      else {
@@ -34,7 +34,7 @@
      var dealStage = document.getElementById("dealStage").value;
      console.log("deal stage=" + dealStage);
      if(dealStage == -1){
-         setDivError("dealStageBlock", "Этап сделки не выбран!");
+         setDivError("dealStageBlock", dealStageWarning);
          return false;
      }
      else {
@@ -44,7 +44,7 @@
      var dealNote = document.getElementById("dealNote").value;
      console.log("deal note=" + dealNote);
      if(dealNote == ""){
-         setDivError("dealNoteBlock", "Примечание к сделке не добавлено!");
+         setDivError("dealNoteBlock", dealNoteWarning);
          return false;
      }
      else {
@@ -54,7 +54,7 @@
      var dealDate = document.getElementById("dealDate").value;
      console.log("deal date=" + dealDate);
      if(dealDate == ""){
-         setDivError("dealDateBlock", "Дата не указана!");
+         setDivError("dealDateBlock", dealDateWarning);
          return false;
      }
      else {
@@ -93,7 +93,7 @@
 
      if (contactName != "" || contactPosition != "" || contactPhoneType != "-1" || contactPhone != "" || contactSkype != "" || contactCompany != ""){
          if (contactName == ""){
-             setDivError("contactNameBlock", "Имя и фамилия нового контакта не указаны!");
+             setDivError("contactNameBlock", contactNameWarning);
              return false;
          }
          else {
@@ -101,7 +101,7 @@
          }
 
          if ( contactPosition == ""){
-             setDivError("contactPositionBlock", "Должность нового контакта не указана!");
+             setDivError("contactPositionBlock", contactPostWarning);
              return false;
          }
          else {
@@ -109,7 +109,7 @@
          }
 
          if (contactPhoneType == "-1" || contactPhone == ""){
-             setDivError("contactPhoneTypeBlock", "Телефрн нового контакта не указан!");
+             setDivError("contactPhoneTypeBlock", contactPhoneWarning);
              return false;
          }
          else {
@@ -117,7 +117,7 @@
          }
 
          if (contactSkype == ""){
-             setDivError("contactSkypeBlock", "Skype нового контакта не указан!");
+             setDivError("contactSkypeBlock", contactSkypeWarning);
              return false;
          }
          else {
@@ -125,7 +125,7 @@
          }
 
          if (contactCompany == ""){
-             setDivError("contactCompanyBlock", "Компания нового контакта не указана!");
+             setDivError("contactCompanyBlock", contactCompanyWarning);
              return false;
          }
          else {
@@ -133,7 +133,7 @@
          }
 
          if (contactEmail == ""){
-             setDivError("contactEmailBlock", "Email нового контакта не указан!");
+             setDivError("contactEmailBlock", contactEmailWarning);
              return false;
          }
          else {
@@ -162,7 +162,7 @@
      if (taskDate != "" || taskPeriod != "-1" || taskTime != "" || taskResponsible != "-1" || taskType != "-1" || taskText != ""){
          if (taskPeriod == "-1"){
              if (taskDate == "" || taskTime == ""){
-                 setDivError("taskPeriodBlock", "Необходимо указать период или дату и время задачи");
+                 setDivError("taskPeriodBlock", taskDateWarning);
                  setDivError("taskDateTimeBlock", "");
                  return false;
              }
@@ -175,7 +175,7 @@
          }
 
          if (taskName == ""){
-             setDivError("taskNameBlock", "Имя задачи не указано!");
+             setDivError("taskNameBlock", taskNameWarning);
              return false;
          }
          else {
@@ -183,7 +183,7 @@
          }
 
          if (taskResponsible == "-1"){
-             setDivError("taskResponsibleBlock","Ответственный за задачу не указан!");
+             setDivError("taskResponsibleBlock",taskResponsibleWarning);
              return false;
          }
          else {
@@ -191,7 +191,7 @@
          }
 
          if (taskType == "-1"){
-             setDivError("taskTypeBlock", "Тип задачи не указан!");
+             setDivError("taskTypeBlock", taskTypeWarning);
              return false;
          }
          else {
@@ -199,7 +199,7 @@
          }
 
          if (taskText == ""){
-             setDivError("taskTextBlock", "Текст задачи не указан!");
+             setDivError("taskTextBlock", taskTextWarning);
              return false;
          }
          else {
@@ -236,7 +236,7 @@
          console.log("company adress = " + companyAdress);
 
          if (companyName == ""){
-             setDivError("companyNameBlock", "Имя компании не заполнено!");
+             setDivError("companyNameBlock", companyNameWarning);
              return false;
          }
          else {
@@ -244,7 +244,7 @@
          }
 
          if (companyPhone == ""){
-             setDivError("companyPhoneBlock", "Номер телефона компании не заполнен!");
+             setDivError("companyPhoneBlock", companyPhoneWarning);
              return false;
          }
          else {
@@ -252,7 +252,7 @@
          }
 
          if (companyEmail == ""){
-             setDivError("companyEmailBlock", "email компании не заполнен!");
+             setDivError("companyEmailBlock", companyEmailWarning);
              return false;
          }
          else {
@@ -260,7 +260,7 @@
          }
 
          if (companyAdress == ""){
-             setDivError("companyAdressBlock", "");
+             setDivError("companyAdressBlock", companyAddressWarning);
              return false;
          }
          else {
@@ -268,7 +268,7 @@
          }
 
          if (companyWeb == ""){
-             setDivError("companyWebBlock", "Вэб адресс компании не заполнен!");
+             setDivError("companyWebBlock", companyWebWarning);
              return false;
          }
          else {
@@ -291,7 +291,7 @@
          }
          else{
              console.log("selected company id = " + selectedCompanyId);
-             document.getElementById("addCompany").innerHTML = "Добавить новую";
+             document.getElementById("addCompany").innerHTML = addNewCompany;
              document.getElementById("companyName").setAttribute("disabled", "disabled");
              document.getElementById("companyPhone").setAttribute("disabled", "disabled");
              document.getElementById("companyWeb").setAttribute("disabled", "disabled");
@@ -301,7 +301,7 @@
      }
      else{
          console.log("select company list disabled");
-         document.getElementById("addCompany").innerHTML = "Добавить компанию";
+         document.getElementById("addCompany").innerHTML = addCompany;
          document.getElementById("company").value = "-1";
          document.getElementById("companyName").removeAttribute("disabled");
          document.getElementById("companyPhone").removeAttribute("disabled");
@@ -337,6 +337,117 @@
      var element = document.getElementById(divId + "span");
      if (element != null){
          element.parentNode.removeChild(element);
+     }
+ }
+
+ function getLocale(){
+     var name = "localeCookie" + "=";
+     var cookieArray = document.cookie.split(';');
+     for(var i = 0; i <cookieArray.length; i++) {
+         var cookie = cookieArray[i];
+         while (cookie.charAt(0)==' ') {
+             cookie = cookie.substring(1);
+         }
+         if (cookie.indexOf(name) == 0) {
+             console.log("locale cookie: " + cookie.substring(name.length,cookie.length));
+             return cookie.substring(name.length,cookie.length);
+         }
+     }
+     return "";
+ }
+
+ var dealNameWarning;
+ var dealBudgetWarning;
+ var dealResponsibleWarning;
+ var dealStageWarning;
+ var dealNoteWarning;
+ var dealDateWarning;
+
+ var contactNameWarning;
+ var contactPostWarning;
+ var contactPhoneWarning;
+ var contactSkypeWarning;
+ var contactCompanyWarning;
+ var contactEmailWarning;
+
+ var companyNameWarning;
+ var companyPhoneWarning;
+ var companyEmailWarning;
+ var companyAddressWarning;
+ var companyWebWarning;
+
+ var taskDateWarning;
+ var taskNameWarning;
+ var taskResponsibleWarning;
+ var taskTypeWarning;
+ var taskTextWarning;
+
+ var addNewCompany;
+ var addCompany;
+
+ function initWarnings(){
+     var locale = getLocale();
+     if (locale == "ru_RU"){
+        dealNameWarning = "Имя сделки должно быть заполнено!";
+         console.log("dealNameWarning: " + dealNameWarning);
+         dealBudgetWarning = "Бюджет сделки не указан";
+         dealResponsibleWarning = "Ответственный за сделку не выбран!";
+         dealStageWarning = "Этап сделки не выбран!";
+         dealNoteWarning = "Примечание к сделке не добавлено!";
+         dealDateWarning = "Дата не указана!";
+
+         contactNameWarning = "Имя и фамилия нового контакта не указаны!";
+         contactPostWarning = "Должность нового контакта не указана!";
+         contactPhoneWarning = "Телефрн нового контакта не указан!";
+         contactSkypeWarning = "Skype нового контакта не указан!";
+         contactCompanyWarning = "Компания нового контакта не указана!";
+         contactEmailWarning = "Email нового контакта не указан!";
+
+         companyNameWarning = "Имя компании не заполнено!";
+         companyPhoneWarning = "Номер телефона компании не заполнен!";
+         companyEmailWarning = "email компании не заполнен!";
+         companyAddressWarning = "Адресс компании не заполнен";
+         companyWebWarning = "Вэб адресс компании не заполнен!";
+
+         taskDateWarning = "Необходимо указать период или дату и время задачи";
+         taskNameWarning = "Имя задачи не указано!";
+         taskResponsibleWarning = "Ответственный за задачу не указан!";
+         taskTypeWarning = "Тип задачи не указан!";
+         taskTextWarning = "Текст задачи не указан!";
+
+         addNewCompany = "Добавить новую";
+         addCompany = "Добавить компанию";
+     }
+     else {
+         dealNameWarning = "Deal name is empty!";
+         console.log("dealNameWarning: " + dealNameWarning);
+         dealBudgetWarning = "Deal budget must be set!";
+         dealResponsibleWarning = "Responsible for deal doesn't set!";
+         dealStageWarning = "Deal stage doesn't set!";
+         dealNoteWarning = "Deal note doesn't set!";
+         dealDateWarning = "Deal date doesn't set!";
+
+         contactNameWarning = "Name of the new contact must be set!!";
+         contactPostWarning = "Position of the new contact must be set!";
+         contactPhoneWarning = "Phone of the new contact must be set!";
+         contactSkypeWarning = "Skype of the new contact must be set!";
+         contactCompanyWarning = "Company of the new contact must be set!";
+         contactEmailWarning = "Email of the new contact must be set!";
+
+         companyNameWarning = "Company name is empty!";
+         companyPhoneWarning = "New company phone number is empty!";
+         companyEmailWarning = "Email for new company is empty!";
+         companyAddressWarning = "Company address is empty! ";
+         companyWebWarning = "Web address must be set!";
+
+         taskDateWarning = "Period or date must be set!";
+         taskNameWarning = "Task name must be set!";
+         taskResponsibleWarning = "Responsible for task must be set!";
+         taskTypeWarning = "Task type must be set!";
+         taskTextWarning = "Task text must be set!";
+
+         addNewCompany = "Add new";
+         addCompany = "Add company";
      }
  }
 
