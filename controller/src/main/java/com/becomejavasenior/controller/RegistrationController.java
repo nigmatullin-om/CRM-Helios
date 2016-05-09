@@ -10,6 +10,7 @@ import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -80,6 +81,11 @@ public class RegistrationController extends HttpServlet {
         }
         HttpSession session = request.getSession();
         session.setAttribute("User",user);
+        try {
+            new MailController().sendRegistrationMail(user);
+        } catch (MessagingException e) {
+            LOGGER.error("error while sending message: " + e);
+        }
         doGet(request, response);
     }
 }
