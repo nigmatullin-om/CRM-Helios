@@ -17,12 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CompanyFilter {
+
     private CompanyDao companyDao;
+
     private static final Logger LOGGER = LogManager.getLogger(CompanyFilter.class);
 
     public List<Company> filterCompanies(String byTaskType, String byPeriod, String chosenDate, String createdOrModified,
                                           String[] byStages, String byUser, String byTask, String byTag) throws DatabaseException {
-        companyDao = new DaoFactoryImpl().getCompanyDao();
 
         List<Integer> companiesId = new ArrayList<>();
         int companyAmount = companyDao.getCount();
@@ -217,5 +218,13 @@ public class CompanyFilter {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar;
+    }
+
+    public CompanyDao getCompanyDao() {
+        return companyDao;
+    }
+
+    public void setCompanyDao(CompanyDao companyDao) {
+        this.companyDao = companyDao;
     }
 }

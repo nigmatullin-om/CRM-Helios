@@ -35,5 +35,8 @@
     <bean id="taskDao" factory-bean="daoFactory" factory-method="getTaskDao"/>
     <bean id="taskTypeDao" factory-bean="daoFactory" factory-method="getTaskTypeDao"/>
     <bean id="userDao" factory-bean="daoFactory" factory-method="getUserDao"/>
+    <bean id="companyFilter" class="com.becomejavasenior.filter.CompanyFilter">
+        <property name="companyDao" ref="companyDao"/>
+    </bean>
 
 </beans>
