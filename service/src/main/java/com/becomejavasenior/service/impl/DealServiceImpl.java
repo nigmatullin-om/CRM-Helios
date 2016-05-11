@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class DealServiceImpl implements DealService {
@@ -38,62 +40,6 @@ public class DealServiceImpl implements DealService {
 
     @Resource
     private ContactDao contactDao;
-
-    public DealDao getDealDao() {
-        return dealDao;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public CompanyDao getCompanyDao() {
-        return companyDao;
-    }
-
-    public NoteDao getNoteDao() {
-        return noteDao;
-    }
-
-    public FileDao getFileDao() {
-        return fileDao;
-    }
-
-    public TagDao getTagDao() {
-        return tagDao;
-    }
-
-    public ContactDao getContactDao() {
-        return contactDao;
-    }
-
-    public void setDealDao(DealDao dealDao) {
-        this.dealDao = dealDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public void setCompanyDao(CompanyDao companyDao) {
-        this.companyDao = companyDao;
-    }
-
-    public void setNoteDao(NoteDao noteDao) {
-        this.noteDao = noteDao;
-    }
-
-    public void setFileDao(FileDao fileDao) {
-        this.fileDao = fileDao;
-    }
-
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
-    }
-
-    public void setContactDao(ContactDao contactDao) {
-        this.contactDao = contactDao;
-    }
 
     @Override
     public int create(Deal deal) throws DatabaseException {
@@ -170,18 +116,12 @@ public class DealServiceImpl implements DealService {
 
     public Map<String, List<Deal>> filterSuccessAndFailedDeals(List<Deal> deals) {
         Map<String, List<Deal>> mapDeals = new HashMap<>();
-        List<Deal> successDeals = new LinkedList<>();
-        List<Deal> failedDeals = new LinkedList<>();
-        ListIterator<Deal> listIterator = deals.listIterator();
-        while (listIterator.hasNext()) {
-            Deal tempDeal = listIterator.next();
-            if (tempDeal.getDealStage() == DealStage.SUCCESS) {
-                successDeals.add(tempDeal);
-            }
-            if (tempDeal.getDealStage() == DealStage.FAILED_AND_CLOSED) {
-                failedDeals.add(tempDeal);
-            }
-        }
+
+        List<Deal> successDeals = deals.stream().filter(deal -> deal.getDealStage().equals(DealStage.SUCCESS)).
+                collect(Collectors.toCollection(LinkedList::new));
+        List<Deal> failedDeals = deals.stream().filter(deal -> deal.getDealStage().equals(DealStage.FAILED_AND_CLOSED)).
+                collect(Collectors.toCollection(LinkedList::new));
+
         mapDeals.put(SUCCESS_DEALS, successDeals);
         mapDeals.put(FAILED_DEALS, failedDeals);
         return mapDeals;
