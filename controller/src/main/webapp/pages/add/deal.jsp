@@ -17,7 +17,7 @@
             <script src="/resources/js/clockpicker.js"></script>
             <script src="../../resources/js/addDealForm.js"></script>
             <script src="../../resources/js/addContactsToDeal.js"></script>
-            <script src="../../resources/js/messageResource.min.js"></script>
+            <script src="../../resources/js/addDealWarnings.js"></script>
             <script>
                 $(function() {
                     $("#dealDate").datepicker();
@@ -49,14 +49,14 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-4"><fmt:message key="lblTags"/></label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="dealTags" id="dealTags" >
+                                    <input type="text" class="form-control" name="dealTags" id="dealTags">
                                 </div>
                             </div>
 
                             <div class="form-group" id="dealResponsibleBlock">
                                 <label class="control-label col-sm-4"><fmt:message key="lblResponsible"/></label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" value="-1" name="dealResponsible" id="dealResponsible" placeholder="SELECT">
+                                    <select class="form-control" name="dealResponsible" id="dealResponsible">
                                         <option value="-1" selected disabled><fmt:message key="pleaseSelect"/></option>
                                         <c:forEach items="${users}" var="user">
                                             <option value="${user.id}">${user.name}</option>
@@ -310,7 +310,6 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-4"></label>
                                 <a href="/dashboard" class="button"> <button type="button" class="btn control-button col-sm-4" name="cancel" id="cancel"><fmt:message key="lblReset"/></button> </a>
-
                             </div>
                         </div>
                     </div>
