@@ -5,6 +5,7 @@ import com.becomejavasenior.model.Role;
 import com.becomejavasenior.model.User;
 import com.becomejavasenior.service.RoleService;
 import com.becomejavasenior.service.UserService;
+import com.becomejavasenior.service.impl.MailServiceImpl;
 import com.becomejavasenior.service.impl.RoleServiceImpl;
 import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
 
 @WebServlet("/registration")
 public class RegistrationController extends HttpServlet {
@@ -81,10 +83,15 @@ public class RegistrationController extends HttpServlet {
         }
         HttpSession session = request.getSession();
         session.setAttribute("User",user);
+        LocaleService localeService = new LocaleService(Locale.getDefault());
+        String topic = localeService.getString("registrationTopic");
+        LOGGER.info("message topic: " + topic);
+        String body = localeService.getString("registrationBody");
+        LOGGER.info("message body: " + body);
         try {
-            new MailController().sendRegistrationMail(user);
+            new MailServiceImpl().sendRegistrationMail(topic, body, user);
         } catch (MessagingException e) {
-            LOGGER.error("error while sending message: " + e);
+            LOGGER.error("error while sending registration message: " + e);
         }
         doGet(request, response);
     }
