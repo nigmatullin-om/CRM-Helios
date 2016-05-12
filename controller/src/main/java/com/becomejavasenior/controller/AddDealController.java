@@ -303,7 +303,7 @@ public class AddDealController extends HttpServlet {
             company.setName(companyName);
             company.setAddress(companyAdress);
             company.setEmail(companyEmail);
-            company.setPhoneType(PhoneType.MOBILE);//// TODO: 08.04.2016
+            company.setPhoneType(PhoneType.MOBILE);
             company.setPhone(companyPhone);
             company.setWeb(companyWeb);
             company.setDeleted(false);
@@ -356,7 +356,7 @@ public class AddDealController extends HttpServlet {
         if (!taskPeriod.equals("-1") || !taskTimeStr.equals("") && !taskDateStr.equals("")){
             if (!taskPeriod.equals("-1")){
                 taskPeriodEnum = Period.values()[Integer.parseInt(taskPeriod)];
-                finishDate = new Date(); //// TODO: 11.04.2016
+                finishDate = new Date();
             }
             else {
                 try {
