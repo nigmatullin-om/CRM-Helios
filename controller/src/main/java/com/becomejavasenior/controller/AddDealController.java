@@ -60,6 +60,11 @@ public class AddDealController extends HttpServlet {
         this.contactService =ctx.getBean(ContactService.class);
         this.companyService = ctx.getBean(CompanyService.class);
         this.taskTypeService = ctx.getBean(TaskTypeService.class);
+        this.dealService = ctx.getBean(DealService.class);
+        this.taskService = ctx.getBean(TaskService.class);
+        this.noteService = ctx.getBean(NoteService.class);
+        this.fileService = ctx.getBean(FileService.class);
+        this.tagService = ctx.getBean(TagService.class);
     }
 
     @Override
