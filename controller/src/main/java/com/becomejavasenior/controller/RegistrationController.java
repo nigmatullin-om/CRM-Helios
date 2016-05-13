@@ -4,6 +4,7 @@ import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.Role;
 import com.becomejavasenior.model.User;
 import com.becomejavasenior.service.*;
+import com.becomejavasenior.service.impl.MailServiceImpl;
 import com.becomejavasenior.service.impl.RoleServiceImpl;
 import com.becomejavasenior.service.impl.UserServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
 
 @WebServlet("/registration")
 public class RegistrationController extends HttpServlet {
@@ -84,6 +87,16 @@ public class RegistrationController extends HttpServlet {
         }
         HttpSession session = request.getSession();
         session.setAttribute("User",user);
+        LocaleService localeService = new LocaleService(Locale.getDefault());
+        String topic = localeService.getString("registrationTopic");
+        LOGGER.info("message topic: " + topic);
+        String body = localeService.getString("registrationBody");
+        LOGGER.info("message body: " + body);
+        try {
+            new MailServiceImpl().sendRegistrationMail(topic, body, user);
+        } catch (MessagingException e) {
+            LOGGER.error("error while sending registration message: " + e);
+        }
         doGet(request, response);
     }
 }
