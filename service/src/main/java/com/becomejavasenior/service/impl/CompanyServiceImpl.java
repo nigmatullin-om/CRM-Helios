@@ -91,8 +91,4 @@ public class CompanyServiceImpl implements CompanyService {
         return companyDao.modified();
     }
 
-    @Override
-    public int createWithId(Company company) throws DatabaseException {
-        return companyDao.createWithId(company);
-    }
 }

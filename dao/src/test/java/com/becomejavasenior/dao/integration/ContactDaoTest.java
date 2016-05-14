@@ -54,7 +54,7 @@ public class ContactDaoTest extends AbstractTestDao {
     }
 
     @Test
-    public void testCreateWithId() throws DatabaseException {
+    public void testCreate() throws DatabaseException {
         User user = userDao.getUserById(USER5);
         Contact contact = contactDao.getContactById(CONTACT5);
         contact.setCreationDate(new Date());
@@ -62,7 +62,7 @@ public class ContactDaoTest extends AbstractTestDao {
         contact.setResponsibleUser(user);
         contact.setModifiedByUser(user);
         contact.setCompany(companyDao.getCompanyById(COMPANY5));
-        int result = contactDao.createWithId(contact);
+        int result = contactDao.create(contact);
         assertThat(result, Matchers.greaterThan(0));
     }
 

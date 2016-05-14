@@ -167,7 +167,7 @@ public class CompanyDaoTest extends AbstractTestDao {
     }
 
     @Test
-    public void testCreateWithId () throws DatabaseException {
+    public void testCreate() throws DatabaseException {
         Company company = companyDao.getCompanyById(COMPANY4);
         User user = userDao.getUserById(USER5);
         company.setResponsibleUser(user);
@@ -175,7 +175,7 @@ public class CompanyDaoTest extends AbstractTestDao {
         company.setModifiedByUser(user);
         company.setModificationDate(new Date());
         company.setCreationDate(new Date());
-        int id = companyDao.createWithId(company);
+        int id = companyDao.create(company);
         assertThat(id, Matchers.greaterThan(0));
     }
 }

@@ -137,10 +137,6 @@ public class DealServiceImpl implements DealService {
         return dealDao.countDealsWithoutTasks();
     }
 
-    public int createWithId(Deal deal) throws DatabaseException {
-        return dealDao.createWithId(deal);
-    }
-
     @Override
 
     public int createDealForContact(int contactId, Deal deal) throws DatabaseException {

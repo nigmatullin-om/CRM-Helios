@@ -27,7 +27,6 @@ public interface ContactService {
 
     int getCount() throws DatabaseException;
 
-    int createWithId(Contact contact) throws DatabaseException;
 
     int addContactToDeal(Contact contact, Deal deal) throws DatabaseException;
 

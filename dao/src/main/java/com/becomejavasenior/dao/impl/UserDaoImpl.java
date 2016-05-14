@@ -121,7 +121,7 @@ public class UserDaoImpl extends CommonDao implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("Getting a user was failed. Error - {}", new Object[]{e.getMessage()});
+            LOGGER.error("Getting a user was failed. Error - {}", e);
             throw new DatabaseException(e.getMessage());
         }
         if (user == null) {
