@@ -43,11 +43,9 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             " company.phone_type_id, company.created_by, company.date_create, company.deleted, company.date_modify, company.user_modify_id " +
             "FROM company INNER JOIN task ON company.id = task.company_id WHERE task.id = ?";
     private static final String GET_ID_COMPANIES_FOR_USERNAME = "SELECT company.id FROM company INNER JOIN person ON person.id = company.responsible_id WHERE person.name = ? AND company.deleted = false";
-    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM task where company_id IS NOT NULL ) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_TASKS = "SELECT id FROM company WHERE deleted = false AND NOT EXISTS( SELECT 1 FROM task WHERE task.company_id = company.id)";
     private static final String GET_ID_COMPANIES_WITHOUT_DEALS = "SELECT id FROM company WHERE id NOT IN (SELECT company_id FROM deal) AND deleted = false";
-    private static final String GET_ID_COMPANIES_WITHOUT_OPEN_DEALS = "SELECT id FROM company WHERE id IN (SELECT company_id FROM deal JOIN stage ON stage.id = deal.stage_id" +
-            " WHERE stage.name = '" + DealStage.getDealStageById(4) + "' AND stage.name = '" + DealStage.getDealStageById(5) + "')" +
-            " OR id NOT IN (SELECT company_id FROM deal) AND deleted = false";
+    private static final String GET_ID_COMPANIES_WITHOUT_OPEN_DEALS = "SELECT company.id FROM company LEFT JOIN deal ON company.id = deal.company_id AND deal.stage_id NOT IN(5,6) WHERE company.deleted = false AND deal.id IS NULL";
     private static final String GET_ID_COMPANIES_WITH_OUTDATED_TASKS = "SELECT company.id FROM company JOIN task ON company.id = task.company_id AND done=FALSE AND finish_date < now() AND company.deleted = false";
     private static final String GET_ID_COMPANIES_CREATED_BY_PERIOD = "SELECT id FROM company WHERE date_create > ? AND deleted = false";
     private static final String GET_ID_COMPANIES_MODIFIED_BY_PERIOD = "SELECT id FROM company WHERE date_modify > ? AND deleted = false";

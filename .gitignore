@@ -61,6 +61,6 @@ fabric.properties
 ################################
 ######### DB Properties#########
 ################################
-dao/src/test/resources/testdb_config.properties
+#dao/src/test/resources/testdb_config.properties
 dao/src/main/resources/db_config.properties
 jdbcTemplate/src/main/resources/db_config.properties
