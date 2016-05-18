@@ -123,7 +123,7 @@
         </div>
 
         <div class="col-md-8">
-            <a href="http://localhost:8080/crm-helios/addCompany" class="addButton" role="button" >Добавить</a>
+            <a href="${pageContext.request.contextPath}/add/company" class="addButton" role="button" >Добавить</a>
             <br> <br />
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#companies">Компании</a></li>

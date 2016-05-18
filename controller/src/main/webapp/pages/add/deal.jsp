@@ -1,50 +1,21 @@
 <%@include file="/resources/jsp/locale.jsp"%>
 
+<fmt:message key= "pageDealAdd" var="pageDealAdd"/>
+
 <t:pageLayout title="${pageDealAdd}">
    <jsp:attribute name="bodyLayout">
-
-        <html>
-        <head>
-            <title><fmt:message key="dealAdd"/></title>
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-            <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-            <link rel="stylesheet" href="../../resources/css/clockpicker.css">
-            <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-            <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-            <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-            <script src="/resources/js/clockpicker.js"></script>
-            <script src="../../resources/js/addDealForm.js"></script>
-            <script src="../../resources/js/addContactsToDeal.js"></script>
-            <script src="../../resources/js/addDealWarnings.js"></script>
-            <script>
-                $(function() {
-                    $("#dealDate").datepicker();
-                });
-                $(function() {
-                    $("#taskDate").datepicker();
-                });
-                $(function(){
-                    $("#taskTime").clockpicker();
-                });
-                $(document).ready(initWarnings());
-            </script>
-        </head>
-        <body>
-
             <div class="container">
                 <h1 style="text-align:  center"><fmt:message key="dealAdd"/></h1>
-                <form class="form-horizontal" id="addDealForm" role="form" action="/add/deal" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" id="addDealForm" role="form" action="${pageContext.request.contextPath}/add/deal" method="post">
                     <div class="row">
                         <div class="col-sm-6">
 
-                            <div class="form-group" id="dealNameBlock">
-                                <label class="control-label col-sm-4"><fmt:message key="dealName"/></label>
+                            <fieldset class="form-group">
+                                <label for="dealName" class="control-label col-sm-4"><fmt:message key="dealName"/></label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" name="dealName" id="dealName">
                                 </div>
-                            </div>
+                            </fieldset>
 
                             <div class="form-group">
                                 <label class="control-label col-sm-4"><fmt:message key="lblTags"/></label>
@@ -58,8 +29,8 @@
                                 <div class="col-sm-8">
                                     <select class="form-control" name="dealResponsible" id="dealResponsible">
                                         <option value="-1" selected disabled><fmt:message key="pleaseSelect"/></option>
-                                        <c:forEach items="${users}" var="user">
-                                            <option value="${user.id}">${user.name}</option>
+                                        <c:forEach items="${usersList}" var="user">
+                                            <option value=${user.id}>${user.name}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -70,16 +41,16 @@
                                 <div class="col-sm-7">
                                     <input type="number" step="0.01" class="form-control" name="dealBudget" id="dealBudget" >
                                 </div>
-                                <label class="control-label col-sm-1">грн</label>
+                                <label class="control-label col-sm-1">$</label>
                             </div>
 
                             <div class="form-group" id="dealStageBlock">
                                 <label class="control-label col-sm-4"><fmt:message key="dealStage"/></label>
                                 <div class="col-sm-8">
                                     <select class="form-control" name="dealStage" id="dealStage">
-                                        <option value="-1" selected disabled><fmt:message key="pleaseSelect"/>t</option>
+                                        <option value="-1" selected disabled><fmt:message key="pleaseSelect"/></option>
                                         <c:forEach items="${dealStages}" var="stage">
-                                            <option value="${stage.id}">${stage.name}</option>
+                                            <option value=${stage}><fmt:message key= "${stage}"/></option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -150,7 +121,7 @@
                                     <select class="form-control"  name="contactPhoneType" id="contactPhoneType">
                                         <option value="-1" selected disabled><fmt:message key="pleaseSelect"/></option>
                                         <c:forEach items="${phoneTypes}" var="phoneType">
-                                            <option value="${phoneType.id}">${phoneType.name}</option>
+                                            <option value=${phoneType}><fmt:message key = "${phoneType}"/></option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -236,8 +207,8 @@
                                 <div class="col-sm-8">
                                     <select class="form-control"  name="taskPeriod" id="taskPeriod">
                                         <option value="-1" selected disabled><fmt:message key="pleaseSelect"/></option>
-                                        <c:forEach items="${periods}" var="period">
-                                            <option value="${period.id}">${period.name}</option>
+                                        <c:forEach items="${taskPeriods}" var="period">
+                                            <option value=${period}><fmt:message key= "${period}"/></option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -270,8 +241,8 @@
                                 <div class="col-sm-8">
                                     <select class="form-control" name="taskResponsible" id="taskResponsible">
                                         <option value="-1" selected disabled><fmt:message key="pleaseSelect"/></option>
-                                        <c:forEach items="${users}" var="user">
-                                            <option value="${user.id}">${user.name}</option>
+                                        <c:forEach items="${usersList}" var="user">
+                                            <option value=${user.id}>${user.name}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -299,24 +270,19 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label col-sm-4"></label>
-                                <button type="submit" class="btn control-button col-sm-4" onclick="return checkDealForm()" name="save" id="save"><fmt:message key="lblSubmit"/></button>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label col-sm-4"></label>
-                                <a href="/dashboard" class="button"> <button type="button" class="btn control-button col-sm-4" name="cancel" id="cancel"><fmt:message key="lblReset"/></button> </a>
-                            </div>
+                    <div class="row" style="text-align:center;">
+                        <div class="col-md-12 col-sm-12">
+                            <button type="submit" class="btn btn-success btn-large" onclick="return checkDealForm()">
+                                <fmt:message key= "lblSubmit"/>
+                            </button>
+                            <button type="reset" class="btn btn-danger btn-large" style="margin-left: 40px">
+                                <fmt:message key= "lblReset"/>
+                            </button>
                         </div>
                     </div>
 
                 </form>
             </div>
-        </body>
-        </html>
     </jsp:attribute>
 </t:pageLayout>
+</html>

@@ -1,6 +1,9 @@
 package com.becomejavasenior.controller;
 
+import com.becomejavasenior.controller.constant.CompanyField;
+import com.becomejavasenior.controller.constant.DealField;
 import com.becomejavasenior.controller.constant.Jsp;
+import com.becomejavasenior.controller.constant.TaskField;
 import com.becomejavasenior.dao.DatabaseException;
 import com.becomejavasenior.model.*;
 import com.becomejavasenior.service.*;
@@ -71,50 +74,14 @@ public class AddDealController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ServletContext servletContext = req.getServletContext();
 
-        List<EnumAdapter> stages = new ArrayList<EnumAdapter>();
-        stages.add(new EnumAdapter(1, "Первичный контакт"));
-        stages.add(new EnumAdapter(2, "Переговоры"));
-        stages.add(new EnumAdapter(3, "Принятие решения"));
-        stages.add(new EnumAdapter(4, "Подписание сделки"));
-        stages.add(new EnumAdapter(5, "Успешно завершена"));
-        stages.add(new EnumAdapter(6, "Не завершено и закрыто"));
-        log.info("deal stages: " + stages.toString());
-        servletContext.setAttribute("dealStages", stages);
-
-        List<EnumAdapter> phoneTypes = new ArrayList<EnumAdapter>();
-        phoneTypes.add(new EnumAdapter(1, "Рабочий"));
-        phoneTypes.add(new EnumAdapter(2, "Прямой рабочий номер"));
-        phoneTypes.add(new EnumAdapter(3, "Домашний"));
-        phoneTypes.add(new EnumAdapter(4, "Мобильный"));
-        phoneTypes.add(new EnumAdapter(5, "Домашний"));
-        phoneTypes.add(new EnumAdapter(6, "Другое"));
-        log.info("phone types: " + phoneTypes.toString());
-        servletContext.setAttribute("phoneTypes", phoneTypes);
-
-        List<EnumAdapter> periods = new ArrayList<>();
-        periods.add(new EnumAdapter(0, "Сегодня"));
-        periods.add(new EnumAdapter(1, "Весь день"));
-        periods.add(new EnumAdapter(2, "Завтра"));
-        periods.add(new EnumAdapter(3, "Следующая неделя"));
-        periods.add(new EnumAdapter(4, "Следующий месяц"));
-        periods.add(new EnumAdapter(5, "Следующий год"));
-        log.info("periods: " + periods.toString());
-        servletContext.setAttribute("periods", periods);
-
-        List<User> users = new ArrayList<>();
-        try {
-            log.info("trying to get users");
-            users = userService.findAll();
-        } catch (DatabaseException e) {
-            log.error("error while trying get users" + e);
-        }
-        log.info("users: " + users.toString());
-        servletContext.setAttribute("users", users);
+        req.setAttribute(DealField.STAGES, DealStage.values());
+        req.setAttribute(TaskField.PERIODS, Period.values());
 
         List<Contact> contacts = new ArrayList<>();
         try {
             log.info("trying to get contacts");
             contacts = contactService.findAll();
+            log.debug("got contacts", contacts);
         } catch (DatabaseException e) {
             log.error("error while trying get contacts" + e);
         }
@@ -172,8 +139,10 @@ public class AddDealController extends HttpServlet {
                 fileService.addFileToDeal(file, deal);
             }
 
-            note.setId(noteService.createWithId(note));
-            noteService.addNoteToDeal(note, deal);
+            if(!note.getText().isEmpty() ) {
+                note.setId(noteService.createWithId(note));
+                noteService.addNoteToDeal(note, deal);
+            }
 
             if (tags.size() > 0){
                 for (Tag tag : tags){
@@ -219,30 +188,28 @@ public class AddDealController extends HttpServlet {
 
             }
         } catch (DatabaseException e) {
-            log.error("error while saving to DB" + e);
+            log.error("error while saving to DB! " + e);
         }
         resp.sendRedirect("/dashboard");
     }
 
     private Deal getDeal(HttpServletRequest req){
         User currentUser = (User)req.getSession().getAttribute(CURRENT_USER);
-        String dealName = req.getParameter("dealName");
+        String dealName = req.getParameter(DealField.NAME);
         log.info("deal name = " + dealName);
-        String dealTags = req.getParameter("dealTags");
+        String dealTags = req.getParameter(DealField.TAGS);
         log.info("deal tags = " + dealTags);
-        int dealResponsibleId = Integer.parseInt(req.getParameter("dealResponsible"));
-        log.info("deal responsible id = " + dealResponsibleId);
-        BigDecimal dealBudget =  new BigDecimal(Float.parseFloat(req.getParameter("dealBudget")));
+        int dealResponsibleId = Integer.parseInt(req.getParameter(DealField.RESPONSIBLE));
+        log.debug("deal responsible id = " + dealResponsibleId);
+        BigDecimal dealBudget = BigDecimal.valueOf(Float.parseFloat(req.getParameter(DealField.BUDGET)));
         log.info("deal budget = " + dealBudget);
-        int dealStage = Integer.parseInt(req.getParameter("dealStage"));
-        log.info("dealStage integer = " + dealStage);
-        DealStage dealStageEnum = DealStage.values()[dealStage];
-        log.info("deal stage = " + dealStageEnum.name());
-        String dealNote = req.getParameter("dealNote");
+        DealStage dealStage = DealStage.valueOf(req.getParameter(DealField.STAGE));
+        log.info("dealStage = " + dealStage);
+        String dealNote = req.getParameter(DealField.NOTE);
         log.info("deal note = " + dealNote);
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         try {
-            Date dealDate =  dateFormat.parse(req.getParameter("dealDate".trim()));
+            Date dealDate =  dateFormat.parse(req.getParameter(DealField.DATE.trim()));
             log.info("deal date = " + dealDate.toString());
         } catch (ParseException e) {
             log.error("can't parse date" + e);
@@ -250,7 +217,7 @@ public class AddDealController extends HttpServlet {
         Deal deal = new Deal();
         deal.setName(dealName);
         deal.setBudget(dealBudget);
-        deal.setDealStage(dealStageEnum);
+        deal.setDealStage(dealStage);
         deal.setDeleted(false);
         deal.setCreationDate(new Date());
         deal.setCreatedByUser(currentUser);
@@ -413,9 +380,13 @@ public class AddDealController extends HttpServlet {
         File file = null;
         try {
             filePart = req.getPart("fileName");
-            String fileName = extractFileName(filePart);
+            String fileName = "";
+            if(filePart != null) {
+                fileName = extractFileName(filePart);
+            }
+
             log.info("file name: ?" + fileName + "?");
-            if (!fileName.equals("")){
+            if (!fileName.isEmpty()){
                 log.info("file was attached, trying to upload");
 
                 InputStream fileContent = filePart.getInputStream();
@@ -434,7 +405,7 @@ public class AddDealController extends HttpServlet {
                 log.info("file was not attached, returning null");
                 return null;
             }
-        } catch (IOException | ServletException e) {
+        } catch (IOException | ServletException | NullPointerException e) {
             log.error("error while uploading file:" + e);
         }
         return file;

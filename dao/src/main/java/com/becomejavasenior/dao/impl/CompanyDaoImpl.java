@@ -89,7 +89,7 @@ public class CompanyDaoImpl extends CommonDao implements CompanyDao {
             preparedStatement.setString(4, company.getEmail());
             preparedStatement.setString(5, company.getAddress());
             preparedStatement.setString(6, company.getPhone());
-            preparedStatement.setInt(7, company.getPhoneType().ordinal());
+            preparedStatement.setInt(7, company.getPhoneType().ordinal() +1);
             preparedStatement.setInt(8, company.getCreatedByUser().getId());
             preparedStatement.setDate(9, new java.sql.Date(company.getCreationDate().getTime()));
             preparedStatement.setBoolean(10, company.getDeleted());

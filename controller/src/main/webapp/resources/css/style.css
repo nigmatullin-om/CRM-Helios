@@ -109,3 +109,6 @@ table.calendar > tbody > tr > td > div.tomorrow-task {
 .wrong-pas-text{
     color: red;
 }
+.btn-language-current {
+    background-color: #e6e6e6;
+}

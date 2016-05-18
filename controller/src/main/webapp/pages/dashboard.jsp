@@ -12,12 +12,12 @@
                         <h3 class="panel-title"><fmt:message key= "deals"/></h3>
                     </div>
                     <div class="panel-body">
-                        <p><fmt:message key="dealsAll"/>: <a href="#" onclick="testAlert(); return false">${fn:length(deals)}</a></p>
+                        <p><fmt:message key="dealsAll"/>: <a href="${pageContext.request.contextPath}/view/deals">${fn:length(deals)}</a></p>
                         <c:set var="sum" value="${0}"/>
                         <c:forEach items="${deals}" var="deal">
                             <c:set var="sum" value="${sum + deal.budget}"/>
                         </c:forEach>
-                        <p><fmt:message key="lblBudget"/>: <a href="#" onclick="testAlert(); return false">${sum}</a></p>
+                        <p><fmt:message key="lblBudget"/>: <a href="${pageContext.request.contextPath}/view/deals">${sum}</a></p>
                     </div>
                 </div>
 
@@ -26,8 +26,8 @@
                         <h3 class="panel-title"><fmt:message key="dealsSuccess"/> </h3>
                     </div>
                     <div class="panel-body">
-                        <p><fmt:message key="dealsSuccess"/>: <a href="#" onclick="testAlert(); return false">${successDealsCount}</a></p>
-                        <p><fmt:message key="dealsFail"/>: <a href="#" onclick="testAlert(); return false">${failedDealsCount}</a></p>
+                        <p><fmt:message key="dealsSuccess"/>: <a href="${pageContext.request.contextPath}/view/deals">${successDealsCount}</a></p>
+                        <p><fmt:message key="dealsFail"/>: <a href="${pageContext.request.contextPath}/view/deals">${failedDealsCount}</a></p>
                     </div>
                 </div>
 
@@ -36,8 +36,8 @@
                         <h3 class="panel-title"><fmt:message key="dealsWithoutTasks"/> </h3>
                     </div>
                     <div class="panel-body">
-                        <p><fmt:message key="dealsWithoutTasks"/>: <a href="#" onclick="testAlert(); return false">${dealsWithoutTasksCount}</a></p>
-                        <p><fmt:message key="dealsWithTasks"/>: <a href="#" onclick="testAlert(); return false">${dealsWithTasksCount}</a></p>
+                        <p><fmt:message key="dealsWithoutTasks"/>: <a href="${pageContext.request.contextPath}/view/deals">${dealsWithoutTasksCount}</a></p>
+                        <p><fmt:message key="dealsWithTasks"/>: <a href="${pageContext.request.contextPath}/view/deals" >${dealsWithTasksCount}</a></p>
                     </div>
                 </div>
 
@@ -48,9 +48,9 @@
                         <h3 class="panel-title"><fmt:message key="tasksInWorkAndDone"/> </h3>
                     </div>
                     <div class="panel-body">
-                        <p><fmt:message key="tasksInWork"/>: <a href="#" onclick="testAlert(); return false">${runningTasksCount}</a></p>
-                        <p><fmt:message key="tasksDone"/>: <a href="#" onclick="testAlert(); return false">${doneTasksCount}</a></p>
-                        <p><fmt:message key="tasksMatured"/>: <a href="#" onclick="testAlert(); return false">${notDoneTasksCount}</a></p>
+                        <p><fmt:message key="tasksInWork"/>: <a href="${pageContext.request.contextPath}/view/tasks">${runningTasksCount}</a></p>
+                        <p><fmt:message key="tasksDone"/>: <a href="${pageContext.request.contextPath}/view/tasks">${doneTasksCount}</a></p>
+                        <p><fmt:message key="tasksMatured"/>: <a href="${pageContext.request.contextPath}/view/tasks">${notDoneTasksCount}</a></p>
                     </div>
                 </div>
                 <div class="panel panel-primary">
@@ -58,8 +58,8 @@
                         <h3 class="panel-title"><fmt:message key="allContactsAllCompanies"/> </h3>
                     </div>
                     <div class="panel-body">
-                        <p><fmt:message key="contactsAll"/>: <a href="#" onclick="testAlert(); return false">${contactsCount}</a></p>
-                        <p><fmt:message key="companiesAll"/>: <a href="#" onclick="testAlert(); return false">${companiesCount}</a></p>
+                        <p><fmt:message key="contactsAll"/>: <a href="#">${contactsCount}</a></p>
+                        <p><fmt:message key="companiesAll"/>: <a href="${pageContext.request.contextPath}/view/CompaniesList">${companiesCount}</a></p>
                     </div>
                 </div>
             </div>

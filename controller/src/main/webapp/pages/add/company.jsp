@@ -7,7 +7,7 @@
 
 <div class="container">
     <h1 class="page-header text-center">${pageCompanyAdd}</h1>
-    <form class="form-horizontal" action="/add/company" method="post">
+    <form class="form-horizontal" action="${pageContext.request.contextPath}/add/company" method="post">
         <div class="row">
 
             <div class="col-md-3 col-sm-3">
@@ -188,12 +188,12 @@
         </div>
         <div class="row" style="text-align:center;">
             <div class="col-md-12 col-sm-12">
-                <button type="submit" class="btn btn-success btn-large" onclick="return checkAddCompanyForm()">
+                <a href="${pageContext.request.contextPath}/view/CompaniesList" type="submit" class="btn btn-success btn-large" onclick="return checkAddCompanyForm()" role="button">
                     <fmt:message key= "lblSubmit"/>
-                </button>
-                <button type="reset" class="btn btn-danger btn-large" style="margin-left: 40px">
+                </a>
+                <a href="${pageContext.request.contextPath}/view/CompaniesList" type="reset" class="btn btn-danger btn-large" style="margin-left: 40px" role="button">
                     <fmt:message key= "lblReset"/>
-                </button>
+                </a>
             </div>
         </div>
     </form>

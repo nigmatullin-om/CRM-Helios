@@ -11,6 +11,17 @@
     ${cookie['localeCookie'].value} = "en_US"
     ${cookie['localeCookie'].path} = "/"
 </c:if>
+<c:choose>
+    <c:when test="${userLocale == 'en_US'}">
+        <c:set var ="backgroundEng" value="btn-language-current"/>
+        <c:set var ="backgroundRus" value=""/>
+    </c:when>
+    <c:otherwise>
+        <c:set var ="backgroundEng" value=""/>
+        <c:set var ="backgroundRus" value="btn-language-current"/>
+    </c:otherwise>
+</c:choose>
+
 <fmt:setLocale value="${userLocale}"/>
 <fmt:setBundle basename="LocaleText"/>
 <fmt:message key= "pageMain" var="pageMain"/>
@@ -65,12 +76,6 @@
                 <li><a href="${pageContext.request.contextPath}/view/deals"><fmt:message key= "pageDeals"/></a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/add/company"><fmt:message key= "pageCompanyAdd"/></a></li>
-            </ul>
-            <ul class="nav navbar-nav">
-                <li><a href="${pageContext.request.contextPath}/add/deal"><fmt:message key="pageDealAdd"/> </a></li>
-            </ul>
-            <ul class="nav navbar-nav">
                 <li><a href="${pageContext.request.contextPath}/add/contact"><fmt:message key="pageContactAdd"/> </a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -91,8 +96,8 @@
                 <p>© 2016 CRM-HELIOS.</p>
             </div>
             <div class="col-md-9 col-sm-9" align="right">
-                <input type="button" value="Рус" class="btn btn-default flag flag-ru" onclick="SetCookie('localeCookie','ru_RU')"/>
-                <input type="button" value="Eng" class="btn btn-default flag flag-us" onclick="SetCookie('localeCookie','en_US')"/>
+                <input type="button" value="Рус" class="btn btn-default flag flag-ru ${backgroundRus}" onclick="SetCookie('localeCookie','ru_RU')"/>
+                <input type="button" value="Eng" class="btn btn-default flag flag-us ${backgroundEng}" onclick="SetCookie('localeCookie','en_US')"/>
             </div>
         </div>
     </footer>

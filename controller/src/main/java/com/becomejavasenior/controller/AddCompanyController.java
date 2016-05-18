@@ -57,7 +57,7 @@ public class AddCompanyController extends HttpServlet {
         try {
             users = userService.findAll();
         } catch (DatabaseException e) {
-            LOGGER.error("Couldn't get users data!", e.getMessage());
+            LOGGER.error("Couldn't get users data!", e);
         }
 
         company.setName(req.getParameter(CompanyField.NAME));

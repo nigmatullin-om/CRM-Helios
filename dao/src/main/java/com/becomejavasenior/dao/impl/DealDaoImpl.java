@@ -85,11 +85,11 @@ public class DealDaoImpl extends CommonDao implements DealDao {
                 preparedStatement.setBoolean(8, false);
             }
             int affectedRows = preparedStatement.executeUpdate();
-            LOGGER.info("affectedRows = " + affectedRows);
+            LOGGER.debug("affectedRows = " + affectedRows);
             try (ResultSet resultSet = preparedStatement.getGeneratedKeys();) {
                 if (resultSet.next()) {
                     key = resultSet.getInt(1);
-                    LOGGER.info("new deal id = " + key);
+                    LOGGER.debug("new deal id = " + key);
                 } else {
                     LOGGER.error("Couldn't create the deal entity!");
                     throw new DatabaseException("Couldn't create the deal entity!");
@@ -186,9 +186,9 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         List<Deal> deals = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(getSql().readAll());
-             ResultSet resultSet = preparedStatement.executeQuery();) {
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                Deal deal = getDealById(resultSet.getInt("id"));
+                Deal deal = getDealByResultSet(resultSet);
                 deals.add(deal);
             }
         } catch (SQLException e) {
@@ -197,6 +197,8 @@ public class DealDaoImpl extends CommonDao implements DealDao {
         }
         return deals;
     }
+
+
 
     @Override
     public int countDealsWithTasks() throws DatabaseException {
@@ -238,7 +240,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setInt(1, contact.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Deal deal = getDealById(resultSet.getInt("id"));
+                Deal deal = getDealByResultSet(resultSet);
                 deals.add(deal);
             }
         } catch (SQLException e) {
@@ -256,7 +258,7 @@ public class DealDaoImpl extends CommonDao implements DealDao {
             preparedStatement.setInt(1, company.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Deal deal = getDealById(resultSet.getInt(1));
+                Deal deal = getDealByResultSet(resultSet);
                 deals.add(deal);
             }
         } catch (SQLException e) {

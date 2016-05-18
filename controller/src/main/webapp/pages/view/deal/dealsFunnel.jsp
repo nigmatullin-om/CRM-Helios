@@ -7,6 +7,10 @@
 <t:pageLayout title="Сделки">
     <jsp:attribute name="bodyLayout">
         <div class="deal-view-links">
+            <a href="${pageContext.request.contextPath}/add/deal" class="btn btn-default" role="button" >Добавить</a>
+        </div>
+        <br>
+        <div class="deal-view-links">
             <a href="?view=funnel" class="btn btn-primary disabled" role="button">Воронка</a>
             <a href="?view=list" class="btn btn-primary active" role="button">Список</a>
         </div>
